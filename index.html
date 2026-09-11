@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>威黃物流服務有限公司 | FLS Logistics Services Ltd.</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(rgba(15, 23, 42, 0.88), rgba(30, 41, 59, 0.92)), url('images/loistic-pic02.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 text-white sticky top-0 z-50 shadow-lg border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Brand -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white px-2 py-1.5 rounded shadow flex items-center">
+                        <img src="images/FLS-logo-80.jpg" alt="FLS Logo" class="h-8 w-auto object-contain" onerror="this.style.display='none'">
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-base sm:text-lg leading-tight" data-i18n="brand_name">威黃物流服務有限公司</h1>
+                        <p class="text-xs text-slate-400 hidden sm:block" data-i18n="brand_sub">Fenix Group 旗下品牌 · 高端時尚與生活美學物流專家</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links (Desktop) -->
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <a href="#services" class="hover:text-amber-400 transition" data-i18n="nav_services">核心服務</a>
+                    <a href="#ecosystem" class="hover:text-amber-400 transition" data-i18n="nav_ecosystem">集團生態</a>
+                    <a href="#warehouses" class="hover:text-amber-400 transition" data-i18n="nav_warehouses">6大倉庫網點</a>
+                    <a href="#tracking" class="hover:text-amber-400 transition" data-i18n="nav_tracking">網上查貨</a>
+                    <a href="#news" class="hover:text-amber-400 transition" data-i18n="nav_news">最新資訊</a>
+                </nav>
+
+                <!-- Actions: Language Switcher & Quote CTA & Mobile Toggle -->
+                <div class="flex items-center space-x-3">
+                    <!-- Language Dropdown -->
+                    <select id="lang-switcher" onchange="changeLanguage(this.value)" class="bg-slate-800 text-slate-200 border border-slate-700 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-amber-500 font-medium cursor-pointer">
+                        <option value="tc" selected>繁體中文</option>
+                        <option value="sc">简体中文</option>
+                        <option value="en">English</option>
+                    </select>
+
+                    <a href="#quote" class="hidden sm:inline-block bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2 rounded text-xs sm:text-sm transition shadow-sm" data-i18n="btn_quote">
+                        網上報價
+                    </a>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-slate-300 hover:text-white p-2 focus:outline-none" aria-label="Toggle Menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 border-t border-slate-700 px-4 pt-3 pb-5 space-y-3">
+            <a href="#services" onclick="toggleMobileMenu()" class="block text-slate-200 hover:text-amber-400 text-sm font-medium py-1" data-i18n="nav_services">核心服務</a>
+            <a href="#ecosystem" onclick="toggleMobileMenu()" class="block text-slate-200 hover:text-amber-400 text-sm font-medium py-1" data-i18n="nav_ecosystem">集團生態</a>
+            <a href="#warehouses" onclick="toggleMobileMenu()" class="block text-slate-200 hover:text-amber-400 text-sm font-medium py-1" data-i18n="nav_warehouses">6大倉庫網點</a>
+            <a href="#tracking" onclick="toggleMobileMenu()" class="block text-slate-200 hover:text-amber-400 text-sm font-medium py-1" data-i18n="nav_tracking">網上查貨</a>
+            <a href="#news" onclick="toggleMobileMenu()" class="block text-slate-200 hover:text-amber-400 text-sm font-medium py-1" data-i18n="nav_news">最新資訊</a>
+            <a href="#quote" onclick="toggleMobileMenu()" class="block text-center bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded text-sm transition mt-2" data-i18n="btn_quote">網上報價</a>
+        </div>
+    </header>
+
+    <section class="hero-bg text-white py-20 lg:py-32 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl space-y-6">
+                <span class="inline-block bg-amber-600/30 text-amber-400 border border-amber-500/30 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full" data-i18n="hero_badge">
+                    Backed by Fenix Group Holdings Ltd.
+                </span>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
+                    <span data-i18n="hero_title_1">高端時尚與生活品牌</span><br><span class="text-amber-500" data-i18n="hero_title_2">全方位物流解決方案專家</span>
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed" data-i18n="hero_desc">
+                    憑藉多年服務國際頂級時尚零售品牌（如 Sidefame 旗下 Anteprima、Marimekko、Cocktail 等）嘅豐富經驗，為你提供精細化成衣吊掛倉儲 (GOH)、零售與電商全渠道履約派送服務。
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 pt-4">
+                    <a href="#quote" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-6 py-3 rounded-lg text-center transition shadow-md" data-i18n="hero_btn_quote">
+                        立即申請企業報價 ➔
+                    </a>
+                    <a href="#tracking" class="bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold px-6 py-3 rounded-lg text-center transition backdrop-blur-sm" data-i18n="hero_btn_tracking">
+                        查貨系統登入 ↗
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Logos Section -->
+    <section class="bg-white py-12 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+            <div class="flex justify-center items-center">
+                <img src="images/SIDEFAME GROUP.jpg" alt="Sidefame Group Logo" class="h-10 object-contain mx-auto" onerror="this.style.display='none'">
+            </div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest" data-i18n="clients_title">長遠信賴合作的國際頂級時尚零售品牌群</p>
+            <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6">
+                <span class="px-5 py-2.5 bg-slate-100 rounded-xl text-sm font-black text-slate-800 tracking-wider shadow-xs">ANTEPRIMA</span>
+                <span class="px-5 py-2.5 bg-slate-100 rounded-xl text-sm font-black text-slate-800 tracking-wider shadow-xs">marimekko</span>
+                <span class="px-5 py-2.5 bg-slate-100 rounded-xl text-sm font-black text-slate-800 tracking-wider shadow-xs">ATSURO TAYAMA</span>
+                <span class="px-5 py-2.5 bg-slate-100 rounded-xl text-sm font-black text-slate-800 tracking-wider shadow-xs">COCKTAIL</span>
+                <span class="px-5 py-2.5 bg-slate-100 rounded-xl text-sm font-black text-slate-800 tracking-wider shadow-xs">WIREBAG</span>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded" data-i18n="services_tag">核心專業服務</span>
+                <h2 class="text-3xl font-bold text-slate-900" data-i18n="services_heading">針對高端時尚與零售供應鏈的精細化管理</h2>
+                <p class="text-slate-600 text-sm" data-i18n="services_sub">超越傳統物流，為品牌提供從倉儲、吊掛到全渠道派送的無縫接軌體驗。</p>
+            </div>
+
+            <!-- Service Visual Highlight with loistic-pic04 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-12 mb-16">
+                <div class="rounded-2xl overflow-hidden shadow-lg border border-slate-200">
+                    <img src="images/loistic-pic04.jpeg" alt="Warehouse Operations" class="w-full h-72 object-cover" onerror="this.src='https://placehold.co/600x400/1e293b/ffffff?text=FLS+Warehouse'">
+                </div>
+                <div class="space-y-4">
+                    <div class="inline-block bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded" data-i18n="srv_highlight_tag">專業倉儲與車隊</div>
+                    <h3 class="text-2xl font-bold text-slate-900" data-i18n="srv_highlight_title">現代化倉儲設施與溫濕度精準控制</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed" data-i18n="srv_highlight_desc">
+                        我們在葵涌及荃灣擁有總計超過數十萬平方呎的專業倉儲基地，配備高架棧板架、自動化分揀帶及 24 小時閉路電視保安系統，確保每一件高檔成衣與零售貨品妥善保存。
+                    </p>
+                    <div class="flex items-center space-x-6 pt-2">
+                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-700"><span>✓</span> <span data-i18n="srv_check_1">防潮防塵吊掛專區 (GOH)</span></div>
+                        <div class="flex items-center space-x-2 text-xs font-bold text-slate-700"><span>✓</span> <span data-i18n="srv_check_2">港深跨境直通車隊</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-slate-50 border border-slate-200 p-8 rounded-2xl hover:border-amber-500 transition shadow-sm">
+                    <div class="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-6">01</div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2" data-i18n="srv_1_title">時裝成衣與吊掛管理 (GOH)</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed" data-i18n="srv_1_desc">
+                        配備專用防潮防塵吊掛設施，確保高級成衣、手袋及鞋履在倉儲及運輸過程中保持完美平整，直接對應門市上架需求。
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-8 rounded-2xl hover:border-amber-500 transition shadow-sm">
+                    <div class="w-12 h-12 bg-amber-600 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-6">02</div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2" data-i18n="srv_2_title">零售與電商全渠道履約</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed" data-i18n="srv_2_desc">
+                        同時支援 B2B 實體專門店批量補貨與 B2C 網購零售訂單之分揀、包裝與快速派送，助力品牌全渠道業務發展。
+                    </p>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-8 rounded-2xl hover:border-amber-500 transition shadow-sm">
+                    <div class="w-12 h-12 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-xl mb-6">03</div>
+                    <h3 class="font-bold text-lg text-slate-900 mb-2" data-i18n="srv_3_title">港深跨境幹線與標準倉儲</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed" data-i18n="srv_3_desc">
+                        擁有港深兩地龐大倉庫網點，配備 24 小時閉路電視保安與專業物流車隊，確保貨物安全、高效、準時抵達目的地。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ecosystem Section -->
+    <section id="ecosystem" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded" data-i18n="eco_tag">集團資源與生態網絡</span>
+                <h2 class="text-3xl font-bold text-slate-900" data-i18n="eco_heading">強大後盾：Fenix Group 集團協同效應</h2>
+                <p class="text-slate-600 text-sm" data-i18n="eco_sub">結合母公司優勢與旗下多元化業務，提供全方位的商業與物流支援。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <!-- FLS Core -->
+                <div class="bg-slate-900 text-white p-8 rounded-2xl flex flex-col justify-between shadow-md">
+                    <div>
+                        <span class="bg-amber-600 text-white text-xs font-bold px-2.5 py-1 rounded" data-i18n="eco_fls_tag">B2B 物流旗艦</span>
+                        <h3 class="text-xl font-bold mt-4" data-i18n="eco_fls_title">FLS 威黃物流</h3>
+                        <p class="text-slate-300 text-sm mt-3 leading-relaxed" data-i18n="eco_fls_desc">
+                            專注於高端時尚成衣、零售供應鏈、吊掛倉儲 (GOH) 及企業級履約派送。
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-800 text-xs text-slate-400" data-i18n="eco_fls_phone">
+                        📍 服務熱線：(852) 2487 1968
+                    </div>
+                </div>
+
+                <!-- Carry Kuma -->
+                <div class="bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm hover:border-amber-500 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded" data-i18n="eco_kuma_tag">上門儲存/電商</span>
+                            <img src="images/Carry-kuma-logo.png" alt="Carry Kuma Logo" class="h-8 object-contain" onerror="this.style.display='none'">
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mt-2">Carry Kuma</h3>
+                        <p class="text-slate-600 text-sm mt-3 leading-relaxed" data-i18n="eco_kuma_desc">
+                            提供靈活的上門儲存箱服務與微型電商物流，滿足中小企與個人用戶的敏捷倉儲需求。
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-slate-500" data-i18n="eco_kuma_note">共享幹線與倉儲資源</span>
+                        <a href="https://carrykuma.com.hk/" target="_blank" class="text-blue-600 font-bold hover:underline">carrykuma.com.hk ↗</a>
+                    </div>
+                </div>
+
+                <!-- Fenix Pet -->
+                <div class="bg-white border border-slate-200 p-8 rounded-2xl flex flex-col justify-between shadow-sm hover:border-amber-500 transition">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-emerald-600 text-white text-xs font-bold px-2.5 py-1 rounded" data-i18n="eco_pet_tag">寵物代理批發</span>
+                            <img src="images/Fenix-Pet logo_2.png" alt="Fenix Pet Logo" class="h-10 object-contain" onerror="this.style.display='none'">
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mt-2">Fenix Pet</h3>
+                        <p class="text-slate-600 text-sm mt-3 leading-relaxed" data-i18n="eco_pet_desc">
+                            專營寵物用品銷售與品牌代理，夥拍 Waylun Pet Care 負責香港及澳門區的專業批發業務。
+                        </p>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <span class="text-slate-500" data-i18n="eco_pet_partner">合作夥伴：Waylun Pet Care</span>
+                        <a href="https://fenixpet.com.hk/" target="_blank" class="text-emerald-600 font-bold hover:underline">fenixpet.com.hk ↗</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parent Company Badge with Fenix group logo -->
+            <div class="mt-12 bg-white border border-slate-200 p-8 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between">
+                <div class="flex items-center space-x-4 mb-4 sm:mb-0">
+                    <img src="images/Fenix group logo.png" alt="Fenix Group Logo" class="h-12 object-contain" onerror="this.style.display='none'">
+                    <div>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider" data-i18n="eco_parent_tag">控股母公司背景</span>
+                        <h4 class="text-lg font-bold text-slate-900">FENIX GROUP HOLDINGS LTD.</h4>
+                        <p class="text-xs text-slate-600" data-i18n="eco_parent_desc">提供雄厚財務實力與國際信譽後盾 (fenixgh.com)</p>
+                    </div>
+                </div>
+                <a href="http://www.fenixgh.com" target="_blank" class="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-lg hover:bg-slate-800 transition" data-i18n="eco_parent_btn">
+                    瀏覽集團官網 ↗
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6 Warehouses Network Section -->
+    <section id="warehouses" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded" data-i18n="wh_tag">倉儲網絡分佈</span>
+                <h2 class="text-3xl font-bold text-slate-900" data-i18n="wh_heading">港深 6 大專業倉儲樞紐總覽</h2>
+                <p class="text-slate-600 text-sm" data-i18n="wh_sub">策略性佈局於葵涌、荃灣及深圳龍崗，全面滿足各類時裝與零售倉儲需求。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+                <!-- 1 -->
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl hover:shadow-sm transition">
+                    <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded" data-i18n="wh_badge_hq">總部與核心倉</span>
+                    <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="wh_1_title">葵涌-達利中心 (5樓 502A-B)</h3>
+                    <p class="text-xs text-slate-600 mt-1.5 leading-relaxed" data-i18n="wh_1_addr">香港葵涌梨木道88號達利中心5樓502A-B室</p>
+                </div>
+
+                <!-- 2 -->
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl hover:shadow-sm transition">
+                    <span class="text-[10px] font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded" data-i18n="wh_badge_ext">擴展倉儲</span>
+                    <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="wh_2_title">葵涌-達利中心 (5樓 502C-D)</h3>
+                    <p class="text-xs text-slate-600 mt-1.5 leading-relaxed" data-i18n="wh_2_addr">香港葵涌梨木道88號達利中心5樓502C-D室</p>
+                </div>
+
+                <!-- 3 -->
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl hover:shadow-sm transition">
+                    <span class="text-[10px] font-bold text-slate-700 bg-slate-200 px-2 py-0.5 rounded" data-i18n="wh_badge_ext">擴展倉儲</span>
+                    <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="wh_3_title">葵涌-達利中心 (5樓 501)</h3>
+                    <p class="text-xs text-slate-600 mt-1.5 leading-relaxed" data-i18n="wh_3_addr">香港葵涌梨木道88號達利中心5樓501室</p>
+                </div>
+
+                <!-- 4 -->
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl hover:shadow-sm transition">
+                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded" data-i18n="wh_badge_tsuen11">荃灣大型物流倉</span>
+                    <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="wh_4_title">荃灣 - 永得利中心 (11樓)</h3>
+                    <p class="text-xs text-slate-600 mt-1.5 leading-relaxed" data-i18n="wh_4_addr">荃灣橫窩仔街 43-57 號永得利中心 11/F</p>
+                </div>
+
+                <!-- 5 -->
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl hover:shadow-sm transition">
+                    <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded" data-i18n="wh_badge_tsuen7">荃灣大型物流倉</span>
+                    <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="wh_5_title">荃灣 - 永得利中心 (7樓)</h3>
+                    <p class="text-xs text-slate-600 mt-1.5 leading-relaxed" data-i18n="wh_5_addr">荃灣橫窩仔街 43-57 號永得利中心 7/F</p>
+                </div>
+
+                <!-- 6 -->
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl hover:shadow-sm transition">
+                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded" data-i18n="wh_badge_sz">大灣區跨境樞紐</span>
+                    <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="wh_6_title">深圳市龍崗區港華工業園倉</h3>
+                    <p class="text-xs text-slate-600 mt-1.5 leading-relaxed" data-i18n="wh_6_addr">深圳市龙岗区南湾街道紅棉路港华工业园12号第D栋第五层</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tracking & B2B Quote Section -->
+    <section id="tracking" class="py-20 bg-slate-900 text-white border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Left: Tracking Portal Access -->
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider bg-slate-800 border border-slate-700 px-3 py-1 rounded" data-i18n="trk_tag">客戶專屬通道</span>
+                    <h2 class="text-3xl font-bold" data-i18n="trk_heading">網上查貨系統 (Tracking Portal)</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed" data-i18n="trk_desc">
+                        現有客戶可透過安全帳號登入系統，實時檢視貨物之入倉與出倉時間及基本狀態記錄。
+                    </p>
+                    <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 space-y-4">
+                        <div class="space-y-2 text-xs text-slate-300">
+                            <div class="flex items-center space-x-2"><span>✓</span> <span data-i18n="trk_li_1">安全帳號密碼驗證登入</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span> <span data-i18n="trk_li_2">即時檢視貨物入倉記錄與時間</span></div>
+                            <div class="flex items-center space-x-2"><span>✓</span> <span data-i18n="trk_li_3">即時檢視貨物出倉記錄與狀態</span></div>
+                        </div>
+                        <a href="http://103.243.0.131:8080/fxlsebp/login.htm" target="_blank" class="block w-full text-center bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg text-sm transition shadow" data-i18n="trk_btn">
+                            登入現有查貨系統 (Login Portal) ↗
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right: B2B Request a Quote Form (Formspree Integrated for Real Email Delivery to jason@fls.com.hk) -->
+                <div id="quote" class="lg:col-span-7 bg-white text-slate-800 p-8 rounded-2xl shadow-xl">
+                    <div class="border-b border-slate-200 pb-4 mb-6">
+                        <span class="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded" data-i18n="quote_tag">商業商機轉化</span>
+                        <h3 class="text-2xl font-bold text-slate-900 mt-2" data-i18n="quote_heading">專屬 B2B 網上報價表格</h3>
+                        <p class="text-slate-600 text-sm" data-i18n="quote_sub">填寫您的企業物流需求，直接發送至 cs@fls.com.hk，我們將於 2 小時內回覆。</p>
+                    </div>
+
+                    <form action="https://formspree.io/f/mljezogk" method="POST" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="q_company">公司名稱 *</label>
+                                <input type="text" name="company" required placeholder="例：Luxury Fashion Ltd." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="q_contact">聯絡人姓名 / 職稱 *</label>
+                                <input type="text" name="contact" required placeholder="例：陳先生 (物流經理)" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="q_email">聯絡電話 / 電郵 *</label>
+                                <input type="text" name="email_phone" required placeholder="例：+852 1234 5678 / info@brand.com" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="q_service">所需物流服務類型 *</label>
+                                <select name="service_type" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none bg-white">
+                                    <option data-i18n="opt_1">時尚成衣與吊掛倉儲 (GOH)</option>
+                                    <option data-i18n="opt_2">零售與電商全渠道履約 (Omnichannel)</option>
+                                    <option data-i18n="opt_3">標準棧板倉儲與本地派送</option>
+                                    <option data-i18n="opt_4">Carry Kuma 微型倉儲與儲存箱</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1" data-i18n="q_volume">預估月均訂單 / 棧板數 / 貨量需求</label>
+                            <input type="text" name="volume" placeholder="例：每月約 500 件吊掛成衣或 50 個棧板" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none">
+                        </div>
+
+                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-lg text-sm transition shadow-md" data-i18n="q_submit">
+                            提交專屬報價申請
+                        </button>
+                    </form>
+
+                    <div id="quote-success" class="hidden mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 font-medium" data-i18n="q_success">
+                        ✓ 報價申請已成功發送！您的需求已轉交業務團隊 (cs@fls.com.hk)，我們將盡快與您聯絡。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Blog Section -->
+    <section id="news" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto space-y-2">
+                <span class="text-xs font-bold text-amber-600 uppercase tracking-wider bg-amber-50 px-3 py-1 rounded" data-i18n="news_tag">最新資訊與 SEO Hub</span>
+                <h2 class="text-3xl font-bold text-slate-900" data-i18n="news_heading">企業動態與物流專題文章</h2>
+                <p class="text-slate-600 text-sm" data-i18n="news_sub">定期發布假期安排通告及高端零售供應鏈專業洞察。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl flex flex-col justify-between shadow-sm">
+                    <div>
+                        <span class="text-[10px] font-bold text-amber-700 uppercase" data-i18n="news_c1_tag">通告</span>
+                        <div class="text-xs text-slate-400 mt-1">2026-09-01</div>
+                        <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="news_c1_title">【服務通告】FLS 中秋節及國慶假期物流派送時間安排</h3>
+                        <p class="text-slate-600 text-xs mt-2 leading-relaxed" data-i18n="news_c1_desc">為確保閣下的貨物順利發運，請留意葵涌及荃灣倉庫與車隊之截單及收發貨時間調整...</p>
+                    </div>
+                    <div class="mt-6 text-xs text-amber-600 font-bold hover:underline cursor-pointer" data-i18n="news_read">閱讀全文 ➔</div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl flex flex-col justify-between shadow-sm">
+                    <div>
+                        <span class="text-[10px] font-bold text-amber-700 uppercase" data-i18n="news_c2_tag">行業專題</span>
+                        <div class="text-xs text-slate-400 mt-1">2026-08-18</div>
+                        <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="news_c2_title">【行業分析】高端時尚品牌為何極其重視吊掛倉儲 (GOH)？</h3>
+                        <p class="text-slate-600 text-xs mt-2 leading-relaxed" data-i18n="news_c2_desc">成衣在運輸與倉儲過程中的防潮與平整度控制，直接影響專門店上架效率與品牌形象...</p>
+                    </div>
+                    <div class="mt-6 text-xs text-amber-600 font-bold hover:underline cursor-pointer" data-i18n="news_read">閱讀全文 ➔</div>
+                </div>
+
+                <div class="bg-slate-50 border border-slate-200 p-6 rounded-xl flex flex-col justify-between shadow-sm">
+                    <div>
+                        <span class="text-[10px] font-bold text-amber-700 uppercase" data-i18n="news_c3_tag">企業動態</span>
+                        <div class="text-xs text-slate-400 mt-1">2026-07-25</div>
+                        <h3 class="font-bold text-slate-900 text-base mt-2" data-i18n="news_c3_title">【系統升級】FLS 完成葵涌及深圳倉庫自動化分揀系統優化</h3>
+                        <p class="text-slate-600 text-xs mt-2 leading-relaxed" data-i18n="news_c3_desc">升級後 B2C 電商履約訂單處理速度提升 35%，全面支援亞太區零售供應鏈高速增長...</p>
+                    </div>
+                    <div class="mt-6 text-xs text-amber-600 font-bold hover:underline cursor-pointer" data-i18n="news_read">閱讀全文 ➔</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="text-white font-bold text-base mb-3" data-i18n="ft_title">威黃物流服務有限公司 (FLS)</div>
+                <p class="leading-relaxed text-slate-400" data-i18n="ft_desc">
+                    Fenix Group Holdings Ltd. 旗下成員。<br>
+                    專業提供高端時尚成衣倉儲、吊掛管理 (GOH)、零售與電商全渠道履約派送服務。
+                </p>
+            </div>
+            <div>
+                <div class="text-white font-bold text-sm mb-3" data-i18n="ft_contact_title">聯絡與總部資訊</div>
+                <p class="leading-relaxed text-slate-400" data-i18n="ft_contact_info">
+                    📍 總部：香港葵涌梨木道88號達利中心5樓502A-B室<br>
+                    📞 電話：(852) 2487 1968<br>
+                    ✉️ 電郵：cs@fls.com.hk
+                </p>
+            </div>
+            <div>
+                <div class="text-white font-bold text-sm mb-3" data-i18n="ft_links_title">集團生態與系統導航</div>
+                <div class="space-y-1.5">
+                    <div>• <a href="http://103.243.0.131:8080/fxlsebp/login.htm" target="_blank" class="text-amber-400 hover:underline" data-i18n="ft_link_1">現有查貨系統登入 ↗</a></div>
+                    <div>• <a href="https://carrykuma.com.hk/" target="_blank" class="hover:underline text-slate-300" data-i18n="ft_link_2">Carry Kuma 上門儲存 ↗</a></div>
+                    <div>• <a href="https://fenixpet.com.hk/" target="_blank" class="hover:underline text-slate-300" data-i18n="ft_link_3">Fenix Pet 寵物批發 ↗</a></div>
+                    <div>• <a href="http://www.fenixgh.com" target="_blank" class="hover:underline text-slate-300" data-i18n="ft_link_4">Fenix Group 母公司官網 ↗</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-slate-800 text-center text-slate-500" data-i18n="ft_copyright">
+            © 2026 威黃物流服務有限公司 (FLS Logistics Services Ltd.) 版權所有 · All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu, Formspree & Multi-language (TC, SC, EN) -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function handleFormSubmit(event) {
+            const successBox = document.getElementById('quote-success');
+            successBox.classList.remove('hidden');
+            setTimeout(() => {
+                successBox.classList.add('hidden');
+            }, 6000);
+        }
+
+        // Translation Dictionary
+        const translations = {
+            tc: {
+                brand_name: "威黃物流服務有限公司",
+                brand_sub: "Fenix Group 旗下品牌 · 高端時尚與生活美學物流專家",
+                nav_services: "核心服務",
+                nav_ecosystem: "集團生態",
+                nav_warehouses: "6大倉庫網點",
+                nav_tracking: "網上查貨",
+                nav_news: "最新資訊",
+                btn_quote: "網上報價",
+                hero_badge: "Backed by Fenix Group Holdings Ltd.",
+                hero_title_1: "高端時尚與生活品牌",
+                hero_title_2: "全方位物流解決方案專家",
+                hero_desc: "憑藉多年服務國際頂級時尚零售品牌（如 Sidefame 旗下 Anteprima、Marimekko、Cocktail 等）嘅豐富經驗，為你提供精細化成衣吊掛倉儲 (GOH)、零售與電商全渠道履約派送服務。",
+                hero_btn_quote: "立即申請企業報價 ➔",
+                hero_btn_tracking: "查貨系統登入 ↗",
+                clients_title: "長遠信賴合作的國際頂級時尚零售品牌群",
+                services_tag: "核心專業服務",
+                services_heading: "針對高端時尚與零售供應鏈的精細化管理",
+                services_sub: "超越傳統物流，為品牌提供從倉儲、吊掛到全渠道派送的無縫接軌體驗。",
+                srv_highlight_tag: "專業倉儲與車隊",
+                srv_highlight_title: "現代化倉儲設施與溫濕度精準控制",
+                srv_highlight_desc: "我們在葵涌及荃灣擁有總計超過數十萬平方呎的專業倉儲基地，配備高架棧板架、自動化分揀帶及 24 小時閉路電視保安系統，確保每一件高檔成衣與零售貨品妥善保存。",
+                srv_check_1: "防潮防塵吊掛專區 (GOH)",
+                srv_check_2: "港深跨境直通車隊",
+                srv_1_title: "時裝成衣與吊掛管理 (GOH)",
+                srv_1_desc: "配備專用防潮防塵吊掛設施，確保高級成衣、手袋及鞋履在倉儲及運輸過程中保持完美平整，直接對應門市上架需求。",
+                srv_2_title: "零售與電商全渠道履約",
+                srv_2_desc: "同時支援 B2B 實體專門店批量補貨與 B2C 網購零售訂單之分揀、包裝與快速派送，助力品牌全渠道業務發展。",
+                srv_3_title: "港深跨境幹線與標準倉儲",
+                srv_3_desc: "擁有港深兩地龐大倉庫網點，配備 24 小時閉路電視保安與專業物流車隊，確保貨物安全、高效、準時抵達目的地。",
+                eco_tag: "集團資源與生態網絡",
+                eco_heading: "強大後盾：Fenix Group 集團協同效應",
+                eco_sub: "結合母公司優勢與旗下多元化業務，提供全方位的商業與物流支援。",
+                eco_fls_tag: "B2B 物流旗艦",
+                eco_fls_title: "FLS 威黃物流",
+                eco_fls_desc: "專注於高端時尚成衣、零售供應鏈、吊掛倉儲 (GOH) 及企業級履約派送。",
+                eco_fls_phone: "📍 服務熱線：(852) 2487 1968",
+                eco_kuma_tag: "上門儲存/電商",
+                eco_kuma_desc: "提供靈活的上門儲存箱服務與微型電商物流，滿足中小企與個人用戶的敏捷倉儲需求。",
+                eco_kuma_note: "共享幹線與倉儲資源",
+                eco_pet_tag: "寵物代理批發",
+                eco_pet_desc: "專營寵物用品銷售與品牌代理，夥拍 Waylun Pet Care 負責香港及澳門區的專業批發業務。",
+                eco_pet_partner: "合作夥伴：Waylun Pet Care",
+                eco_parent_tag: "控股母公司背景",
+                eco_parent_desc: "提供雄厚財務實力與國際信譽後盾 (fenixgh.com)",
+                eco_parent_btn: "瀏覽集團官網 ↗",
+                wh_tag: "倉儲網絡分佈",
+                wh_heading: "港深 6 大專業倉儲樞紐總覽",
+                wh_sub: "策略性佈局於葵涌、荃灣及深圳龍崗，全面滿足各類時裝與零售倉儲需求。",
+                wh_badge_hq: "總部與核心倉",
+                wh_badge_ext: "擴展倉儲",
+                wh_badge_tsuen11: "荃灣大型物流倉",
+                wh_badge_tsuen7: "荃灣大型物流倉",
+                wh_badge_sz: "大灣區跨境樞紐",
+                wh_1_title: "葵涌-達利中心 (5樓 502A-B)",
+                wh_1_addr: "香港葵涌梨木道88號達利中心5樓502A-B室",
+                wh_2_title: "葵涌-達利中心 (5樓 502C-D)",
+                wh_2_addr: "香港葵涌梨木道88號達利中心5樓502C-D室",
+                wh_3_title: "葵涌-達利中心 (5樓 501)",
+                wh_3_addr: "香港葵涌梨木道88號達利中心5樓501室",
+                wh_4_title: "荃灣 - 永得利中心 (11樓)",
+                wh_4_addr: "荃灣橫窩仔街 43-57 號永得利中心 11/F",
+                wh_5_title: "荃灣 - 永得利中心 (7樓)",
+                wh_5_addr: "荃灣橫窩仔街 43-57 號永得利中心 7/F",
+                wh_6_title: "深圳市龍崗區港華工業園倉",
+                wh_6_addr: "深圳市龙岗区南湾街道紅棉路港华工业园12号第D栋第五层",
+                trk_tag: "客戶專屬通道",
+                trk_heading: "網上查貨系統 (Tracking Portal)",
+                trk_desc: "現有客戶可透過安全帳號登入系統，實時檢視貨物之入倉與出倉時間及基本狀態記錄。",
+                trk_li_1: "安全帳號密碼驗證登入",
+                trk_li_2: "即時檢視貨物入倉記錄與時間",
+                trk_li_3: "即時檢視貨物出倉記錄與狀態",
+                trk_btn: "登入現有查貨系統 (Login Portal) ↗",
+                quote_tag: "商業商機轉化",
+                quote_heading: "專屬 B2B 網上報價表格",
+                quote_sub: "填寫您的企業物流需求，直接發送至 cs@fls.com.hk，我們將於 2 小時內回覆。",
+                q_company: "公司名稱 *",
+                q_contact: "聯絡人姓名 / 職稱 *",
+                q_email: "聯絡電話 / 電郵 *",
+                q_service: "所需物流服務類型 *",
+                opt_1: "時尚成衣與吊掛倉儲 (GOH)",
+                opt_2: "零售與電商全渠道履約 (Omnichannel)",
+                opt_3: "標準棧板倉儲與本地派送",
+                opt_4: "Carry Kuma 微型倉儲與儲存箱",
+                q_volume: "預估月均訂單 / 棧板數 / 貨量需求",
+                q_submit: "提交專屬報價申請",
+                q_success: "✓ 報價申請已成功發送！您的需求已轉交業務團隊 (cs@fls.com.hk)，我們將盡快與您聯絡。",
+                news_tag: "最新資訊與 SEO Hub",
+                news_heading: "企業動態與物流專題文章",
+                news_sub: "定期發布假期安排通告及高端零售供應鏈專業洞察。",
+                news_c1_tag: "通告",
+                news_c1_title: "【服務通告】FLS 中秋節及國慶假期物流派送時間安排",
+                news_c1_desc: "為確保閣下的貨物順利發運，請留意葵涌及荃灣倉庫與車隊之截單及收發貨時間調整...",
+                news_c2_tag: "行業專題",
+                news_c2_title: "【行業分析】高端時尚品牌為何極其重視吊掛倉儲 (GOH)？",
+                news_c2_desc: "成衣在運輸與倉儲過程中的防潮與平整度控制，直接影響專門店上架效率與品牌形象...",
+                news_c3_tag: "企業動態",
+                news_c3_title: "【系統升級】FLS 完成葵涌及深圳倉庫自動化分揀系統優化",
+                news_c3_desc: "升級後 B2C 電商履約訂單處理速度提升 35%，全面支援亞太區零售供應鏈高速增長...",
+                news_read: "閱讀全文 ➔",
+                ft_title: "威黃物流服務有限公司 (FLS)",
+                ft_desc: "Fenix Group Holdings Ltd. 旗下成員。<br>專業提供高端時尚成衣倉儲、吊掛管理 (GOH)、零售與電商全渠道履約派送服務。",
+                ft_contact_title: "聯絡與總部資訊",
+                ft_contact_info: "📍 總部：香港葵涌梨木道88號達利中心5樓502A-B室<br>📞 電話：(852) 2487 1968<br>✉️ 電郵：cs@fls.com.hk",
+                ft_links_title: "集團生態與系統導航",
+                ft_link_1: "現有查貨系統登入 ↗",
+                ft_link_2: "Carry Kuma 上門儲存 ↗",
+                ft_link_3: "Fenix Pet 寵物批發 ↗",
+                ft_link_4: "Fenix Group 母公司官網 ↗",
+                ft_copyright: "© 2026 威黃物流服務有限公司 (FLS Logistics Services Ltd.) 版權所有 · All Rights Reserved."
+            },
+            sc: {
+                brand_name: "威黄物流服务有限公司",
+                brand_sub: "Fenix Group 旗下品牌 · 高端时尚与生活美学物流专家",
+                nav_services: "核心服务",
+                nav_ecosystem: "集团生态",
+                nav_warehouses: "6大仓库网点",
+                nav_tracking: "网上查货",
+                nav_news: "最新资讯",
+                btn_quote: "网上报价",
+                hero_badge: "Backed by Fenix Group Holdings Ltd.",
+                hero_title_1: "高端时尚与生活品牌",
+                hero_title_2: "全方位物流解决方案专家",
+                hero_desc: "凭借多年服务国际顶级时尚零售品牌（如 Sidefame 旗下 Anteprima、Marimekko、Cocktail 等）的丰富经验，为你提供精细化成衣吊挂仓储 (GOH)、零售与电商全渠道履约派送服务。",
+                hero_btn_quote: "立即申请企业报价 ➔",
+                hero_btn_tracking: "查货系统登录 ↗",
+                clients_title: "长远信赖合作的国际顶级时尚零售品牌群",
+                services_tag: "核心专业服务",
+                services_heading: "针对高端时尚与零售供应链的精细化管理",
+                services_sub: "超越传统物流，为品牌提供从仓储、吊挂到全渠道派送的无缝接轨体验。",
+                srv_highlight_tag: "专业仓储与车队",
+                srv_highlight_title: "现代化仓储设施与温湿度精准控制",
+                srv_highlight_desc: "我们在葵涌及荃湾拥有总计超过数十万平方呎的专业仓储基地，配备高架栈板架、自动化分拣带及 24 小时闭路电视保安系统，确保每一件高档成衣与零售货品妥善保存。",
+                srv_check_1: "防潮防尘吊挂专区 (GOH)",
+                srv_check_2: "港深跨境直通车队",
+                srv_1_title: "时装成衣与吊挂管理 (GOH)",
+                srv_1_desc: "配备专用防潮防尘吊挂设施，确保高级成衣、手袋及鞋履在仓储及运输过程中保持完美平整，直接对应门市上架需求。",
+                srv_2_title: "零售与电商全渠道履约",
+                srv_2_desc: "同时支援 B2B 实体专门店批量补货与 B2C 网购零售订单之分拣、包装与快速派送，助力品牌全渠道业务发展。",
+                srv_3_title: "港深跨境干线与标准仓储",
+                srv_3_desc: "拥有港深两地庞大仓库网点，配备 24 小时闭路电视保安与专业物流车队，确保货物安全、高效、准时抵达目的地。",
+                eco_tag: "集团资源与生态网络",
+                eco_heading: "强大后盾：Fenix Group 集团协同效应",
+                eco_sub: "结合母公司优势与旗下多元化业务，提供全方位的商业与物流支援。",
+                eco_fls_tag: "B2B 物流旗舰",
+                eco_fls_title: "FLS 威黄物流",
+                eco_fls_desc: "专注于高端时尚成衣、零售供应链、吊挂仓储 (GOH) 及企业级履约派送。",
+                eco_fls_phone: "📍 服务热线：(852) 2487 1968",
+                eco_kuma_tag: "上门储存/电商",
+                eco_kuma_desc: "提供灵活的上门储存箱服务与微型电商物流，满足中小企与个人用户的敏捷仓储需求。",
+                eco_kuma_note: "共享干线与仓储资源",
+                eco_pet_tag: "宠物代理批发",
+                eco_pet_desc: "专营宠物用品销售与品牌代理，伙拍 Waylun Pet Care 负责香港及澳门区的专业批发业务。",
+                eco_pet_partner: "合作伙伴：Waylun Pet Care",
+                eco_parent_tag: "控股母公司背景",
+                eco_parent_desc: "提供雄厚财务实力与国际信誉后盾 (fenixgh.com)",
+                eco_parent_btn: "浏览集团官网 ↗",
+                wh_tag: "仓储网络分布",
+                wh_heading: "港深 6 大专业仓储枢纽总览",
+                wh_sub: "策略性布局于葵涌、荃湾及深圳龙岗，全面满足各类时装与零售仓储需求。",
+                wh_badge_hq: "总部与核心仓",
+                wh_badge_ext: "扩展仓储",
+                wh_badge_tsuen11: "荃湾大型物流仓",
+                wh_badge_tsuen7: "荃湾大型物流仓",
+                wh_badge_sz: "大湾区跨境枢纽",
+                wh_1_title: "葵涌-达利中心 (5楼 502A-B)",
+                wh_1_addr: "香港葵涌梨木道88号达利中心5楼502A-B室",
+                wh_2_title: "葵涌-达利中心 (5楼 502C-D)",
+                wh_2_addr: "香港葵涌梨木道88号达利中心5楼502C-D室",
+                wh_3_title: "葵涌-达利中心 (5楼 501)",
+                wh_3_addr: "香港葵涌梨木道88号达利中心5楼501室",
+                wh_4_title: "荃湾 - 永得利中心 (11楼)",
+                wh_4_addr: "荃湾横窝仔街 43-57 号永得利中心 11/F",
+                wh_5_title: "荃湾 - 永得利中心 (7楼)",
+                wh_5_addr: "荃湾横窝仔街 43-57 号永得利中心 7/F",
+                wh_6_title: "深圳市龙岗区港华工业园仓",
+                wh_6_addr: "深圳市龙岗区南湾街道红棉路港华工业园12号第D栋第五层",
+                trk_tag: "客户专属通道",
+                trk_heading: "网上查货系统 (Tracking Portal)",
+                trk_desc: "现有客户可透过安全账号登入系统，实时检视货物之入仓与出仓时间及基本状态记录。",
+                trk_li_1: "安全账号密码验证登入",
+                trk_li_2: "实时检视货物入仓记录与时间",
+                trk_li_3: "实时检视货物出仓记录与状态",
+                trk_btn: "登入现有查货系统 (Login Portal) ↗",
+                quote_tag: "商业商机转化",
+                quote_heading: "专属 B2B 网上报价表格",
+                quote_sub: "填写您的企业物流需求，直接发送至 cs@fls.com.hk，我们将于 2 小时内回覆。",
+                q_company: "公司名称 *",
+                q_contact: "联系人姓名 / 职称 *",
+                q_email: "联系电话 / 电子邮箱 *",
+                q_service: "所需物流服务类型 *",
+                opt_1: "时尚成衣与吊挂仓储 (GOH)",
+                opt_2: "零售与电商全渠道履约 (Omnichannel)",
+                opt_3: "标准栈板仓储与本地派送",
+                opt_4: "Carry Kuma 微型仓储与储存箱",
+                q_volume: "预估月均订单 / 栈板数 / 货量需求",
+                q_submit: "提交专属报价申请",
+                q_success: "✓ 报价申请已成功发送！您的需求已转交业务团队 (cs@fls.com.hk)，我们将尽快与您联络。",
+                news_tag: "最新资讯与 SEO Hub",
+                news_heading: "企业动态与物流专题文章",
+                news_sub: "定期发布假期安排通告及高端零售供应链专业洞察。",
+                news_c1_tag: "通告",
+                news_c1_title: "【服务通告】FLS 中秋节及国庆假期物流派送时间安排",
+                news_c1_desc: "为确保阁下的货物顺利发运，请留意葵涌及荃湾仓库与车队之截单及收发货时间调整...",
+                news_c2_tag: "行业专题",
+                news_c2_title: "【行业分析】高端时尚品牌为何极其重视吊挂仓储 (GOH)？",
+                news_c2_desc: "成衣在运输与仓储过程中的防潮与平整度控制，直接影响专门店上架效率与品牌形象...",
+                news_c3_tag: "企业动态",
+                news_c3_title: "【系统升级】FLS 完成葵涌及深圳仓库自动化分拣系统优化",
+                news_c3_desc: "升级后 B2C 电商履约订单处理速度提升 35%，全面支援亚太区零售供应链高速增长...",
+                news_read: "阅读全文 ➔",
+                ft_title: "威黄物流服务有限公司 (FLS)",
+                ft_desc: "Fenix Group Holdings Ltd. 旗下成员。<br>专业提供高端时尚成衣仓储、吊挂管理 (GOH)、零售与电商全渠道履约派送服务。",
+                ft_contact_title: "联络与总部资讯",
+                ft_contact_info: "📍 总部：香港葵涌梨木道88号达利中心5楼502A-B室<br>📞 电话：(852) 2487 1968<br>✉️ 电邮：cs@fls.com.hk",
+                ft_links_title: "集团生态与系统导航",
+                ft_link_1: "现有查货系统登录 ↗",
+                ft_link_2: "Carry Kuma 上门储存 ↗",
+                ft_link_3: "Fenix Pet 宠物批发 ↗",
+                ft_link_4: "Fenix Group 母公司官网 ↗",
+                ft_copyright: "© 2026 威黄物流服务有限公司 (FLS Logistics Services Ltd.) 版权所有 · All Rights Reserved."
+            },
+            en: {
+                brand_name: "FLS Logistics Services Ltd.",
+                brand_sub: "A Fenix Group Brand · Luxury Fashion & Lifestyle Logistics Expert",
+                nav_services: "Services",
+                nav_ecosystem: "Ecosystem",
+                nav_warehouses: "6 Warehouses",
+                nav_tracking: "Tracking",
+                nav_news: "News & Insights",
+                btn_quote: "Get Quote",
+                hero_badge: "Backed by Fenix Group Holdings Ltd.",
+                hero_title_1: "Luxury Fashion & Lifestyle Brands",
+                hero_title_2: "End-to-End Logistics Solutions Expert",
+                hero_desc: "With years of experience serving top international fashion retail brands (such as Sidefame's Anteprima, Marimekko, Cocktail, etc.), we provide specialized Garment-on-Hanger (GOH) warehousing, retail, and omnichannel e-commerce fulfillment services.",
+                hero_btn_quote: "Request Business Quote ➔",
+                hero_btn_tracking: "Tracking Login ↗",
+                clients_title: "Trusted Long-Term Partners Among Global Fashion Brands",
+                services_tag: "Core Professional Services",
+                services_heading: "Precision Management for Fashion & Retail Supply Chains",
+                services_sub: "Going beyond traditional logistics, offering seamless integration from warehousing and GOH to omnichannel delivery.",
+                srv_highlight_tag: "Professional Storage & Fleet",
+                srv_highlight_title: "Modern Facilities with Precise Climate Control",
+                srv_highlight_desc: "Operating hundreds of thousands of sq.ft. of professional warehousing in Kwai Chung and Tsuen Wan, equipped with high-bay racking, automated sorting, and 24/7 CCTV security.",
+                srv_check_1: "Moisture & Dust-Free GOH Zone",
+                srv_check_2: "HK-Shenzhen Cross-Border Fleet",
+                srv_1_title: "Garment-on-Hanger Management (GOH)",
+                srv_1_desc: "Dedicated anti-moisture and dust-free GOH facilities ensuring premium apparel, handbags, and shoes remain in pristine condition for store readiness.",
+                srv_2_title: "Retail & E-commerce Omnichannel Fulfillment",
+                srv_2_desc: "Simultaneously supporting B2B boutique replenishment and B2C online retail order picking, packing, and rapid delivery.",
+                srv_3_title: "Cross-Border Trunk Lines & Standard Warehousing",
+                srv_3_desc: "Extensive warehouse network across Hong Kong and Shenzhen backed by professional fleets ensuring safe, efficient, and on-time delivery.",
+                eco_tag: "Group Resources & Ecosystem",
+                eco_heading: "Powerful backing: Fenix Group Synergies",
+                eco_sub: "Combining parent company strengths and diversified business units to provide full commercial and logistics support.",
+                eco_fls_tag: "B2B Logistics Flagship",
+                eco_fls_title: "FLS Logistics",
+                eco_fls_desc: "Specializing in luxury fashion apparel, retail supply chain, GOH warehousing, and enterprise fulfillment.",
+                eco_fls_phone: "📍 Hotline: (852) 2487 1968",
+                eco_kuma_tag: "Valet Storage / E-comm",
+                eco_kuma_desc: "Providing flexible valet storage box services and micro e-commerce logistics for SMEs and individual users.",
+                eco_kuma_note: "Shared Trunk & Storage Resources",
+                eco_pet_tag: "Pet Agency & Wholesale",
+                eco_pet_desc: "Specializing in pet product distribution and brand agency, partnering with Waylun Pet Care for HK & Macau wholesale.",
+                eco_pet_partner: "Partner: Waylun Pet Care",
+                eco_parent_tag: "Parent Company Background",
+                eco_parent_desc: "Providing robust financial strength and international reputation (fenixgh.com)",
+                eco_parent_btn: "Visit Group Website ↗",
+                wh_tag: "Warehousing Network",
+                wh_heading: "6 Major Professional Warehouse Hubs in HK & Shenzhen",
+                wh_sub: "Strategically located in Kwai Chung, Tsuen Wan, and Longgang Shenzhen to fulfill all fashion and retail storage needs.",
+                wh_badge_hq: "Headquarters & Core Hub",
+                wh_badge_ext: "Expansion Warehouse",
+                wh_badge_tsuen11: "Tsuen Wan Large Logistics Hub",
+                wh_badge_tsuen7: "Tsuen Wan Large Logistics Hub",
+                wh_badge_sz: "Greater Bay Area Hub",
+                wh_1_title: "Kwai Chung - Dally Center (5/F 502A-B)",
+                wh_1_addr: "Unit 502A-B, 5/F, Dally Center, 88 Lee Muk Road, Kwai Chung, HK",
+                wh_2_title: "Kwai Chung - Dally Center (5/F 502C-D)",
+                wh_2_addr: "Unit 502C-D, 5/F, Dally Center, 88 Lee Muk Road, Kwai Chung, HK",
+                wh_3_title: "Kwai Chung - Dally Center (5/F 501)",
+                wh_3_addr: "Unit 501, 5/F, Dally Center, 88 Lee Muk Road, Kwai Chung, HK",
+                wh_4_title: "Tsuen Wan - ATL Logistics Centre (11/F)",
+                wh_4_addr: "11/F, ATL Logistics Centre, 43-57 Wang Wo Tsai Street, Tsuen Wan",
+                wh_5_title: "Tsuen Wan - ATL Logistics Centre (7/F)",
+                wh_5_addr: "7/F, ATL Logistics Centre, 43-57 Wang Wo Tsai Street, Tsuen Wan",
+                wh_6_title: "Shenzhen Longgang Ganghua Industrial Park",
+                wh_6_addr: "5th Floor, Building D, No. 12 Ganghua Industrial Park, Hongmian Rd, Nanwan, Longgang, Shenzhen",
+                trk_tag: "Client Exclusive Portal",
+                trk_heading: "Online Tracking Portal",
+                trk_desc: "Existing clients can log in securely to inspect inbound/outbound timestamps and basic shipment status logs.",
+                trk_li_1: "Secure Account & Password Authentication",
+                trk_li_2: "Real-time Inbound Records & Timestamps",
+                trk_li_3: "Real-time Outbound Logs & Status",
+                trk_btn: "Login Tracking Portal (Login Portal) ↗",
+                quote_tag: "Commercial Conversion",
+                quote_heading: "B2B Request a Quote Form",
+                quote_sub: "Fill in your enterprise logistics needs to send directly to cs@fls.com.hk. We reply within 2 hours.",
+                q_company: "Company Name *",
+                q_contact: "Contact Name / Title *",
+                q_email: "Phone / Email *",
+                q_service: "Required Service Type *",
+                opt_1: "Garment-on-Hanger (GOH) Warehousing",
+                opt_2: "Retail & E-commerce Omnichannel Fulfillment",
+                opt_3: "Standard Pallet Storage & Local Delivery",
+                opt_4: "Carry Kuma Valet Storage & Boxes",
+                q_volume: "Est. Monthly Orders / Pallets / Volume",
+                q_submit: "Submit Quote Request",
+                q_success: "✓ Quote request submitted successfully! Forwarded to cs@fls.com.hk. We will contact you shortly.",
+                news_tag: "Latest News & SEO Hub",
+                news_heading: "Corporate News & Logistics Articles",
+                news_sub: "Regular holiday notices and professional insights on retail supply chains.",
+                news_c1_tag: "Notice",
+                news_c1_title: "[Notice] FLS Mid-Autumn & National Day Holiday Delivery Schedule",
+                news_c1_desc: "To ensure smooth cargo dispatch, please note cut-off times for Kwai Chung and Tsuen Wan warehouses...",
+                news_c2_tag: "Industry Insight",
+                news_c2_title: "[Analysis] Why Luxury Fashion Brands Prioritize GOH Warehousing?",
+                news_c2_desc: "Moisture and flatness control during transport directly affects store merchandising efficiency...",
+                news_c3_tag: "Company Milestone",
+                news_c3_title: "[System Upgrade] FLS Completes Automated Sorting Optimization",
+                news_c3_desc: "B2C e-commerce order processing speed increased by 35% following recent warehouse upgrades...",
+                news_read: "Read More ➔",
+                ft_title: "FLS Logistics Services Ltd.",
+                ft_desc: "A member of Fenix Group Holdings Ltd.<br>Specializing in luxury fashion warehousing, GOH management, and omnichannel retail fulfillment.",
+                ft_contact_title: "Contact & Headquarters",
+                ft_contact_info: "📍 HQ: Unit 502A-B, 5/F, Dally Center, 88 Lee Muk Rd, Kwai Chung, HK<br>📞 Tel: (852) 2487 1968<br>✉️ Email: cs@fls.com.hk",
+                ft_links_title: "Ecosystem & Navigation",
+                ft_link_1: "Tracking Portal Login ↗",
+                ft_link_2: "Carry Kuma Storage ↗",
+                ft_link_3: "Fenix Pet Wholesale ↗",
+                ft_link_4: "Fenix Group Official Website ↗",
+                ft_copyright: "© 2026 FLS Logistics Services Ltd. All Rights Reserved."
+            }
+        };
+
+        function changeLanguage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) {
+                    el.innerHTML = t[key];
+                }
+            });
+        }
+    </script>
+</body>
+</html>
