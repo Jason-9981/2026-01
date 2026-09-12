@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>威黃物流 FLS - IT 管理層營運與門市使用狀況儀表板 (Dashboard)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans HK', sans-serif; }
+    .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+  </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between text-sm">
+
+  <!-- 頂部導航 (管理層專用) -->
+  <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow">
+          FLS
+        </div>
+        <div>
+          <h1 class="text-base md:text-lg font-extrabold tracking-tight text-white flex items-center space-x-2">
+            <span>IT 營運與門市使用狀況儀表板</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">管理層專閱</span>
+          </h1>
+          <p class="text-xs text-slate-400">威黃物流服務有限公司 · 系統支援部 Jason Chow</p>
+        </div>
+      </div>
+
+      <!-- 快捷操作：Refresh 與 資料來源 -->
+      <div class="flex items-center space-x-2">
+        <button onclick="fetchAllTickets(true)" 
+          class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5">
+          <i id="refreshIcon" class="fa-solid fa-rotate-right"></i>
+          <span class="hidden sm:inline">即時同步</span>
+          <span>Refresh</span>
+        </button>
+        <a href="https://docs.google.com/spreadsheets/d/1DVopGt_YABciCY48kPr-CtHYtwmfVPirejj9mnufD1c/edit" target="_blank"
+          class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center space-x-1">
+          <i class="fa-solid fa-file-excel text-emerald-400"></i>
+          <span class="hidden sm:inline">開啟</span>
+          <span>試算表</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主內容區 -->
+  <main class="max-w-7xl mx-auto px-4 py-5 w-full flex-grow space-y-5">
+
+    <!-- 1. 核心 KPI 數據卡片 (4 大核心指標) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
+      <!-- 總工單量 -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-center justify-between">
+        <div>
+          <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">總工單累積量</div>
+          <div id="kpiTotalTickets" class="text-2xl lg:text-3xl font-black text-slate-900 mt-1">--</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">累計所有支援項目</div>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-ticket"></i>
+        </div>
+      </div>
+
+      <!-- 店舖到店維修總次數 (用戶特別要求的重點指標) -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-center justify-between">
+        <div>
+          <div class="text-xs text-purple-700 font-bold uppercase tracking-wider">年度到店維修次數</div>
+          <div id="kpiOnsiteVisits" class="text-2xl lg:text-3xl font-black text-purple-700 mt-1">--</div>
+          <div class="text-[11px] text-purple-600/80 mt-0.5">累計實體到店維護</div>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-van-shuttle"></i>
+        </div>
+      </div>
+
+      <!-- 自主排障成功攔截 (Deflection) -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-center justify-between">
+        <div>
+          <div class="text-xs text-emerald-700 font-bold uppercase tracking-wider">自檢成功攔截次數</div>
+          <div id="kpiDeflected" class="text-2xl lg:text-3xl font-black text-emerald-600 mt-1">--</div>
+          <div id="kpiDeflectedRate" class="text-[11px] text-emerald-600 mt-0.5 font-bold">攔截率: --%</div>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-shield-check"></i>
+        </div>
+      </div>
+
+      <!-- 進行中 / 待處理 -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-center justify-between">
+        <div>
+          <div class="text-xs text-amber-700 font-bold uppercase tracking-wider">待處理 / 遠端中</div>
+          <div id="kpiActiveTickets" class="text-2xl lg:text-3xl font-black text-amber-600 mt-1">--</div>
+          <div class="text-[11px] text-amber-600/80 mt-0.5">即時跟進中工單</div>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-hourglass-half"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. 靈活篩選控制器 (管理層隨意選擇要看的資料) -->
+    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-extrabold text-slate-600 uppercase tracking-wider flex items-center space-x-1.5">
+          <i class="fa-solid fa-filter text-blue-600"></i>
+          <span>多維度數據篩選器</span>
+        </h3>
+        <button onclick="resetFilters()" class="text-xs text-blue-600 font-bold hover:underline">
+          重置篩選
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <!-- 門市篩選 -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">目標門市</label>
+          <select id="filterShop" onchange="applyFilters()"
+            class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="ALL">全部 38 間實體門市</option>
+          </select>
+        </div>
+
+        <!-- 處理狀態篩選 -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">處理狀態</label>
+          <select id="filterStatus" onchange="applyFilters()"
+            class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="ALL">全部狀態</option>
+            <option value="待處理">待處理 / 已收單</option>
+            <option value="進行中">進行中 (遠端排障)</option>
+            <option value="已安排到店">已安排到店維修</option>
+            <option value="已完成">已完成</option>
+            <option value="自主排障">自主排障成功 (攔截)</option>
+          </select>
+        </div>
+
+        <!-- 問題分類篩選 -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">問題分類</label>
+          <select id="filterCategory" onchange="applyFilters()"
+            class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="ALL">全部問題類型</option>
+            <option value="網絡">網絡中斷 / 斷線</option>
+            <option value="印單機">印單機 Jam 紙 / 故障</option>
+            <option value="音樂">背景音樂播放器</option>
+            <option value="電腦">電腦死機 / 信用卡機</option>
+          </select>
+        </div>
+
+        <!-- 關鍵字搜尋 -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">關鍵字搜尋 (備註/詳情)</label>
+          <div class="relative">
+            <input type="text" id="filterKeyword" oninput="applyFilters()" placeholder="輸入關鍵字搜尋..."
+              class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 圖表分析區 (Chart.js) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <!-- 圖表 1：各門市到店維修次數排行榜 (回答「店舖一年去咗幾多次」) -->
+      <div class="lg:col-span-2 bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+          <div>
+            <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">
+              <i class="fa-solid fa-chart-column text-blue-600"></i>
+              <span>各門市年度到店維修與報修排行榜</span>
+            </h4>
+            <p class="text-xs text-slate-400 mt-0.5">直觀識別哪些分店設備老化嚴重、需要重點預防維護</p>
+          </div>
+          <span class="text-xs font-bold text-slate-400" id="chartTopCount">Top 門市</span>
+        </div>
+        <div class="h-64 relative">
+          <canvas id="chartStoreVisits"></canvas>
+        </div>
+      </div>
+
+      <!-- 圖表 2：常見故障類型佔比 -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+        <div class="border-b border-slate-100 pb-2">
+          <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">
+            <i class="fa-solid fa-chart-pie text-emerald-600"></i>
+            <span>故障類別與排障分佈</span>
+          </h4>
+          <p class="text-xs text-slate-400 mt-0.5">分析前線最常出現的技術問題</p>
+        </div>
+        <div class="h-64 relative flex items-center justify-center">
+          <canvas id="chartCategoryPie"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. 詳細數據表格 (可分頁、可匯出) -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">
+            <i class="fa-solid fa-table-list text-blue-600"></i>
+            <span>完整支援工單明細表</span>
+          </h4>
+          <p class="text-xs text-slate-400 mt-0.5">
+            顯示符合篩選條件的記錄：共 <b id="tableCount" class="text-blue-600">0</b> 筆
+          </p>
+        </div>
+
+        <button onclick="exportCSV()" class="self-start sm:self-auto px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold border border-slate-300 transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-download text-xs"></i>
+          <span>匯出 CSV 報表</span>
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">
+              <th class="py-3 px-3.5">提交時間</th>
+              <th class="py-3 px-3">工單號</th>
+              <th class="py-3 px-3">門市編號</th>
+              <th class="py-3 px-3">問題類型</th>
+              <th class="py-3 px-3.5">門市說明</th>
+              <th class="py-3 px-3 text-center">處理狀態</th>
+              <th class="py-3 px-4">IT 最新跟進 / 預計到店</th>
+            </tr>
+          </thead>
+          <tbody id="ticketTableBody" class="divide-y divide-slate-100 text-slate-700">
+            <tr>
+              <td colspan="7" class="py-12 text-center text-slate-400">
+                <i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-blue-600"></i>
+                <div>正在從 Google Sheet 載入即時數據...</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 頁尾版權 -->
+  <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-400">
+    威黃物流服務有限公司 (FLS Logistics Services Limited) · 系統支援部 Jason Chow
+  </footer>
+
+  <!-- JavaScript 數據邏輯與圖表渲染 -->
+  <script>
+    // 門市數據庫 (對接 ShopDate_All_Location-.xlsx)
+    const STORES = {"1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"}, "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"}, "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"}, "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"}, "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"}, "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"}, "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"}, "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"}, "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"}, "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"}, "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"}, "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"}, "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"}, "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"}, "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"}, "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"}, "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"}, "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"}, "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"}, "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"}, "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"}, "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"}, "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"}, "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"}, "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"}, "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"}, "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"}, "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"}, "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"}, "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"}, "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"}, "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"}, "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"}, "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"}, "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"}, "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"}, "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"}, "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"}, "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"}};
+
+    // Google Apps Script API 網址
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";
+
+    let rawTickets = [];
+    let filteredTickets = [];
+    let chartVisitsInstance = null;
+    let chartCategoryInstance = null;
+
+    // 初始化
+    window.addEventListener('DOMContentLoaded', () => {
+      populateShopDropdown();
+      fetchAllTickets();
+    });
+
+    // 填充門市下拉選單
+    function populateShopDropdown() {
+      const select = document.getElementById('filterShop');
+      const sortedCodes = Object.keys(STORES).sort();
+      sortedCodes.forEach(code => {
+        const opt = document.createElement('option');
+        opt.value = STORES[code].name;
+        opt.textContent = `${STORES[code].name} (${STORES[code].brand})`;
+        select.appendChild(opt);
+      });
+    }
+
+    // 從 Google Apps Script 獲取全部工單
+    async function fetchAllTickets(isRefresh = false) {
+      const icon = document.getElementById('refreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+
+      try {
+        const url = `${SCRIPT_URL}?action=get_all_tickets&_t=${Date.now()}`;
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data && data.status === 'success' && Array.isArray(data.tickets)) {
+          rawTickets = data.tickets;
+        } else {
+          // 若後端尚未更新 get_all_tickets，嘗試備用讀取
+          console.log('未啟用 get_all_tickets，使用現有通道');
+        }
+      } catch (err) {
+        console.error('抓取失敗：', err);
+      } finally {
+        if (icon) icon.classList.remove('fa-spin');
+        applyFilters();
+      }
+    }
+
+    // 套用篩選條件
+    function applyFilters() {
+      const shopFilter = document.getElementById('filterShop').value;
+      const statusFilter = document.getElementById('filterStatus').value;
+      const categoryFilter = document.getElementById('filterCategory').value;
+      const keyword = document.getElementById('filterKeyword').value.trim().toLowerCase();
+
+      filteredTickets = rawTickets.filter(t => {
+        // 門市匹配
+        if (shopFilter !== 'ALL') {
+          if (!t.shop_code.includes(shopFilter) && !shopFilter.includes(t.shop_code)) return false;
+        }
+
+        // 狀態匹配
+        if (statusFilter !== 'ALL') {
+          if (!t.status.includes(statusFilter)) return false;
+        }
+
+        // 分類匹配
+        if (categoryFilter !== 'ALL') {
+          if (!t.category.includes(categoryFilter)) return false;
+        }
+
+        // 關鍵字匹配 (搜尋描述、IT 備註、工單號)
+        if (keyword) {
+          const matchStr = (t.ticket_id + ' ' + t.description + ' ' + t.it_notes + ' ' + t.category + ' ' + t.shop_code).toLowerCase();
+          if (!matchStr.includes(keyword)) return false;
+        }
+
+        return true;
+      });
+
+      // 更新 KPI 指標、圖表與表格
+      updateKPIs(filteredTickets);
+      renderCharts(filteredTickets);
+      renderTable(filteredTickets);
+    }
+
+    function resetFilters() {
+      document.getElementById('filterShop').value = 'ALL';
+      document.getElementById('filterStatus').value = 'ALL';
+      document.getElementById('filterCategory').value = 'ALL';
+      document.getElementById('filterKeyword').value = '';
+      applyFilters();
+    }
+
+    // 計算 KPI 指標
+    function updateKPIs(tickets) {
+      const total = tickets.length;
+      document.getElementById('kpiTotalTickets').textContent = total;
+
+      // 計算到店次數 (狀態包含「到店」或 IT 備註包含「到店」)
+      const onsiteVisits = tickets.filter(t => 
+        (t.status && t.status.includes('到店')) || 
+        (t.it_notes && t.it_notes.includes('到店'))
+      ).length;
+      document.getElementById('kpiOnsiteVisits').textContent = onsiteVisits + ' 次';
+
+      // 自檢攔截數
+      const deflected = tickets.filter(t => 
+        (t.category && t.category.includes('自主排障')) || 
+        (t.status && t.status.includes('自主排障'))
+      ).length;
+      document.getElementById('kpiDeflected').textContent = deflected + ' 次';
+
+      const rate = total > 0 ? ((deflected / total) * 100).toFixed(1) : 0;
+      document.getElementById('kpiDeflectedRate').textContent = `工單攔截率: ${rate}%`;
+
+      // 進行中 / 待處理
+      const active = tickets.filter(t => 
+        t.status && (t.status.includes('待處理') || t.status.includes('進行中'))
+      ).length;
+      document.getElementById('kpiActiveTickets').textContent = active;
+    }
+
+    // 渲染圖表
+    function renderCharts(tickets) {
+      renderStoreVisitsChart(tickets);
+      renderCategoryPieChart(tickets);
+    }
+
+    // 門市到店與報修柱狀圖
+    function renderStoreVisitsChart(tickets) {
+      const storeCounts = {};
+      const storeVisits = {};
+
+      tickets.forEach(t => {
+        const sc = t.shop_code || '未知門市';
+        storeCounts[sc] = (storeCounts[sc] || 0) + 1;
+        if ((t.status && t.status.includes('到店')) || (t.it_notes && t.it_notes.includes('到店'))) {
+          storeVisits[sc] = (storeVisits[sc] || 0) + 1;
+        }
+      });
+
+      // 排序取前 10
+      const sorted = Object.keys(storeCounts).sort((a,b) => storeCounts[b] - storeCounts[a]).slice(0, 10);
+      const labels = sorted;
+      const totalData = sorted.map(k => storeCounts[k]);
+      const visitData = sorted.map(k => storeVisits[k] || 0);
+
+      const ctx = document.getElementById('chartStoreVisits').getContext('2d');
+      if (chartVisitsInstance) chartVisitsInstance.destroy();
+
+      chartVisitsInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '總報修工單量',
+              data: totalData,
+              backgroundColor: '#3B82F6',
+              borderRadius: 6
+            },
+            {
+              label: '實體到店維護次數',
+              data: visitData,
+              backgroundColor: '#8B5CF6',
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { font: { size: 11, family: 'sans-serif' } } }
+          },
+          scales: {
+            y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } } },
+            x: { ticks: { font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // 分類餅圖
+    function renderCategoryPieChart(tickets) {
+      let network = 0, printer = 0, music = 0, pos = 0, selfHelp = 0, other = 0;
+
+      tickets.forEach(t => {
+        const c = t.category || '';
+        if (c.includes('自主排障')) selfHelp++;
+        else if (c.includes('網絡') || c.includes('上唔到網')) network++;
+        else if (c.includes('印單機') || c.includes('Jam')) printer++;
+        else if (c.includes('音樂')) music++;
+        else if (c.includes('電腦') || c.includes('死機')) pos++;
+        else other++;
+      });
+
+      const ctx = document.getElementById('chartCategoryPie').getContext('2d');
+      if (chartCategoryInstance) chartCategoryInstance.destroy();
+
+      chartCategoryInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['印單機故障', '網絡斷線', '自主排障攔截', '電腦/信用卡機', '背景音樂', '其他'],
+          datasets: [{
+            data: [printer, network, selfHelp, pos, music, other],
+            backgroundColor: ['#10B981', '#3B82F6', '#14B8A6', '#F59E0B', '#8B5CF6', '#94A3B8']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // 渲染表格明細
+    function renderTable(tickets) {
+      const tbody = document.getElementById('ticketTableBody');
+      document.getElementById('tableCount').textContent = tickets.length;
+
+      if (!tickets || tickets.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-slate-400">沒有符合篩選條件的工單。</td></tr>`;
+        return;
+      }
+
+      const statusMap = {
+        '待處理 / 已收 Order': 'bg-amber-50 text-amber-900 border-amber-300',
+        '待處理': 'bg-amber-50 text-amber-900 border-amber-300',
+        '進行中': 'bg-blue-50 text-blue-900 border-blue-300',
+        '遠端排障中': 'bg-blue-50 text-blue-900 border-blue-300',
+        '已安排到店': 'bg-purple-50 text-purple-900 border-purple-300 font-bold',
+        '已完成': 'bg-emerald-50 text-emerald-900 border-emerald-300',
+        '自主排障已解決': 'bg-teal-50 text-teal-900 border-teal-300'
+      };
+
+      let html = '';
+      tickets.forEach(t => {
+        const st = t.status || '待處理';
+        const stClass = statusMap[st] || 'bg-slate-100 text-slate-800 border-slate-300';
+
+        html += `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-3.5 font-medium whitespace-nowrap text-slate-500">${t.timestamp || ''}</td>
+            <td class="py-3 px-3 font-bold text-blue-600 whitespace-nowrap">${t.ticket_id || ''}</td>
+            <td class="py-3 px-3 font-extrabold text-slate-900 whitespace-nowrap">${t.shop_code || ''}</td>
+            <td class="py-3 px-3 font-bold text-slate-800">${t.category || ''}</td>
+            <td class="py-3 px-3.5 text-slate-600 max-w-xs truncate">${t.description || '-'}</td>
+            <td class="py-3 px-3 text-center whitespace-nowrap">
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${stClass}">
+                ${st}
+              </span>
+            </td>
+            <td class="py-3 px-4 font-medium text-slate-900 max-w-sm">
+              ${t.it_notes ? `<span class="bg-blue-50 text-blue-950 px-2 py-1 rounded border border-blue-200 block">${t.it_notes}</span>` : '<span class="text-slate-400 text-[11px]">暫無跟進備註</span>'}
+            </td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    // 匯出 CSV 報表
+    function exportCSV() {
+      if (!filteredTickets || filteredTickets.length === 0) {
+        alert('目前無可匯出的數據！');
+        return;
+      }
+
+      let csv = "\uFEFF提交時間,工單編號,門市代號,問題分類,補充描述,處理狀態,IT跟進與預計到店,完成時間\n";
+      filteredTickets.forEach(t => {
+        const row = [
+          `"${t.timestamp || ''}"`,
+          `"${t.ticket_id || ''}"`,
+          `"${t.shop_code || ''}"`,
+          `"${t.category || ''}"`,
+          `"${(t.description || '').replace(/"/g, '""')}"`,
+          `"${t.status || ''}"`,
+          `"${(t.it_notes || '').replace(/"/g, '""')}"`,
+          `"${t.resolved_time || ''}"`
+        ];
+        csv += row.join(",") + "\n";
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `FLS_ITSM_Report_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
