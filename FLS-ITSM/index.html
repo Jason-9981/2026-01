@@ -22,7 +22,7 @@
         </div>
         <div>
           <h1 class="text-sm font-bold tracking-tight text-white">威黃物流 · 門市 ITSM 服務台</h1>
-          <p class="text-[11px] text-slate-400">系統支援部 Jason Chow</p>
+          <p class="text-[11px] text-slate-400">系統支援部 Jason Chow (手提: 97242234)</p>
         </div>
       </div>
       
@@ -109,203 +109,240 @@
         </span>
       </div>
 
-      <!-- 智能分流卡片 (Martin 專組) -->
-      <div class="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 shadow-sm">
-        <div class="flex items-start space-x-3">
-          <div class="text-amber-600 text-lg mt-0.5">
-            <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="flex-1 text-xs text-amber-900">
-            <div class="font-bold text-amber-950 text-sm mb-1">⚠️ 業務分流須知：非硬件/網絡問題請直接聯絡 Martin</div>
-            <p class="leading-relaxed">如遇以下業務，請直接致電合作專組 <b>Martin (27383105)</b>：<br/>
-              • 網上系統 VIP & POS 系統<br/>
-              • DS file / OneDrive / 神同步<br/>
-              • 盤點系統 (Stock take)<br/>
-              • 電子支付 (Alipay, WeChat pay)<br/>
-              • Apple ID / 電子打卡 (e-attendance)
-            </p>
-            <div class="mt-2.5 flex items-center space-x-2">
-              <a href="tel:27383105" class="inline-flex items-center px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-sm transition">
-                <i class="fa-solid fa-phone mr-1.5"></i> 一鍵致電 Martin (27383105)
-              </a>
-              <span class="text-[10px] text-amber-700">(註：Martin 無 WhatsApp，只接電話)</span>
+      <!-- 頁籤導航：報修服務台 vs 工單進度查詢 -->
+      <div class="flex items-center space-x-2 bg-slate-200/80 p-1 rounded-2xl">
+        <button type="button" id="tabBtnNew" onclick="switchTab('new')"
+          class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-white text-blue-900 shadow-sm">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span>申請服務報修</span>
+        </button>
+        <button type="button" id="tabBtnHistory" onclick="switchTab('history')"
+          class="flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-600 hover:text-slate-900">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>維修進度與記錄</span>
+          <span id="tabCountBadge" class="hidden px-1.5 py-0.2 bg-blue-600 text-white rounded-full text-[10px]"></span>
+        </button>
+      </div>
+
+      <!-- ==================== TAB 1: 申請報修內容 ==================== -->
+      <div id="tabContentNew" class="space-y-4">
+        <!-- 智能分流卡片 (Martin 專組) -->
+        <div class="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-start space-x-3">
+            <div class="text-amber-600 text-lg mt-0.5">
+              <i class="fa-solid fa-circle-info"></i>
+            </div>
+            <div class="flex-1 text-xs text-amber-900">
+              <div class="font-bold text-amber-950 text-sm mb-1">⚠️ 業務分流須知：非硬件/網絡問題請直接聯絡 Martin</div>
+              <p class="leading-relaxed">如遇以下業務，請直接致電合作專組 <b>Martin (27383105)</b>：<br/>
+                • 網上系統 VIP & POS 系統<br/>
+                • DS file / OneDrive / 神同步<br/>
+                • 盤點系統 (Stock take)<br/>
+                • 電子支付 (Alipay, WeChat pay)<br/>
+                • Apple ID / 電子打卡 (e-attendance)
+              </p>
+              <div class="mt-2.5 flex items-center space-x-2">
+                <a href="tel:27383105" class="inline-flex items-center px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-bold text-xs shadow-sm transition">
+                  <i class="fa-solid fa-phone mr-1.5"></i> 一鍵致電 Martin (27383105)
+                </a>
+                <span class="text-[10px] text-amber-700">(註：Martin 無 WhatsApp，只接電話)</span>
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- 常見故障快捷點選 -->
+        <div class="glass rounded-2xl p-4 border border-slate-200 shadow-sm">
+          <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">請選擇需要支援的問題類型</h3>
+          
+          <div class="grid grid-cols-2 gap-2.5">
+            <button type="button" onclick="selectIssue('network')" id="btn_network"
+              class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
+              <span class="text-2xl text-blue-600"><i class="fa-solid fa-wifi"></i></span>
+              <div>
+                <div class="text-xs font-bold text-slate-900">上唔到網 / 網絡斷線</div>
+                <div class="text-[10px] text-slate-500">Modem / Router 異常</div>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectIssue('printer')" id="btn_printer"
+              class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
+              <span class="text-2xl text-emerald-600"><i class="fa-solid fa-print"></i></span>
+              <div>
+                <div class="text-xs font-bold text-slate-900">印單機 Jam 紙 / 離線</div>
+                <div class="text-[10px] text-slate-500">印唔出、亮紅燈、卡紙</div>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectIssue('music')" id="btn_music"
+              class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
+              <span class="text-2xl text-purple-600"><i class="fa-solid fa-music"></i></span>
+              <div>
+                <div class="text-xs font-bold text-slate-900">背景音樂播放器無聲</div>
+                <div class="text-[10px] text-slate-500">Music Player 線路檢查</div>
+              </div>
+            </button>
+
+            <button type="button" onclick="selectIssue('pos_hardware')" id="btn_pos_hardware"
+              class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
+              <span class="text-2xl text-amber-600"><i class="fa-solid fa-desktop"></i></span>
+              <div>
+                <div class="text-xs font-bold text-slate-900">電腦死機 / 信用卡機</div>
+                <div class="text-[10px] text-slate-500">黑屏、畫面卡死、卡機</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== 30 秒極速自檢排障卡片 ==================== -->
+        <div id="troubleshootSection" class="hidden glass rounded-2xl p-4 border-2 border-blue-500 bg-blue-50/30 shadow-md space-y-3">
+          <div class="flex items-center justify-between border-b border-blue-100 pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
+                <i class="fa-solid fa-bolt"></i>
+              </span>
+              <h4 class="text-sm font-bold text-blue-950">30 秒極速自檢指引（請先嘗試）</h4>
+            </div>
+          </div>
+
+          <!-- 網絡自檢指引 -->
+          <div id="guide_network" class="hidden text-xs text-slate-700 space-y-2">
+            <div class="p-2.5 bg-white rounded-xl border border-blue-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-blue-600">步驟 1：</span> 觀察 Modem 及 Router 上的指示燈號</div>
+              <p class="text-slate-600 text-[11px]">檢查是否有紅燈亮起或燈號熄滅（正常運作應為穩定的綠燈或規律閃爍）。</p>
+            </div>
+            <div class="p-2.5 bg-white rounded-xl border border-blue-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-blue-600">步驟 2：</span> 拔電重啟法 (Power Cycle)</div>
+              <p class="text-slate-600 text-[11px]">將 Modem 和 Router 的電源插頭拔除，<b>靜待 10 秒後</b> 重新插上，並等待約 3 分鐘讓訊號重新同步。</p>
+            </div>
+          </div>
+
+          <!-- 印單機自檢指引 -->
+          <div id="guide_printer" class="hidden text-xs text-slate-700 space-y-2">
+            <div class="p-2.5 bg-white rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-emerald-600">步驟 1：</span> 檢查電腦印表機在線狀態</div>
+              <p class="text-slate-600 text-[11px]">在電腦右下角或印表機設定中，確認該部印單機是否顯示為「Online (在線)」，而非離線或暫停。</p>
+            </div>
+            <div class="p-2.5 bg-white rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-emerald-600">步驟 2：</span> 檢查背後線路是否有鬆脫</div>
+              <p class="text-slate-600 text-[11px]">檢查印表機後方的 USB 數據線、網絡線及電源線是否插穩，拔出重新插緊。</p>
+            </div>
+            <div class="p-2.5 bg-white rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-emerald-600">步驟 3：</span> 拿出手電筒照明檢查微小紙碎</div>
+              <p class="text-slate-600 text-[11px]">如遇 Jam 紙，請打開印表機頂蓋、取出碳粉匣/紙卷，<b>用手機電筒照明機器內部</b>，仔細檢查滾輪處有無微小殘留碎紙。</p>
+            </div>
+          </div>
+
+          <!-- 音樂播放器自檢指引 -->
+          <div id="guide_music" class="hidden text-xs text-slate-700 space-y-2">
+            <div class="p-2.5 bg-white rounded-xl border border-purple-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-purple-600">步驟 1：</span> 檢查 3.5mm 音源線接駁</div>
+              <p class="text-slate-600 text-[11px]">檢查播放器連接到擴音機（Amplifier）的 3.5mm 音源線路是否鬆脫。</p>
+            </div>
+            <div class="p-2.5 bg-white rounded-xl border border-purple-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-purple-600">步驟 2：</span> 拔出重新插緊</div>
+              <p class="text-slate-600 text-[11px]">將音源線拔出並重新用力插到底，並確認擴音機上的音量旋鈕沒有被誤碰至靜音。</p>
+            </div>
+          </div>
+
+          <!-- 通用提示 (電腦/POS) -->
+          <div id="guide_pos_hardware" class="hidden text-xs text-slate-700 space-y-2">
+            <div class="p-2.5 bg-white rounded-xl border border-amber-100 shadow-sm space-y-1.5">
+              <div class="font-bold text-slate-900"><span class="text-amber-600">步驟：</span> 檢查電腦主機電源與網絡連線</div>
+              <p class="text-slate-600 text-[11px]">請先確認電腦主機電源燈是否恆亮，螢幕訊號線是否插牢。若系統卡死，可長按電源鍵 5 秒重啟。</p>
+            </div>
+          </div>
+
+          <!-- 自檢分流雙按鈕 -->
+          <div class="pt-2 flex items-center space-x-2">
+            <button type="button" id="btnSolved" onclick="handleSolved(this)"
+              class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow transition flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-check"></i>
+              <span>已解決！太好了（記錄成功）</span>
+            </button>
+            <button type="button" onclick="handleNotSolved()"
+              class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-xs shadow transition flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-wrench"></i>
+              <span>依然未能解決，聯絡 IT</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== 正式報修表單 ==================== -->
+        <div id="ticketFormSection" class="hidden glass rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center space-x-2 border-b border-slate-100 pb-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+              <i class="fa-solid fa-ticket"></i>
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-900">填寫支援工單</h4>
+              <p class="text-[11px] text-slate-500">門市身份已自動鎖定，請補充故障詳情</p>
+            </div>
+          </div>
+
+          <form id="ticketForm" onsubmit="submitTicket(event)" class="space-y-3.5">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">已鎖定門市</label>
+              <input type="text" id="formStoreDisplay" readonly
+                class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">問題分類</label>
+              <input type="text" id="formCategoryDisplay" readonly
+                class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">補充說明 (選填)</label>
+              <textarea id="formDescription" rows="3" placeholder="請描述故障情況、螢幕顯示的錯誤代碼，或異常聲響等..."
+                class="w-full p-3 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition"></textarea>
+            </div>
+
+            <!-- 拍照輔助提示 -->
+            <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-100 text-xs text-blue-900 flex items-start space-x-2.5">
+              <i class="fa-solid fa-camera text-blue-600 mt-0.5 text-sm"></i>
+              <div class="text-[11px] leading-relaxed">
+                <b>📸 拍照輔助排障指引：</b><br/>
+                建議先用手機拍下 <b>Modem/Router 燈號</b> 或 <b>印表機出錯畫面</b>。提交工單後，可直接在跳轉的 WhatsApp 對話中將相片發送給 Jason！
+              </div>
+            </div>
+
+            <!-- TeamViewer 遠端協議 -->
+            <div class="p-3 bg-slate-900 rounded-xl text-slate-200 text-xs flex items-start space-x-2.5 shadow-sm">
+              <i class="fa-solid fa-network-wired text-blue-400 mt-0.5 text-sm"></i>
+              <div class="text-[11px] leading-relaxed text-slate-300">
+                <b>⚡ TeamViewer 遠端排障協議：</b><br/>
+                工單提交後，IT 部門會直接透過 TeamViewer 遠端連線門市電腦處理。請確保門市電腦處於<b>開機狀態</b>，毋須電話催促。
+              </div>
+            </div>
+
+            <button type="submit" id="btnSubmit"
+              class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition duration-150 flex items-center justify-center space-x-2">
+              <span>送出工單並通知 IT</span>
+              <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+          </form>
         </div>
       </div>
 
-      <!-- 常見故障快捷點選 -->
-      <div class="glass rounded-2xl p-4 border border-slate-200 shadow-sm">
-        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">請選擇需要支援的問題類型</h3>
-        
-        <div class="grid grid-cols-2 gap-2.5">
-          <button type="button" onclick="selectIssue('network')" id="btn_network"
-            class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
-            <span class="text-2xl text-blue-600"><i class="fa-solid fa-wifi"></i></span>
-            <div>
-              <div class="text-xs font-bold text-slate-900">上唔到網 / 網絡斷線</div>
-              <div class="text-[10px] text-slate-500">Modem / Router 異常</div>
-            </div>
-          </button>
-
-          <button type="button" onclick="selectIssue('printer')" id="btn_printer"
-            class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
-            <span class="text-2xl text-emerald-600"><i class="fa-solid fa-print"></i></span>
-            <div>
-              <div class="text-xs font-bold text-slate-900">印單機 Jam 紙 / 離線</div>
-              <div class="text-[10px] text-slate-500">印唔出、亮紅燈、卡紙</div>
-            </div>
-          </button>
-
-          <button type="button" onclick="selectIssue('music')" id="btn_music"
-            class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
-            <span class="text-2xl text-purple-600"><i class="fa-solid fa-music"></i></span>
-            <div>
-              <div class="text-xs font-bold text-slate-900">背景音樂播放器無聲</div>
-              <div class="text-[10px] text-slate-500">Music Player 線路檢查</div>
-            </div>
-          </button>
-
-          <button type="button" onclick="selectIssue('pos_hardware')" id="btn_pos_hardware"
-            class="issue-btn p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-500 hover:bg-blue-50/50 text-left transition flex flex-col justify-between h-24">
-            <span class="text-2xl text-amber-600"><i class="fa-solid fa-desktop"></i></span>
-            <div>
-              <div class="text-xs font-bold text-slate-900">電腦死機 / 信用卡機</div>
-              <div class="text-[10px] text-slate-500">黑屏、畫面卡死、卡機</div>
-            </div>
+      <!-- ==================== TAB 2: 維修進度與歷史記錄 ==================== -->
+      <div id="tabContentHistory" class="hidden space-y-3">
+        <div class="flex items-center justify-between pb-1">
+          <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider">本店維修與服務申請進度</h3>
+          <button type="button" onclick="loadStoreTickets(true)" class="text-xs text-blue-600 hover:text-blue-800 font-bold flex items-center space-x-1">
+            <i id="refreshIcon" class="fa-solid fa-rotate-right"></i>
+            <span>重新整理進度</span>
           </button>
         </div>
-      </div>
 
-      <!-- ==================== 30 秒極速自檢排障卡片 (動態展開) ==================== -->
-      <div id="troubleshootSection" class="hidden glass rounded-2xl p-4 border-2 border-blue-500 bg-blue-50/30 shadow-md space-y-3">
-        <div class="flex items-center justify-between border-b border-blue-100 pb-2">
-          <div class="flex items-center space-x-2">
-            <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">
-              <i class="fa-solid fa-bolt"></i>
-            </span>
-            <h4 class="text-sm font-bold text-blue-950">30 秒極速自檢指引（請先按步驟嘗試）</h4>
+        <!-- 工單列表容器 -->
+        <div id="ticketHistoryList" class="space-y-3">
+          <div class="text-center py-10 text-slate-400 text-xs">
+            <i class="fa-solid fa-spinner fa-spin text-lg mb-2"></i>
+            <div>正在載入工單進度...</div>
           </div>
         </div>
-
-        <!-- 網絡自檢指引 -->
-        <div id="guide_network" class="hidden text-xs text-slate-700 space-y-2">
-          <div class="p-2.5 bg-white rounded-xl border border-blue-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-blue-600">步驟 1：</span> 觀察 Modem 及 Router 上的指示燈號</div>
-            <p class="text-slate-600 text-[11px]">檢查是否有紅燈亮起或燈號熄滅（正常運作應為穩定的綠燈或規律閃爍）。</p>
-          </div>
-          <div class="p-2.5 bg-white rounded-xl border border-blue-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-blue-600">步驟 2：</span> 拔電重啟法 (Power Cycle)</div>
-            <p class="text-slate-600 text-[11px]">將 Modem 和 Router 的電源插頭拔除，<b>靜待 10 秒後</b> 重新插上，並等待約 3 分鐘讓訊號重新同步。</p>
-          </div>
-        </div>
-
-        <!-- 印單機自檢指引 -->
-        <div id="guide_printer" class="hidden text-xs text-slate-700 space-y-2">
-          <div class="p-2.5 bg-white rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-emerald-600">步驟 1：</span> 檢查電腦印表機在線狀態</div>
-            <p class="text-slate-600 text-[11px]">在電腦右下角或印表機設定中，確認該部印單機是否顯示為「Online (在線)」，而非離線或暫停。</p>
-          </div>
-          <div class="p-2.5 bg-white rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-emerald-600">步驟 2：</span> 檢查背後線路是否有鬆脫</div>
-            <p class="text-slate-600 text-[11px]">檢查印表機後方的 USB 數據線、網絡線及電源線是否插穩，拔出重新插緊。</p>
-          </div>
-          <div class="p-2.5 bg-white rounded-xl border border-emerald-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-emerald-600">步驟 3：</span> 拿出手電筒照明檢查微小紙碎</div>
-            <p class="text-slate-600 text-[11px]">如遇 Jam 紙，請打開印表機頂蓋、取出碳粉匣/紙卷，<b>用手機電筒照明機器內部</b>，仔細檢查滾輪處有無微小殘留碎紙。</p>
-          </div>
-        </div>
-
-        <!-- 音樂播放器自檢指引 -->
-        <div id="guide_music" class="hidden text-xs text-slate-700 space-y-2">
-          <div class="p-2.5 bg-white rounded-xl border border-purple-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-purple-600">步驟 1：</span> 檢查 3.5mm 音源線接駁</div>
-            <p class="text-slate-600 text-[11px]">檢查播放器連接到擴音機（Amplifier）的 3.5mm 音源線路是否鬆脫。</p>
-          </div>
-          <div class="p-2.5 bg-white rounded-xl border border-purple-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-purple-600">步驟 2：</span> 拔出重新插緊</div>
-            <p class="text-slate-600 text-[11px]">將音源線拔出並重新用力插到底，並確認擴音機上的音量旋鈕沒有被誤碰至靜音。</p>
-          </div>
-        </div>
-
-        <!-- 通用提示 (電腦/POS) -->
-        <div id="guide_pos_hardware" class="hidden text-xs text-slate-700 space-y-2">
-          <div class="p-2.5 bg-white rounded-xl border border-amber-100 shadow-sm space-y-1.5">
-            <div class="font-bold text-slate-900"><span class="text-amber-600">步驟：</span> 檢查電腦主機電源與網絡連線</div>
-            <p class="text-slate-600 text-[11px]">請先確認電腦主機電源燈是否恆亮，螢幕訊號線是否插牢。若系統卡死，可長按電源鍵 5 秒重啟。</p>
-          </div>
-        </div>
-
-        <!-- 自檢分流雙按鈕 -->
-        <div class="pt-2 flex items-center space-x-2">
-          <button type="button" onclick="handleSolved()"
-            class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow transition flex items-center justify-center space-x-1.5">
-            <i class="fa-solid fa-check"></i>
-            <span>已解決！太好了</span>
-          </button>
-          <button type="button" onclick="handleNotSolved()"
-            class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-xs shadow transition flex items-center justify-center space-x-1.5">
-            <i class="fa-solid fa-wrench"></i>
-            <span>依然未能解決，聯絡 IT</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- ==================== 正式報修表單 (自檢未能解決時展開) ==================== -->
-      <div id="ticketFormSection" class="hidden glass rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
-        <div class="flex items-center space-x-2 border-b border-slate-100 pb-3">
-          <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
-            <i class="fa-solid fa-ticket"></i>
-          </div>
-          <div>
-            <h4 class="text-sm font-bold text-slate-900">填寫支援工單</h4>
-            <p class="text-[11px] text-slate-500">門市身份已自動鎖定，請補充故障詳情</p>
-          </div>
-        </div>
-
-        <form id="ticketForm" onsubmit="submitTicket(event)" class="space-y-3.5">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">已鎖定門市</label>
-            <input type="text" id="formStoreDisplay" readonly
-              class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">問題分類</label>
-            <input type="text" id="formCategoryDisplay" readonly
-              class="w-full px-3 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">補充說明 (選填)</label>
-            <textarea id="formDescription" rows="3" placeholder="請描述故障情況、螢幕顯示的錯誤代碼，或異常聲響等..."
-              class="w-full p-3 bg-white border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none transition"></textarea>
-          </div>
-
-          <!-- 拍照輔助提示 -->
-          <div class="p-3 bg-blue-50/70 rounded-xl border border-blue-100 text-xs text-blue-900 flex items-start space-x-2.5">
-            <i class="fa-solid fa-camera text-blue-600 mt-0.5 text-sm"></i>
-            <div class="text-[11px] leading-relaxed">
-              <b>📸 拍照輔助排障指引：</b><br/>
-              建議先用手機拍下 <b>Modem/Router 燈號</b> 或 <b>印表機出錯畫面</b>。提交工單後，可直接在跳轉的 WhatsApp 對話中將相片發送給 Jason！
-            </div>
-          </div>
-
-          <!-- TeamViewer 遠端協議 -->
-          <div class="p-3 bg-slate-900 rounded-xl text-slate-200 text-xs flex items-start space-x-2.5 shadow-sm">
-            <i class="fa-solid fa-network-wired text-blue-400 mt-0.5 text-sm"></i>
-            <div class="text-[11px] leading-relaxed text-slate-300">
-              <b>⚡ TeamViewer 遠端排障協議：</b><br/>
-              工單提交後，IT 部門會直接透過 TeamViewer 遠端連線門市電腦處理。請確保門市電腦處於<b>開機狀態</b>，毋須電話催促。
-            </div>
-          </div>
-
-          <button type="submit" id="btnSubmit"
-            class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition duration-150 flex items-center justify-center space-x-2">
-            <span>送出工單並通知 IT</span>
-            <i class="fa-solid fa-paper-plane text-xs"></i>
-          </button>
-        </form>
       </div>
 
     </div>
@@ -334,16 +371,21 @@
         <div><span class="text-slate-400">問題：</span> <span id="modalCategory" class="text-slate-700"></span></div>
       </div>
 
-      <!-- 一鍵 WhatsApp 跳轉按鈕 -->
+      <!-- 一鍵 WhatsApp 跳轉按鈕 (手提電話: 97242234) -->
       <a id="btnWhatsApp" href="#" target="_blank"
         class="block w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-lg transition flex items-center justify-center space-x-2">
         <i class="fa-brands fa-whatsapp text-lg"></i>
         <span>一鍵 WhatsApp 通知 Jason</span>
       </a>
 
-      <button onclick="resetForm()" class="text-xs text-slate-400 hover:text-slate-600 pt-1">
-        返回服務台主頁
-      </button>
+      <div class="pt-1 flex items-center justify-between text-xs">
+        <button onclick="viewHistoryAfterSubmit()" class="text-blue-600 font-bold hover:underline">
+          查看工單處理進度
+        </button>
+        <button onclick="resetForm()" class="text-slate-400 hover:text-slate-600">
+          返回主頁
+        </button>
+      </div>
     </div>
   </div>
 
@@ -353,7 +395,10 @@
     const STORES = {"1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"}, "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"}, "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"}, "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"}, "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"}, "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"}, "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"}, "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"}, "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"}, "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"}, "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"}, "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"}, "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"}, "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"}, "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"}, "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"}, "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"}, "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"}, "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"}, "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"}, "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"}, "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"}, "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"}, "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"}, "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"}, "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"}, "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"}, "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"}, "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"}, "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"}, "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"}, "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"}, "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"}, "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"}, "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"}, "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"}, "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"}, "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"}, "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"}};
 
     // Google Apps Script Web App API 網址
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZr7nMAdiP-9cNl_qeN9YjraYdETfD4Z0DlcZzjUg/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";
+
+    // IT Jason 的手提電話 (用於 WhatsApp 跳轉)
+    const JASON_MOBILE = "97242234";
 
     let currentStore = null;
     let selectedCategory = '';
@@ -393,6 +438,9 @@
       document.getElementById('navStoreName').textContent = currentStore.name;
       document.getElementById('currentStoreTitle').textContent = currentStore.name;
       document.getElementById('formStoreDisplay').value = currentStore.name;
+
+      // 載入該店工單進度
+      loadStoreTickets();
     }
 
     function logout() {
@@ -400,6 +448,27 @@
         localStorage.removeItem('fls_itsm_code');
         localStorage.removeItem('fls_itsm_pw');
         location.reload();
+      }
+    }
+
+    // 頁籤切換
+    function switchTab(tab) {
+      const btnNew = document.getElementById('tabBtnNew');
+      const btnHistory = document.getElementById('tabBtnHistory');
+      const contentNew = document.getElementById('tabContentNew');
+      const contentHistory = document.getElementById('tabContentHistory');
+
+      if (tab === 'new') {
+        btnNew.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-white text-blue-900 shadow-sm";
+        btnHistory.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-600 hover:text-slate-900";
+        contentNew.classList.remove('hidden');
+        contentHistory.classList.add('hidden');
+      } else {
+        btnHistory.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 bg-white text-blue-900 shadow-sm";
+        btnNew.className = "flex-1 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 text-slate-600 hover:text-slate-900";
+        contentHistory.classList.remove('hidden');
+        contentNew.classList.add('hidden');
+        loadStoreTickets(true);
       }
     }
 
@@ -428,9 +497,45 @@
       document.getElementById('ticketFormSection').classList.add('hidden');
     }
 
-    function handleSolved() {
-      alert('太好喇！問題已成功解決，毋須向 IT 報修。祝你工作順利！');
+    // 門市自檢成功：即時記錄到 Google Sheets 與本地快取
+    async function handleSolved(btn) {
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> 正在記錄...';
+
+      const now = new Date();
+      const nowStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+
+      const solvedTicket = {
+        ticket_id: "#SOLVED-" + Math.floor(1000 + Math.random()*9000),
+        timestamp: nowStr,
+        shop_code: currentStore.name,
+        category: selectedCategory + " [自主排障]",
+        description: "【門市自檢成功】前線根據 30 秒自檢指引已自行排除故障，成功攔截工單！",
+        status: "自主排障已解決",
+        it_notes: "系統自動記錄：門市自主修復，已恢復正常營業。"
+      };
+
+      // 寫入本地緩存
+      saveLocalTicket(solvedTicket);
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(solvedTicket)
+        });
+      } catch (err) {
+        console.log('記錄自檢失敗：', err);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+
+      alert('🎉 太好喇！系統已為你的門市自動記錄今次「自主排障成功」！\n\n感謝你協助減輕 IT 支援負擔，祝你工作順利！');
       resetSelection();
+      loadStoreTickets();
     }
 
     function handleNotSolved() {
@@ -448,6 +553,7 @@
       selectedCategory = '';
     }
 
+    // 提交工單
     async function submitTicket(e) {
       e.preventDefault();
       const btn = document.getElementById('btnSubmit');
@@ -455,11 +561,22 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> 登記中...';
 
       const desc = document.getElementById('formDescription').value.trim();
+      const now = new Date();
+      const nowStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+      const fakeTicketId = '#' + Math.floor(1000 + Math.random() * 9000);
+
       const payload = {
+        ticket_id: fakeTicketId,
+        timestamp: nowStr,
         shop_code: currentStore.name,
         category: selectedCategory,
-        description: desc
+        description: desc,
+        status: "待處理 / 已收 Order",
+        it_notes: "我們已收到 Order，IT 正準備排查，請保持電腦開機及 TeamViewer 連線。"
       };
+
+      // 立即存入本地緩存
+      saveLocalTicket(payload);
 
       try {
         await fetch(SCRIPT_URL, {
@@ -469,14 +586,13 @@
           body: JSON.stringify(payload)
         });
 
-        const fakeTicketId = '#' + Math.floor(1000 + Math.random() * 9000);
-
         document.getElementById('modalTicketId').textContent = fakeTicketId;
         document.getElementById('modalStoreName').textContent = currentStore.name;
         document.getElementById('modalCategory').textContent = selectedCategory;
 
+        // WhatsApp 預設文字
         const waMsg = `【IT報修 ${fakeTicketId}】${currentStore.name}\n問題：${selectedCategory}\n詳情：${desc || '無補充'}\n門市電腦已開機，備妥 TeamViewer，請 Jason 遠端協助，謝謝！`;
-        const waUrl = `https://wa.me/85224894322?text=${encodeURIComponent(waMsg)}`;
+        const waUrl = `https://wa.me/852${JASON_MOBILE}?text=${encodeURIComponent(waMsg)}`;
         document.getElementById('btnWhatsApp').href = waUrl;
 
         document.getElementById('successModal').classList.remove('hidden');
@@ -489,10 +605,161 @@
       }
     }
 
+    function viewHistoryAfterSubmit() {
+      document.getElementById('successModal').classList.add('hidden');
+      resetSelection();
+      switchTab('history');
+    }
+
     function resetForm() {
       document.getElementById('successModal').classList.add('hidden');
       document.getElementById('formDescription').value = '';
       resetSelection();
+    }
+
+    // 本地緩存工單管理
+    function saveLocalTicket(t) {
+      if (!currentStore) return;
+      const key = 'fls_tickets_' + currentStore.code;
+      let list = [];
+      try {
+        list = JSON.parse(localStorage.getItem(key) || '[]');
+      } catch (e) { list = []; }
+      list.unshift(t);
+      if (list.length > 20) list = list.slice(0, 20);
+      localStorage.setItem(key, JSON.stringify(list));
+    }
+
+    function getLocalTickets() {
+      if (!currentStore) return [];
+      const key = 'fls_tickets_' + currentStore.code;
+      try {
+        return JSON.parse(localStorage.getItem(key) || '[]');
+      } catch (e) { return []; }
+    }
+
+    // 從 Google Apps Script 及本地載入該門市的工單進度
+    async function loadStoreTickets(showLoading = false) {
+      if (!currentStore) return;
+      const container = document.getElementById('ticketHistoryList');
+      const icon = document.getElementById('refreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+
+      // 優先顯示本地快取，避免空白等待
+      const localTickets = getLocalTickets();
+      if (localTickets.length > 0 && !showLoading) {
+        renderTickets(localTickets);
+      }
+
+      try {
+        // 從 Google Apps Script 獲取雲端最新狀態 (包含 Jason 在 Google Sheet 修改的備註與到店時間)
+        const fetchUrl = `${SCRIPT_URL}?action=get_tickets&shop=${encodeURIComponent(currentStore.name)}&code=${encodeURIComponent(currentStore.code)}`;
+        const response = await fetch(fetchUrl);
+        const data = await response.json();
+
+        if (data && data.status === 'success' && Array.isArray(data.tickets) && data.tickets.length > 0) {
+          renderTickets(data.tickets);
+          // 同步覆蓋更新本地緩存
+          localStorage.setItem('fls_tickets_' + currentStore.code, JSON.stringify(data.tickets));
+        } else if (localTickets.length > 0) {
+          renderTickets(localTickets);
+        } else {
+          renderEmptyState();
+        }
+      } catch (err) {
+        // 若雲端連線延遲，退回顯示本地紀錄
+        if (localTickets.length > 0) {
+          renderTickets(localTickets);
+        } else {
+          renderEmptyState();
+        }
+      } finally {
+        if (icon) icon.classList.remove('fa-spin');
+      }
+    }
+
+    function renderEmptyState() {
+      const container = document.getElementById('ticketHistoryList');
+      container.innerHTML = `
+        <div class="glass rounded-2xl p-8 text-center border border-slate-200">
+          <div class="w-12 h-12 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+            <i class="fa-solid fa-clipboard-check"></i>
+          </div>
+          <h4 class="text-sm font-bold text-slate-800">暫無維修申請紀錄</h4>
+          <p class="text-xs text-slate-400 mt-1">如門市遇到電腦、網絡或印單機問題，請切換至「申請服務報修」填單。</p>
+        </div>
+      `;
+    }
+
+    function renderTickets(tickets) {
+      const container = document.getElementById('ticketHistoryList');
+      if (!tickets || tickets.length === 0) {
+        renderEmptyState();
+        return;
+      }
+
+      // 狀態標籤樣式映射
+      const statusMap = {
+        '待處理 / 已收 Order': { bg: 'bg-amber-100 text-amber-800 border-amber-300', icon: 'fa-regular fa-clock' },
+        '待處理': { bg: 'bg-amber-100 text-amber-800 border-amber-300', icon: 'fa-regular fa-clock' },
+        '進行中': { bg: 'bg-blue-100 text-blue-800 border-blue-300 animate-pulse', icon: 'fa-solid fa-screwdriver-wrench' },
+        '進行中 (遠端排障)': { bg: 'bg-blue-100 text-blue-800 border-blue-300 animate-pulse', icon: 'fa-solid fa-desktop' },
+        '已安排到店': { bg: 'bg-purple-100 text-purple-800 border-purple-300', icon: 'fa-solid fa-van-shuttle' },
+        '已完成': { bg: 'bg-emerald-100 text-emerald-800 border-emerald-300', icon: 'fa-solid fa-circle-check' },
+        '自主排障已解決': { bg: 'bg-teal-100 text-teal-800 border-teal-300', icon: 'fa-solid fa-wand-magic-sparkles' }
+      };
+
+      let html = '';
+      tickets.forEach(t => {
+        const st = t.status || '待處理 / 已收 Order';
+        const stStyle = statusMap[st] || { bg: 'bg-slate-100 text-slate-800 border-slate-300', icon: 'fa-solid fa-circle-info' };
+
+        html += `
+          <div class="glass rounded-2xl p-4 border border-slate-200 shadow-sm space-y-2.5">
+            <!-- 頂部資訊：工單號、時間與狀態 -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div class="flex items-center space-x-2">
+                <span class="font-bold text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                  ${t.ticket_id || '#1000'}
+                </span>
+                <span class="text-[11px] text-slate-400">
+                  <i class="fa-regular fa-calendar-days mr-1"></i>${t.timestamp || ''}
+                </span>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${stStyle.bg} flex items-center space-x-1">
+                <i class="${stStyle.icon} text-[10px]"></i>
+                <span>${st}</span>
+              </span>
+            </div>
+
+            <!-- 問題內容 -->
+            <div>
+              <div class="text-xs font-bold text-slate-900">${t.category || '一般支援'}</div>
+              <p class="text-[11px] text-slate-600 mt-0.5 leading-relaxed">${t.description || '無詳細說明'}</p>
+            </div>
+
+            <!-- IT 最新跟進與預計到店時間 (最重要區域) -->
+            <div class="p-2.5 rounded-xl bg-slate-900 text-white text-xs space-y-1 shadow-sm">
+              <div class="flex items-center space-x-1.5 text-blue-300 text-[10px] font-bold uppercase tracking-wider">
+                <i class="fa-solid fa-headset"></i>
+                <span>IT 跟進狀態 / 預計到店或處理</span>
+              </div>
+              <div class="text-[11px] leading-relaxed text-slate-200 font-medium pl-4 border-l-2 border-blue-500">
+                ${t.it_notes ? t.it_notes : '我們已收到 Order，IT 正在排障中。請保持門市電腦開機及備妥 TeamViewer。'}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      
+      // 更新徽章計數
+      const badge = document.getElementById('tabCountBadge');
+      if (badge) {
+        badge.textContent = tickets.length;
+        badge.classList.remove('hidden');
+      }
     }
   </script>
 </body>
