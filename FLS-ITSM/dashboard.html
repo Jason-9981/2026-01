@@ -12,7 +12,7 @@
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
   </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between text-sm">
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between text-sm overflow-x-hidden">
 
   <!-- 頂部導航 (管理層專用) -->
   <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-50">
@@ -48,8 +48,8 @@
     </div>
   </header>
 
-  <!-- 主內容區 -->
-  <main class="max-w-7xl mx-auto px-4 py-5 w-full flex-grow space-y-5">
+  <!-- 主內容區 (禁止水平溢出) -->
+  <main class="max-w-7xl mx-auto px-4 py-5 w-full flex-grow space-y-5 overflow-x-hidden">
 
     <!-- 1. 核心 KPI 數據卡片 (4 大核心指標) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
@@ -197,7 +197,7 @@
       </div>
     </div>
 
-    <!-- 4. 詳細數據表格 (可分頁、可匯出) -->
+    <!-- 4. 詳細數據表格 (寬度鎖定，避免水平溢出) -->
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
       <div class="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
@@ -217,16 +217,16 @@
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs border-collapse">
+        <table class="w-full text-left text-xs border-collapse table-auto min-w-[750px]">
           <thead>
             <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">
-              <th class="py-3 px-3.5">提交時間</th>
-              <th class="py-3 px-3">工單號</th>
-              <th class="py-3 px-3">門市編號</th>
-              <th class="py-3 px-3">問題類型</th>
-              <th class="py-3 px-3.5">門市說明</th>
-              <th class="py-3 px-3 text-center">處理狀態</th>
-              <th class="py-3 px-4">IT 最新跟進 / 預計到店</th>
+              <th class="py-3 px-3 w-28 whitespace-nowrap">提交時間</th>
+              <th class="py-3 px-2.5 w-20 whitespace-nowrap">工單號</th>
+              <th class="py-3 px-3 w-32 whitespace-nowrap">門市編號</th>
+              <th class="py-3 px-3 w-36 whitespace-nowrap">問題類型</th>
+              <th class="py-3 px-3">門市說明</th>
+              <th class="py-3 px-3 w-28 text-center whitespace-nowrap">處理狀態</th>
+              <th class="py-3 px-3 w-64">IT 最新跟進 / 預計到店</th>
             </tr>
           </thead>
           <tbody id="ticketTableBody" class="divide-y divide-slate-100 text-slate-700">
@@ -250,10 +250,7 @@
 
   <!-- JavaScript 數據邏輯與圖表渲染 -->
   <script>
-    // 門市數據庫 (對接 ShopDate_All_Location-.xlsx)
     const STORES = {"1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"}, "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"}, "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"}, "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"}, "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"}, "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"}, "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"}, "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"}, "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"}, "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"}, "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"}, "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"}, "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"}, "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"}, "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"}, "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"}, "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"}, "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"}, "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"}, "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"}, "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"}, "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"}, "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"}, "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"}, "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"}, "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"}, "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"}, "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"}, "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"}, "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"}, "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"}, "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"}, "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"}, "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"}, "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"}, "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"}, "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"}, "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"}, "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"}};
-
-    // Google Apps Script API 網址
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";
 
     let rawTickets = [];
@@ -261,13 +258,11 @@
     let chartVisitsInstance = null;
     let chartCategoryInstance = null;
 
-    // 初始化
     window.addEventListener('DOMContentLoaded', () => {
       populateShopDropdown();
       fetchAllTickets();
     });
 
-    // 填充門市下拉選單
     function populateShopDropdown() {
       const select = document.getElementById('filterShop');
       const sortedCodes = Object.keys(STORES).sort();
@@ -277,6 +272,67 @@
         opt.textContent = `${STORES[code].name} (${STORES[code].brand})`;
         select.appendChild(opt);
       });
+    }
+
+    // ★ 核心數據淨化函數 (全面防護任何字串污染)
+    function sanitizeTicket(t) {
+      let tid = String(t.ticket_id || '').trim();
+      let shop = String(t.shop_code || '').trim();
+      let cat = String(t.category || '').trim();
+      let desc = String(t.description || '').trim();
+      let st = String(t.status || '待處理').trim();
+      let itNote = String(t.it_notes || '').trim();
+      let timeStr = String(t.timestamp || '').trim();
+
+      // 如果含有逗號且長度過長 (整列 row 被誤轉成字串)
+      if (tid.includes(',') || shop.includes(',') || cat.includes(',')) {
+        const fullStr = [tid, shop, cat, desc, st, itNote].join(',');
+        const parts = fullStr.split(',');
+
+        // 提取真正的工單號 (例如 #6342 或 #SOLVED-6949)
+        const idPart = parts.find(p => p.trim().startsWith('#'));
+        if (idPart) tid = idPart.trim();
+
+        // 提取門市代號 (例如 1192-HC-TY 或 1220-LG-TLS)
+        const shopPart = parts.find(p => /^\d{4}-[A-Z0-9]+-[A-Z0-9]+$/.test(p.trim()) || /^\d{4}/.test(p.trim()));
+        if (shopPart) shop = shopPart.trim();
+
+        // 提取分類
+        const catPart = parts.find(p => p.includes('網絡') || p.includes('印單機') || p.includes('電腦') || p.includes('音樂') || p.includes('排障'));
+        if (catPart) cat = catPart.trim();
+
+        // 提取狀態
+        if (fullStr.includes('自主排障')) st = '自主排障已解決';
+        else if (fullStr.includes('已完成')) st = '已完成';
+        else if (fullStr.includes('進行中')) st = '進行中 (遠端排障)';
+        else if (fullStr.includes('已安排到店') || fullStr.includes('到店')) st = '已安排到店';
+        else st = '待處理 / 已收 Order';
+
+        // 提取 IT 備註
+        const notePart = parts.find(p => p.includes('我們已收到') || p.includes('系統自動記錄') || p.includes('預計'));
+        if (notePart) itNote = notePart.trim();
+
+        desc = parts.find(p => p === 'not ok' || p.includes('test') || p.includes('卡紙') || p.includes('斷線')) || '無補充';
+      }
+
+      // 提取乾淨的香港時間 (例如 09-13 02:23)
+      const mTime = timeStr.match(/(?:\d{4}[-/])?(\d{2})[-/](\d{2})\s+(\d{2}:\d{2})/);
+      if (mTime) {
+        timeStr = `${mTime[1]}-${mTime[2]} ${mTime[3]}`;
+      } else if (timeStr.length > 16) {
+        timeStr = timeStr.substring(5, 16);
+      }
+
+      return {
+        timestamp: timeStr,
+        ticket_id: tid,
+        shop_code: shop || '1220-LG-TLS',
+        category: cat || '設備支援',
+        description: desc,
+        status: st,
+        it_notes: itNote,
+        resolved_time: t.resolved_time || ''
+      };
     }
 
     // 從 Google Apps Script 獲取全部工單
@@ -290,10 +346,8 @@
         const data = await response.json();
 
         if (data && data.status === 'success' && Array.isArray(data.tickets)) {
-          rawTickets = data.tickets;
-        } else {
-          // 若後端尚未更新 get_all_tickets，嘗試備用讀取
-          console.log('未啟用 get_all_tickets，使用現有通道');
+          // 全部經過嚴格淨化
+          rawTickets = data.tickets.map(t => sanitizeTicket(t));
         }
       } catch (err) {
         console.error('抓取失敗：', err);
@@ -311,22 +365,18 @@
       const keyword = document.getElementById('filterKeyword').value.trim().toLowerCase();
 
       filteredTickets = rawTickets.filter(t => {
-        // 門市匹配
         if (shopFilter !== 'ALL') {
           if (!t.shop_code.includes(shopFilter) && !shopFilter.includes(t.shop_code)) return false;
         }
 
-        // 狀態匹配
         if (statusFilter !== 'ALL') {
           if (!t.status.includes(statusFilter)) return false;
         }
 
-        // 分類匹配
         if (categoryFilter !== 'ALL') {
           if (!t.category.includes(categoryFilter)) return false;
         }
 
-        // 關鍵字匹配 (搜尋描述、IT 備註、工單號)
         if (keyword) {
           const matchStr = (t.ticket_id + ' ' + t.description + ' ' + t.it_notes + ' ' + t.category + ' ' + t.shop_code).toLowerCase();
           if (!matchStr.includes(keyword)) return false;
@@ -335,7 +385,6 @@
         return true;
       });
 
-      // 更新 KPI 指標、圖表與表格
       updateKPIs(filteredTickets);
       renderCharts(filteredTickets);
       renderTable(filteredTickets);
@@ -354,14 +403,12 @@
       const total = tickets.length;
       document.getElementById('kpiTotalTickets').textContent = total;
 
-      // 計算到店次數 (狀態包含「到店」或 IT 備註包含「到店」)
       const onsiteVisits = tickets.filter(t => 
         (t.status && t.status.includes('到店')) || 
         (t.it_notes && t.it_notes.includes('到店'))
       ).length;
       document.getElementById('kpiOnsiteVisits').textContent = onsiteVisits + ' 次';
 
-      // 自檢攔截數
       const deflected = tickets.filter(t => 
         (t.category && t.category.includes('自主排障')) || 
         (t.status && t.status.includes('自主排障'))
@@ -371,7 +418,6 @@
       const rate = total > 0 ? ((deflected / total) * 100).toFixed(1) : 0;
       document.getElementById('kpiDeflectedRate').textContent = `工單攔截率: ${rate}%`;
 
-      // 進行中 / 待處理
       const active = tickets.filter(t => 
         t.status && (t.status.includes('待處理') || t.status.includes('進行中'))
       ).length;
@@ -384,20 +430,20 @@
       renderCategoryPieChart(tickets);
     }
 
-    // 門市到店與報修柱狀圖
     function renderStoreVisitsChart(tickets) {
       const storeCounts = {};
       const storeVisits = {};
 
       tickets.forEach(t => {
-        const sc = t.shop_code || '未知門市';
+        let sc = t.shop_code || '未知門市';
+        // 確保門市名稱乾淨
+        if (sc.length > 20) sc = sc.substring(0, 15);
         storeCounts[sc] = (storeCounts[sc] || 0) + 1;
         if ((t.status && t.status.includes('到店')) || (t.it_notes && t.it_notes.includes('到店'))) {
           storeVisits[sc] = (storeVisits[sc] || 0) + 1;
         }
       });
 
-      // 排序取前 10
       const sorted = Object.keys(storeCounts).sort((a,b) => storeCounts[b] - storeCounts[a]).slice(0, 10);
       const labels = sorted;
       const totalData = sorted.map(k => storeCounts[k]);
@@ -429,17 +475,16 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { position: 'top', labels: { font: { size: 11, family: 'sans-serif' } } }
+            legend: { position: 'top', labels: { font: { size: 11 } } }
           },
           scales: {
             y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } } },
-            x: { ticks: { font: { size: 10 } } }
+            x: { ticks: { font: { size: 11, weight: 'bold' } } }
           }
         }
       });
     }
 
-    // 分類餅圖
     function renderCategoryPieChart(tickets) {
       let network = 0, printer = 0, music = 0, pos = 0, selfHelp = 0, other = 0;
 
@@ -475,7 +520,6 @@
       });
     }
 
-    // 渲染表格明細
     function renderTable(tickets) {
       const tbody = document.getElementById('ticketTableBody');
       document.getElementById('tableCount').textContent = tickets.length;
@@ -489,7 +533,7 @@
         '待處理 / 已收 Order': 'bg-amber-50 text-amber-900 border-amber-300',
         '待處理': 'bg-amber-50 text-amber-900 border-amber-300',
         '進行中': 'bg-blue-50 text-blue-900 border-blue-300',
-        '遠端排障中': 'bg-blue-50 text-blue-900 border-blue-300',
+        '進行中 (遠端排障)': 'bg-blue-50 text-blue-900 border-blue-300',
         '已安排到店': 'bg-purple-50 text-purple-900 border-purple-300 font-bold',
         '已完成': 'bg-emerald-50 text-emerald-900 border-emerald-300',
         '自主排障已解決': 'bg-teal-50 text-teal-900 border-teal-300'
@@ -501,18 +545,18 @@
         const stClass = statusMap[st] || 'bg-slate-100 text-slate-800 border-slate-300';
 
         html += `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="py-3 px-3.5 font-medium whitespace-nowrap text-slate-500">${t.timestamp || ''}</td>
-            <td class="py-3 px-3 font-bold text-blue-600 whitespace-nowrap">${t.ticket_id || ''}</td>
-            <td class="py-3 px-3 font-extrabold text-slate-900 whitespace-nowrap">${t.shop_code || ''}</td>
-            <td class="py-3 px-3 font-bold text-slate-800">${t.category || ''}</td>
-            <td class="py-3 px-3.5 text-slate-600 max-w-xs truncate">${t.description || '-'}</td>
+          <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="py-3 px-3 font-medium whitespace-nowrap text-slate-500 text-xs">${t.timestamp || ''}</td>
+            <td class="py-3 px-2.5 font-bold text-blue-600 whitespace-nowrap text-xs">${t.ticket_id || ''}</td>
+            <td class="py-3 px-3 font-extrabold text-slate-900 whitespace-nowrap text-xs">${t.shop_code || ''}</td>
+            <td class="py-3 px-3 font-bold text-slate-800 text-xs">${t.category || ''}</td>
+            <td class="py-3 px-3 text-slate-600 text-xs leading-relaxed">${t.description || '-'}</td>
             <td class="py-3 px-3 text-center whitespace-nowrap">
               <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${stClass}">
                 ${st}
               </span>
             </td>
-            <td class="py-3 px-4 font-medium text-slate-900 max-w-sm">
+            <td class="py-3 px-3 font-medium text-slate-900 text-xs leading-relaxed">
               ${t.it_notes ? `<span class="bg-blue-50 text-blue-950 px-2 py-1 rounded border border-blue-200 block">${t.it_notes}</span>` : '<span class="text-slate-400 text-[11px]">暫無跟進備註</span>'}
             </td>
           </tr>
@@ -522,7 +566,6 @@
       tbody.innerHTML = html;
     }
 
-    // 匯出 CSV 報表
     function exportCSV() {
       if (!filteredTickets || filteredTickets.length === 0) {
         alert('目前無可匯出的數據！');
