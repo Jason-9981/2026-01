@@ -11,7 +11,7 @@
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
   </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between overflow-x-hidden">
 
   <!-- 頂部導航欄 (簡潔緊湊) -->
   <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-50">
@@ -36,8 +36,8 @@
     </div>
   </header>
 
-  <!-- 主內容區 (手機優化 max-w-md) -->
-  <main class="max-w-md mx-auto px-3.5 py-4 w-full flex-grow">
+  <!-- 主內容區 (手機優化 max-w-md，禁止水平溢出) -->
+  <main class="max-w-md mx-auto px-3.5 py-4 w-full flex-grow overflow-x-hidden">
 
     <!-- ==================== 1. 登入介面 (未登入時顯示) ==================== -->
     <div id="loginSection" class="glass rounded-2xl shadow-sm border border-slate-200 p-6 my-auto">
@@ -290,7 +290,7 @@
         </div>
       </div>
 
-      <!-- ==================== TAB 2: 維修進度與紀錄 (重點優化：清晰精簡) ==================== -->
+      <!-- ==================== TAB 2: 維修進度與紀錄 (精簡清爽、絕對不橫向溢出) ==================== -->
       <div id="tabContentHistory" class="hidden space-y-2.5">
         <div class="flex items-center justify-between px-1">
           <h3 class="text-xs font-bold text-slate-600">本店維修與服務申請進度</h3>
@@ -469,18 +469,16 @@
       document.getElementById('ticketFormSection').classList.add('hidden');
     }
 
-    // 格式化精簡日期時間 (09-13 16:38)
+    // 乾淨格式化時間 (MM-DD HH:mm)
     function formatSimpleTime(raw) {
       if (!raw) return "";
       let str = String(raw).trim();
       
-      // 處理 "2026-09-13 16:38:06"
       const m1 = str.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{2})/);
       if (m1) {
         return m1[2].padStart(2, '0') + '-' + m1[3].padStart(2, '0') + ' ' + m1[4];
       }
 
-      // 處理 "Sun Sep 13 2026 16:38:06 GMT+0800..."
       const m2 = str.match(/([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{1,2}:\d{2})/);
       if (m2) {
         const months = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06', Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
@@ -489,22 +487,21 @@
         return mon + '-' + day + ' ' + m2[4];
       }
 
-      // 提取時間片段
       if (str.length > 16) return str.substring(0, 16);
       return str;
     }
 
-    // 清理可能被整列字串污染的欄位
-    function sanitizeField(val, fallback = "") {
-      if (!val) return fallback;
-      let s = String(val).trim();
-      // 如果含有大量逗號 (即是整列 row.toString() 的 bug)，進行切割提純
-      if (s.includes(',') && s.length > 50) {
-        const parts = s.split(',');
-        // 尋找符合 # 號的工單 ID 或分類
-        return parts[1] || parts[3] || parts[0];
+    // ★ 關鍵防護：過濾並提純狀態文字 (絕不允許整列逗號溢出)
+    function parseCleanStatus(st_raw) {
+      let st = String(st_raw || '').trim();
+      if (st.includes(',') || st.length > 25) {
+        if (st.includes('自主排障')) return '自主排障已解決';
+        if (st.includes('已完成')) return '已完成';
+        if (st.includes('進行中')) return '進行中';
+        if (st.includes('已安排到店')) return '已安排到店';
+        return '待處理 / 已收 Order';
       }
-      return s;
+      return st || '待處理 / 已收 Order';
     }
 
     // 門市自檢成功：即時記錄
@@ -523,7 +520,7 @@
         category: selectedCategory + " [自主排障]",
         description: "【門市自檢成功】前線根據 30 秒指引已自行排除故障。",
         status: "自主排障已解決",
-        it_notes: "系統自動記錄：門市自主修復，已恢復正常。"
+        it_notes: "系統自動記錄：門市自主修復，已恢復正常營業。"
       };
 
       saveLocalTicket(solvedTicket);
@@ -624,7 +621,7 @@
       resetSelection();
     }
 
-    // 本地緩存
+    // 本地緩存管理
     function saveLocalTicket(t) {
       if (!currentStore) return;
       const key = 'fls_tickets_' + currentStore.code;
@@ -651,7 +648,6 @@
       const icon = document.getElementById('refreshIcon');
       if (icon) icon.classList.add('fa-spin');
 
-      // 本地緩存優先顯示
       const localTickets = getLocalTickets();
       if (localTickets.length > 0 && !showLoading) {
         renderTickets(localTickets);
@@ -714,7 +710,7 @@
 
       let html = '';
       tickets.forEach(t => {
-        // 資料清洗與防錯
+        // 1. 工單編號提純
         let tid = String(t.ticket_id || '').trim();
         if (tid.includes(',')) {
           const parts = tid.split(',');
@@ -722,41 +718,47 @@
         }
         if (!tid) tid = '#TICKET';
 
+        // 2. 分類提純
         let cat = String(t.category || '').trim();
         if (cat.includes(',') && cat.length > 40) {
           const parts = cat.split(',');
           cat = parts[3] || parts[0] || '設備故障';
         }
 
+        // 3. 描述提純
         let desc = String(t.description || '').trim();
         if (desc.includes(',') && desc.length > 50) {
           const parts = desc.split(',');
           desc = parts[4] || '';
         }
 
+        // 4. 時間乾淨化 (MM-DD HH:mm)
         const cleanTime = formatSimpleTime(t.timestamp);
-        const stRaw = t.status || '待處理 / 已收 Order';
-        const stConf = statusMap[stRaw] || { bg: 'bg-slate-100 text-slate-800 border-slate-300', text: stRaw, icon: 'fa-solid fa-circle-info' };
+
+        // 5. 狀態標籤絕對乾淨化 (防止整列字串污染)
+        const cleanSt = parseCleanStatus(t.status);
+        const stConf = statusMap[cleanSt] || { bg: 'bg-slate-100 text-slate-800 border-slate-300', text: cleanSt, icon: 'fa-solid fa-circle-info' };
         
+        // 6. IT 備註提純
         let itNote = String(t.it_notes || '').trim();
         if (itNote.includes(',') && itNote.length > 50) {
           const parts = itNote.split(',');
-          itNote = parts[6] || parts[5] || itNote;
+          itNote = parts[6] || parts[5] || '';
         }
 
         html += `
-          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-xs space-y-2">
-            <!-- 頂部資訊列：工單號、精簡時間、狀態膠囊 (絕不折行) -->
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <span class="font-bold text-[11px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
+          <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-xs space-y-2 overflow-hidden">
+            <!-- 頂部資訊列：工單號、時間、緊湊狀態標籤 (絕對不折行、不水平溢出) -->
+            <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+              <div class="flex items-center space-x-2 min-w-0">
+                <span class="font-bold text-[11px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200 flex-shrink-0">
                   ${tid}
                 </span>
-                <span class="text-[11px] text-slate-400 font-medium">
+                <span class="text-[11px] text-slate-500 font-medium whitespace-nowrap flex-shrink-0">
                   <i class="fa-regular fa-clock mr-1 text-[10px]"></i>${cleanTime}
                 </span>
               </div>
-              <span class="whitespace-nowrap flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-bold border ${stConf.bg} flex items-center space-x-1">
+              <span class="whitespace-nowrap flex-shrink-0 px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${stConf.bg} flex items-center space-x-1">
                 <i class="${stConf.icon} text-[9px]"></i>
                 <span>${stConf.text}</span>
               </span>
@@ -768,15 +770,15 @@
             </div>
 
             <!-- 門市補充描述 (如有) -->
-            ${(desc && desc !== '無補充' && desc !== '無詳細補充') ? `<div class="text-[11px] text-slate-500 bg-slate-50 p-2 rounded-lg leading-relaxed">${desc}</div>` : ''}
+            ${(desc && desc !== '無補充' && desc !== '無詳細補充') ? `<div class="text-[11px] text-slate-600 bg-slate-50 p-2 rounded-lg leading-relaxed">${desc}</div>` : ''}
 
-            <!-- IT 最新跟進與預計到店時間 (深色醒目卡) -->
+            <!-- IT 最新跟進與預計到店時間 -->
             <div class="p-2.5 rounded-lg bg-slate-900 text-white text-[11px] space-y-1 shadow-xs">
               <div class="flex items-center space-x-1 text-blue-300 text-[10px] font-bold uppercase tracking-wider">
                 <i class="fa-solid fa-headset text-[9px]"></i>
                 <span>IT 跟進狀態 / 預計到店時間</span>
               </div>
-              <div class="text-[11px] text-slate-200 font-medium pl-2.5 border-l-2 border-blue-500 leading-relaxed">
+              <div class="text-[11px] text-slate-200 font-medium pl-2 border-l-2 border-blue-500 leading-relaxed">
                 ${itNote ? itNote : '我們已收到 Order，IT 正準備排查。請保持門市電腦開機及備妥 TeamViewer。'}
               </div>
             </div>
