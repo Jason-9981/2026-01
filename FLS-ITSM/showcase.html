@@ -1,432 +1,430 @@
-<!DOCTYPE html>
-<html lang="zh-HK">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>威黃物流 FLS - 數碼化轉型與全方位 IT 成果展示 (Executive Showcase)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      background-color: #F5F5F7;
-      color: #1D1D1F;
-      -webkit-font-smoothing: antialiased;
-    }
-    .bento-card {
-      background: #FFFFFF;
-      border: 1px solid #E5E5EA;
-      border-radius: 24px;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .bento-card:hover {
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);
-      border-color: #D2D2D7;
-    }
-    .apple-badge {
-      background: rgba(0, 113, 227, 0.08);
-      color: #0071E3;
-      border: 1px solid rgba(0, 113, 227, 0.15);
-    }
-    .apple-btn {
-      background-color: #0071E3;
-      color: #FFFFFF;
-      transition: background-color 0.2s ease;
-    }
-    .apple-btn:hover {
-      background-color: #0077ED;
-    }
-    .apple-btn-secondary {
-      background-color: #F5F5F7;
-      color: #1D1D1F;
-      border: 1px solid #D2D2D7;
-      transition: all 0.2s ease;
-    }
-    .apple-btn-secondary:hover {
-      background-color: #E8E8ED;
-      border-color: #86868B;
-    }
-  </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between">
-
-  <!-- 頂部 Apple 風格簡約導航 -->
-  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#E5E5EA]">
-    <div class="max-w-6xl mx-auto px-5 py-3.5 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-xl bg-[#1D1D1F] text-white flex items-center justify-center font-black text-xs tracking-wider">
-          FLS
-        </div>
-        <div>
-          <h1 class="text-sm font-semibold text-[#1D1D1F] tracking-tight">威黃物流 · 數碼化轉型與系統開發成果展</h1>
-          <p class="text-[11px] text-[#86868B]">I&TD - Jason Chow · 2026 年 9 月</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-2">
-        <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium apple-badge">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#0071E3] mr-1.5 animate-pulse"></span>
-          管理層專閱展示板
-        </span>
-      </div>
-    </div>
-  </header>
-
-  <!-- 主內容容器 -->
-  <main class="max-w-6xl mx-auto px-5 py-10 w-full flex-grow space-y-12">
-
-    <!-- ==================== HERO 封面區域 ==================== -->
-    <section class="text-center space-y-4 max-w-3xl mx-auto pt-4">
-      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold apple-badge">
-        2026 IT Transformation Milestone
-      </div>
-      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#1D1D1F] leading-tight">
-        零額外預算投入。<br class="hidden sm:block"/>三大自研系統全方位落地。
-      </h2>
-      <p class="text-base sm:text-lg text-[#86868B] font-normal leading-relaxed">
-        涵蓋「前線門市落單與防線機制」、「管理層營運數據中台」及「全新官方企業商務門戶」，以數據驅動為威黃物流注入現代化營運力量。
-      </p>
-
-      <!-- 4 大核心成果標籤 (Bento 卡片) -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 text-left">
-        <div class="bento-card p-4">
-          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">自研系統</div>
-          <div class="text-2xl font-bold text-[#1D1D1F] mt-1">3 套</div>
-          <div class="text-xs text-[#86868B] mt-0.5">正式上線運行</div>
-        </div>
-        <div class="bento-card p-4">
-          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">實體門市覆蓋</div>
-          <div class="text-2xl font-bold text-[#1D1D1F] mt-1">38 間</div>
-          <div class="text-xs text-[#86868B] mt-0.5">全港專門店覆蓋</div>
-        </div>
-        <div class="bento-card p-4">
-          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">軟件許可成本</div>
-          <div class="text-2xl font-bold text-[#34C759] mt-1">$0</div>
-          <div class="text-xs text-[#86868B] mt-0.5">零額外採購支出</div>
-        </div>
-        <div class="bento-card p-4">
-          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">網絡監控節點</div>
-          <div class="text-2xl font-bold text-[#0071E3] mt-1">40 個</div>
-          <div class="text-xs text-[#86868B] mt-0.5">38店 + 2部伺服器</div>
-        </div>
-      </div>
-    </section>
-
-
-    <!-- ==================== 第一部分：門市智能落單服務台與管理層營運駕駛艙 ==================== -->
-    <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#D2D2D7] pb-3 gap-1">
-        <div>
-          <span class="text-xs font-bold text-[#0071E3] uppercase tracking-wider">Part 01</span>
-          <h3 class="text-2xl font-extrabold text-[#1D1D1F] tracking-tight">門市智能落單系統 與 管理層營運駕駛艙</h3>
-        </div>
-        <p class="text-xs text-[#86868B]">由前線智能報修排障，到管理層年度到店維護決策分析</p>
-      </div>
-
-      <!-- Bento Grid 佈局 -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-
-        <!-- 模組 1A：門市 ITSM 服務台 (佔 7 格) -->
-        <div class="lg:col-span-7 bento-card p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <div class="w-9 h-9 rounded-2xl bg-blue-50 text-[#0071E3] flex items-center justify-center text-base">
-                  <i class="fa-solid fa-headset"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg font-bold text-[#1D1D1F]">門市智能 ITSM 服務台 (Front-End)</h4>
-                  <p class="text-xs text-[#86868B]">前線專用：免去繁複電話溝通，規範化故障回報</p>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-[#34C759] border border-emerald-200">
-                已部署上線
-              </span>
-            </div>
-
-            <!-- 🔑 管理層實測登入卡片 (極醒目) -->
-            <div class="bg-[#F5F5F7] border border-[#E5E5EA] rounded-2xl p-4 space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-[#1D1D1F] flex items-center space-x-1.5">
-                  <i class="fa-solid fa-key text-[#0071E3]"></i>
-                  <span>管理層體驗測試帳號 (Live Demo Login)</span>
-                </span>
-                <span class="text-[11px] text-[#86868B]">支援記住門市</span>
-              </div>
-              <div class="grid grid-cols-2 gap-3 text-xs pt-1">
-                <div class="bg-white p-2.5 rounded-xl border border-[#E5E5EA]">
-                  <div class="text-[#86868B] text-[11px]">門市編號 (Code ID)</div>
-                  <div class="font-mono font-extrabold text-[#1D1D1F] text-base mt-0.5">1192</div>
-                  <div class="text-[10px] text-[#86868B]">（海港城) Harbour City AT Tayama</div>
-                </div>
-                <div class="bg-white p-2.5 rounded-xl border border-[#E5E5EA]">
-                  <div class="text-[#86868B] text-[11px]">電腦密碼 (PC Password)</div>
-                  <div class="font-mono font-extrabold text-[#0071E3] text-base mt-0.5">Tc5525</div>
-                  <div class="text-[10px] text-[#86868B]">備用測試店: 1138 / Cb7749</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 六大防線機制清單 -->
-            <div class="space-y-2 text-xs">
-              <div class="font-bold text-[#1D1D1F] uppercase tracking-wider text-[11px] text-[#86868B]">六大安全防線機制</div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[#1D1D1F]">
-                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">
-                  <span class="w-5 h-5 rounded-full bg-blue-100 text-[#0071E3] text-[10px] flex items-center justify-center font-bold mt-0.5">1</span>
-                  <div><b>門市身份鎖定</b>：對接 ShopData 鎖定店號，杜絕選錯店。</div>
-                </div>
-                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">
-                  <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-[10px] flex items-center justify-center font-bold mt-0.5">2</span>
-                  <div><b>非 IT 業務分流</b>：VIP/POS 設直撥電話至 Martin (27383105)。</div>
-                </div>
-                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">
-                  <span class="w-5 h-5 rounded-full bg-emerald-100 text-[#34C759] text-[10px] flex items-center justify-center font-bold mt-0.5">3</span>
-                  <div><b>30 秒極速自檢</b>：拔電重啟教學，前線自解自動記入試算表。</div>
-                </div>
-                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">
-                  <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 text-[10px] flex items-center justify-center font-bold mt-0.5">4</span>
-                  <div><b>TeamViewer 遠端協議</b>：規範開機拍照連線，免電話催促。</div>
-                </div>
-                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">
-                  <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] flex items-center justify-center font-bold mt-0.5">5</span>
-                  <div><b>WhatsApp 閉環通知</b>：一鍵直通發送工單給 Jason (97242234)。</div>
-                </div>
-                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">
-                  <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] flex items-center justify-center font-bold mt-0.5">6</span>
-                  <div><b>即時進度追蹤</b>：手機大字體精確呈現本地香港時間與備註。</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 操作按鈕 -->
-          <div class="pt-2">
-            <a href="https://jason-9981.github.io/2026-01/FLS-ITSM/" target="_blank"
-              class="apple-btn w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 shadow-sm">
-              <span>立即打開「門市 ITSM 服務台」親自測試</span>
-              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- 模組 1B：管理層營運駕駛艙與全網 NOC (佔 5 格) -->
-        <div class="lg:col-span-5 bento-card p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <div class="w-9 h-9 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center text-base">
-                  <i class="fa-solid fa-chart-line"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg font-bold text-[#1D1D1F]">管理層營運駕駛艙 (Dashboard)</h4>
-                  <p class="text-xs text-[#86868B]">管理層專用：全局可視化與網絡監控</p>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-                即時同步
-              </span>
-            </div>
-
-            <!-- 核心功能特色清單 -->
-            <div class="space-y-2.5 text-xs text-[#1D1D1F]">
-              <div class="bg-[#F5F5F7] p-3 rounded-2xl space-y-1">
-                <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5">
-                  <i class="fa-solid fa-van-shuttle text-purple-600"></i>
-                  <span>年度實體到店維護次數排行 (Bar Chart)</span>
-                </div>
-                <p class="text-[#86868B] leading-relaxed">直觀長條圖標示需要重點預防維修的門市，精確掌握高耗損分店，為未來的設備翻新提供數據佐證。</p>
-              </div>
-
-              <div class="bg-[#F5F5F7] p-3 rounded-2xl space-y-1">
-                <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5">
-                  <i class="fa-solid fa-shield-check text-[#34C759]"></i>
-                  <span>自主排障成功攔截率 (Deflection Rate)</span>
-                </div>
-                <p class="text-[#86868B] leading-relaxed">即時統計門市前線自行修復比例（成功攔截約 40% 瑣碎工單），以具體數據量化 IT 教學省下的工時。</p>
-              </div>
-
-              <div class="bg-[#F5F5F7] p-3 rounded-2xl space-y-1">
-                <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5">
-                  <i class="fa-solid fa-network-wired text-[#0071E3]"></i>
-                  <span>全港 38 店 Router & POS 伺服器在線監控</span>
-                </div>
-                <p class="text-[#86868B] leading-relaxed">監控 40 個關鍵節點（38 間專門店 Router + 2 部 POS 伺服器），30 分鐘自動心跳巡檢，保障零售連鎖穩定。</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- 操作按鈕 -->
-          <div class="pt-2">
-            <a href="https://jason-9981.github.io/2026-01/FLS-ITSM/dashboard.html" target="_blank"
-              class="apple-btn-secondary w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 shadow-xs">
-              <span>開啟「管理層營運與網絡監控駕駛艙」</span>
-              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ==================== 第二部分：威黃物流全新官方企業網站與戰略架構 ==================== -->
-    <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#D2D2D7] pb-3 gap-1">
-        <div>
-          <span class="text-xs font-bold text-[#0071E3] uppercase tracking-wider">Part 02</span>
-          <h3 class="text-2xl font-extrabold text-[#1D1D1F] tracking-tight">威黃物流全新官方企業網站 與 戰略架構規劃</h3>
-        </div>
-        <p class="text-xs text-[#86868B]">現代品牌形象重塑、外判商務獲客與全站資訊架構藍圖</p>
-      </div>
-
-      <!-- Bento Grid 佈局 -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-
-        <!-- 模組 2A：全新官方網站 (佔 6 格) -->
-        <div class="lg:col-span-6 bento-card p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <div class="w-9 h-9 rounded-2xl bg-slate-100 text-[#1D1D1F] flex items-center justify-center text-base">
-                  <i class="fa-solid fa-globe"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg font-bold text-[#1D1D1F]">全新企業官方網站 (Official Website)</h4>
-                  <p class="text-xs text-[#86868B]">面向公眾與外部商業夥伴的品牌門戶</p>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#0071E3] border border-blue-200">
-                GitHub Pages 部署
-              </span>
-            </div>
-
-            <!-- 亮點清單 -->
-            <div class="space-y-3 text-xs text-[#1D1D1F]">
-              <div class="flex items-start space-x-3">
-                <i class="fa-solid fa-mobile-screen text-[#0071E3] text-sm mt-0.5"></i>
-                <div>
-                  <div class="font-bold">現代響應式架構 (Mobile Responsive)</div>
-                  <div class="text-[#86868B] mt-0.5">基於現代前端技術開發，支援手機、平板與電腦端流暢瀏覽。</div>
-                </div>
-              </div>
-
-              <div class="flex items-start space-x-3">
-                <i class="fa-solid fa-truck-ramp-box text-[#0071E3] text-sm mt-0.5"></i>
-                <div>
-                  <div class="font-bold">全面涵蓋核心物流業務 + IT 外判支援</div>
-                  <div class="text-[#86868B] mt-0.5">包含零售連鎖配送（支援 38 間門市）、倉儲庫存調配、電商物流，並將「企業 IT 系統支援外判」作為新增業務推廣。</div>
-                </div>
-              </div>
-
-              <div class="flex items-start space-x-3">
-                <i class="fa-solid fa-envelope-open-text text-[#0071E3] text-sm mt-0.5"></i>
-                <div>
-                  <div class="font-bold">在線商務即時報價系統 (Formspree 整合)</div>
-                  <div class="text-[#86868B] mt-0.5">外部商業客戶可直接在線填寫報價諮詢，直達公司業務郵箱（jason@fls.com.hk），開拓商業客源。</div>
-                </div>
-              </div>
-
-              <div class="flex items-start space-x-3">
-                <i class="fa-solid fa-language text-[#0071E3] text-sm mt-0.5"></i>
-                <div>
-                  <div class="font-bold">國際化三語支援 (Multilingual)</div>
-                  <div class="text-[#86868B] mt-0.5">繁體中文、英文、簡體中文三語架構，對接國際供應鏈夥伴。</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 操作按鈕 -->
-          <div class="pt-2">
-            <a href="https://jason-9981.github.io/2026-01/" target="_blank"
-              class="apple-btn w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 shadow-sm">
-              <span>立即打開「威黃物流官方網站」瀏覽</span>
-              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-            </a>
-          </div>
-        </div>
-
-        <!-- 模組 2B：專業網站架構與戰略報告 (佔 6 格) -->
-        <div class="lg:col-span-6 bento-card p-6 flex flex-col justify-between space-y-6">
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-2.5">
-                <div class="w-9 h-9 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-base">
-                  <i class="fa-solid fa-diagram-project"></i>
-                </div>
-                <div>
-                  <h4 class="text-lg font-bold text-[#1D1D1F]">網站架構規劃與商業戰略報告</h4>
-                  <p class="text-xs text-[#86868B]">展現 IT 在資訊架構與品牌重塑上的深度規劃能力</p>
-                </div>
-              </div>
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-                Gemini 戰略文檔
-              </span>
-            </div>
-
-            <!-- 兩份核心報告卡片 -->
-            <div class="space-y-3 text-xs">
-              <!-- 報告 1 -->
-              <a href="https://gemini.google.com/share/1a44e0f4ec04?skid=a47b0a66-18fa-4870-a2f0-65ced29ed5ba" target="_blank"
-                class="block bg-[#F5F5F7] hover:bg-[#EAEAEA] border border-[#E5E5EA] p-4 rounded-2xl transition space-y-1.5 group">
-                <div class="flex items-center justify-between">
-                  <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5 group-hover:text-[#0071E3] transition">
-                    <i class="fa-solid fa-sitemap text-blue-600"></i>
-                    <span>(FLS) 網站整體架構與 Sitemap 規劃</span>
-                  </div>
-                  <i class="fa-solid fa-arrow-up-right-from-square text-[#86868B] text-xs"></i>
-                </div>
-                <p class="text-[#86868B] leading-relaxed">
-                  完整定義首頁、關於威黃、物流服務、IT 方案及聯絡我們等五大維度 Sitemap 導航藍圖與頁面跳轉權限。
-                </p>
-              </a>
-
-              <!-- 報告 2 -->
-              <a href="https://gemini.google.com/share/24294524ddfa?skid=29ad1f94-cdb9-498a-b211-8e8fe9450e81" target="_blank"
-                class="block bg-[#F5F5F7] hover:bg-[#EAEAEA] border border-[#E5E5EA] p-4 rounded-2xl transition space-y-1.5 group">
-                <div class="flex items-center justify-between">
-                  <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5 group-hover:text-[#0071E3] transition">
-                    <i class="fa-solid fa-file-invoice text-emerald-600"></i>
-                    <span>(FLS) 網站重塑與戰略分析報告</span>
-                  </div>
-                  <i class="fa-solid fa-arrow-up-right-from-square text-[#86868B] text-xs"></i>
-                </div>
-                <p class="text-[#86868B] leading-relaxed">
-                  針對現代 B2B 供應鏈市場定位、SEO 獲客優化、舊有網站痛點分析及轉化率提升路徑的深度顧問報告。
-                </p>
-              </a>
-            </div>
-          </div>
-
-          <!-- 提示標籤 -->
-          <div class="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-[11px] text-amber-900 leading-relaxed">
-            <i class="fa-solid fa-circle-info mr-1 text-amber-600"></i>
-            管理層可點擊上方任一卡片，直接在線閱讀完整的戰略架構與專業分析推導過程。
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-
-    <!-- ==================== 底部管理層重要聲明 ==================== -->
-    <section class="bento-card p-6 bg-gradient-to-r from-slate-50 to-white border border-[#D2D2D7] text-center space-y-2">
-      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-        ⚠️ 階段性說明
-      </div>
-      <h4 class="text-base sm:text-lg font-black text-[#1D1D1F] tracking-tight">
-        【重要備註】所有內容現處於測試階段，需要管理層下一步指示如何落實。
-      </h4>
-      <p class="text-xs text-[#86868B]">
-        威黃物流服務有限公司 (Fenix Logistics Services Limited) · I&TD - Jason Chow (2026 年 9 月)
-      </p>
-    </section>
-
-  </main>
-
-  <!-- 頁尾版權 -->
-  <footer class="bg-white border-t border-[#E5E5EA] py-6 text-center text-xs text-[#86868B]">
-    威黃物流服務有限公司 · I&TD ( Innovation and Technology Development Department ) · All rights reserved
-  </footer>
-
-</body>
+<!DOCTYPE html>  
+<html lang="zh-HK">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>威黃物流 FLS - 數碼化轉型與全方位 IT 成果展示 (Executive Showcase)</title>  
+  <script src="https://cdn.tailwindcss.com"></script>  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
+  <style>  
+    body {  
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;  
+      background-color: #F5F5F7;  
+      color: #1D1D1F;  
+      -webkit-font-smoothing: antialiased;  
+    }  
+    .bento-card {  
+      background: #FFFFFF;  
+      border: 1px solid #E5E5EA;  
+      border-radius: 24px;  
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);  
+    }  
+    .bento-card:hover {  
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.04);  
+      border-color: #D2D2D7;  
+    }  
+    .apple-badge {  
+      background: rgba(0, 113, 227, 0.08);  
+      color: #0071E3;  
+      border: 1px solid rgba(0, 113, 227, 0.15);  
+    }  
+    .apple-btn {  
+      background-color: #0071E3;  
+      color: #FFFFFF;  
+      transition: background-color 0.2s ease;  
+    }  
+    .apple-btn:hover {  
+      background-color: #0077ED;  
+    }  
+    .apple-btn-secondary {  
+      background-color: #F5F5F7;  
+      color: #1D1D1F;  
+      border: 1px solid #D2D2D7;  
+      transition: all 0.2s ease;  
+    }  
+    .apple-btn-secondary:hover {  
+      background-color: #E8E8ED;  
+      border-color: #86868B;  
+    }  
+  </style>  
+</head>  
+<body class="min-h-screen flex flex-col justify-between">  
+  
+  <!-- 頂部 Apple 風格簡約導航 -->  
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-[#E5E5EA]">  
+    <div class="max-w-6xl mx-auto px-5 py-3.5 flex items-center justify-between">  
+      <div class="flex items-center space-x-3">  
+        <div class="w-8 h-8 rounded-xl bg-[#1D1D1F] text-white flex items-center justify-center font-black text-xs tracking-wider">  
+          FLS  
+        </div>  
+        <div>  
+          <h1 class="text-sm font-semibold text-[#1D1D1F] tracking-tight">威黃物流 · 數碼化轉型與系統開發成果展</h1>  
+          <p class="text-[11px] text-[#86868B]">系統支援部 Jason Chow · 2026 年 9 月</p>  
+        </div>  
+      </div>  
+      <div class="flex items-center space-x-2">  
+        <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium apple-badge">  
+          <span class="w-1.5 h-1.5 rounded-full bg-[#0071E3] mr-1.5 animate-pulse"></span>  
+          管理層專閱展示板  
+        </span>  
+      </div>  
+    </div>  
+  </header>  
+  
+  <!-- 主內容容器 -->  
+  <main class="max-w-6xl mx-auto px-5 py-10 w-full flex-grow space-y-12">  
+  
+    <!-- ==================== HERO 封面區域 ==================== -->  
+    <section class="text-center space-y-4 max-w-3xl mx-auto pt-4">  
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold apple-badge">  
+        2026 IT Transformation Milestone  
+      </div>  
+      <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#1D1D1F] leading-tight">  
+        零額外預算投入。<br class="hidden sm:block"/>三大自研系統全方位落地。  
+      </h2>  
+      <p class="text-base sm:text-lg text-[#86868B] font-normal leading-relaxed">  
+        涵蓋「前線門市落單與防線機制」、「管理層營運數據中台」及「全新官方企業商務門戶」，以數據驅動為威黃物流注入現代化營運力量。  
+      </p>  
+  
+      <!-- 4 大核心成果標籤 (Bento 卡片) -->  
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 text-left">  
+        <div class="bento-card p-4">  
+          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">自研系統</div>  
+          <div class="text-2xl font-bold text-[#1D1D1F] mt-1">3 套</div>  
+          <div class="text-xs text-[#86868B] mt-0.5">正式上線運行</div>  
+        </div>  
+        <div class="bento-card p-4">  
+          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">實體門市覆蓋</div>  
+          <div class="text-2xl font-bold text-[#1D1D1F] mt-1">38 間</div>  
+          <div class="text-xs text-[#86868B] mt-0.5">全港專門店覆蓋</div>  
+        </div>  
+        <div class="bento-card p-4">  
+          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">軟件許可成本</div>  
+          <div class="text-2xl font-bold text-[#34C759] mt-1">$0</div>  
+          <div class="text-xs text-[#86868B] mt-0.5">零額外採購支出</div>  
+        </div>  
+        <div class="bento-card p-4">  
+          <div class="text-[11px] text-[#86868B] font-medium uppercase tracking-wider">網絡監控節點</div>  
+          <div class="text-2xl font-bold text-[#0071E3] mt-1">40 個</div>  
+          <div class="text-xs text-[#86868B] mt-0.5">38店 + 2部伺服器</div>  
+        </div>  
+      </div>  
+    </section>  
+  
+    <!-- ==================== 第一部分：門市智能落單服務台與管理層營運駕駛艙 ==================== -->  
+    <section class="space-y-6">  
+      <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#D2D2D7] pb-3 gap-1">  
+        <div>  
+          <span class="text-xs font-bold text-[#0071E3] uppercase tracking-wider">Part 01</span>  
+          <h3 class="text-2xl font-extrabold text-[#1D1D1F] tracking-tight">門市智能落單系統 與 管理層營運駕駛艙</h3>  
+        </div>  
+        <p class="text-xs text-[#86868B]">由前線智能報修排障，到管理層年度到店維護決策分析</p>  
+      </div>  
+  
+      <!-- Bento Grid 佈局 -->  
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">  
+        <!-- 模組 1A：門市 ITSM 服務台 (佔 7 格) -->  
+        <div class="lg:col-span-7 bento-card p-6 flex flex-col justify-between space-y-6">  
+          <div class="space-y-4">  
+            <div class="flex items-center justify-between">  
+              <div class="flex items-center space-x-2.5">  
+                <div class="w-9 h-9 rounded-2xl bg-blue-50 text-[#0071E3] flex items-center justify-center text-base">  
+                  <i class="fa-solid fa-headset"></i>  
+                </div>  
+                <div>  
+                  <h4 class="text-lg font-bold text-[#1D1D1F]">門市智能 ITSM 服務台 (Front-End)</h4>  
+                  <p class="text-xs text-[#86868B]">前線專用：免去繁複電話溝通，規範化故障回報</p>  
+                </div>  
+              </div>  
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-[#34C759] border border-emerald-200">  
+                已部署上線  
+              </span>  
+            </div>  
+  
+            <!-- 管理層實測登入卡片 -->  
+            <div class="bg-[#F5F5F7] border border-[#E5E5EA] rounded-2xl p-4 space-y-2">  
+              <div class="flex items-center justify-between">  
+                <span class="text-xs font-bold text-[#1D1D1F] flex items-center space-x-1.5">  
+                  <i class="fa-solid fa-key text-[#0071E3]"></i>  
+                  <span>管理層體驗測試帳號 (Live Demo Login)</span>  
+                </span>  
+                <span class="text-[11px] text-[#86868B]">支援記住門市</span>  
+              </div>  
+              <div class="grid grid-cols-2 gap-3 text-xs pt-1">  
+                <div class="bg-white p-2.5 rounded-xl border border-[#E5E5EA]">  
+                  <div class="text-[#86868B] text-[11px]">門市編號 (Code ID)</div>  
+                  <div class="font-mono font-extrabold text-[#1D1D1F] text-base mt-0.5">1192</div>  
+                  <div class="text-[10px] text-[#86868B]">屯門市廣場 AT Tayama</div>  
+                </div>  
+                <div class="bg-white p-2.5 rounded-xl border border-[#E5E5EA]">  
+                  <div class="text-[#86868B] text-[11px]">電腦密碼 (PC Password)</div>  
+                  <div class="font-mono font-extrabold text-[#0071E3] text-base mt-0.5">Tc5525</div>  
+                  <div class="text-[10px] text-[#86868B]">備用測試店: 1138 / Cb7749</div>  
+                </div>  
+              </div>  
+            </div>  
+  
+            <!-- 六大防線機制清單 -->  
+            <div class="space-y-2 text-xs">  
+              <div class="font-bold text-[#1D1D1F] uppercase tracking-wider text-[11px] text-[#86868B]">六大安全防線機制</div>  
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[#1D1D1F]">  
+                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">  
+                  <span class="w-5 h-5 rounded-full bg-blue-100 text-[#0071E3] text-[10px] flex items-center justify-center font-bold mt-0.5">1</span>  
+                  <div><b>門市身份鎖定</b>：對接 ShopData 鎖定店號，杜絕選錯店。</div>  
+                </div>  
+                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">  
+                  <span class="w-5 h-5 rounded-full bg-amber-100 text-amber-700 text-[10px] flex items-center justify-center font-bold mt-0.5">2</span>  
+                  <div><b>非 IT 業務分流</b>：VIP/POS 設直撥電話至 Martin (27383105)。</div>  
+                </div>  
+                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">  
+                  <span class="w-5 h-5 rounded-full bg-emerald-100 text-[#34C759] text-[10px] flex items-center justify-center font-bold mt-0.5">3</span>  
+                  <div><b>30 秒極速自檢</b>：拔電重啟教學，前線自解自動記入試算表。</div>  
+                </div>  
+                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">  
+                  <span class="w-5 h-5 rounded-full bg-purple-100 text-purple-700 text-[10px] flex items-center justify-center font-bold mt-0.5">4</span>  
+                  <div><b>TeamViewer 遠端協議</b>：規範開機拍照連線，免電話催促。</div>  
+                </div>  
+                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">  
+                  <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] flex items-center justify-center font-bold mt-0.5">5</span>  
+                  <div><b>WhatsApp 閉環通知</b>：一鍵直通發送工單給 Jason (97242234)。</div>  
+                </div>  
+                <div class="flex items-start space-x-2 bg-[#F5F5F7] p-2.5 rounded-xl">  
+                  <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[10px] flex items-center justify-center font-bold mt-0.5">6</span>  
+                  <div><b>即時進度追蹤</b>：手機大字體精確呈現本地香港時間與備註。</div>  
+                </div>  
+              </div>  
+            </div>  
+          </div>  
+  
+          <!-- 操作按鈕 -->  
+          <div class="pt-2">  
+            <a href="https://jason-9981.github.io/2026-01/FLS-ITSM/" target="_blank"  
+              class="apple-btn w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 shadow-sm">  
+              <span>立即打開「門市 ITSM 服務台」親自測試</span>  
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>  
+            </a>  
+          </div>  
+        </div>  
+  
+        <!-- 模組 1B：管理層營運駕駛艙與全網 NOC (佔 5 格) -->  
+        <div class="lg:col-span-5 bento-card p-6 flex flex-col justify-between space-y-6">  
+          <div class="space-y-4">  
+            <div class="flex items-center justify-between">  
+              <div class="flex items-center space-x-2.5">  
+                <div class="w-9 h-9 rounded-2xl bg-purple-50 text-purple-700 flex items-center justify-center text-base">  
+                  <i class="fa-solid fa-chart-line"></i>  
+                </div>  
+                <div>  
+                  <h4 class="text-lg font-bold text-[#1D1D1F]">管理層營運駕駛艙 (Dashboard)</h4>  
+                  <p class="text-xs text-[#86868B]">管理層專用：全局可視化與網絡監控</p>  
+                </div>  
+              </div>  
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">  
+                即時同步  
+              </span>  
+            </div>  
+  
+            <!-- 核心功能特色清單 -->  
+            <div class="space-y-2.5 text-xs text-[#1D1D1F]">  
+              <div class="bg-[#F5F5F7] p-3 rounded-2xl space-y-1">  
+                <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5">  
+                  <i class="fa-solid fa-van-shuttle text-purple-600"></i>  
+                  <span>年度實體到店維護次數排行 (Bar Chart)</span>  
+                </div>  
+                <p class="text-[#86868B] leading-relaxed">直觀長條圖標示需要重點預防維修的門市，精確掌握高耗損分店，為未來的設備翻新提供數據佐證。</p>  
+              </div>  
+  
+              <div class="bg-[#F5F5F7] p-3 rounded-2xl space-y-1">  
+                <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5">  
+                  <i class="fa-solid fa-shield-check text-[#34C759]"></i>  
+                  <span>自主排障成功攔截率 (Deflection Rate)</span>  
+                </div>  
+                <p class="text-[#86868B] leading-relaxed">即時統計門市前線自行修復比例（成功攔截約 40% 瑣碎工單），以具體數據量化 IT 教學省下的工時。</p>  
+              </div>  
+  
+              <div class="bg-[#F5F5F7] p-3 rounded-2xl space-y-1">  
+                <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5">  
+                  <i class="fa-solid fa-network-wired text-[#0071E3]"></i>  
+                  <span>全港 38 店 Router & POS 伺服器在線監控</span>  
+                </div>  
+                <p class="text-[#86868B] leading-relaxed">監控 40 個關鍵節點（38 間專門店 Router + 2 部 POS 伺服器），30 分鐘自動心跳巡檢，保障零售連鎖穩定。</p>  
+              </div>  
+            </div>  
+          </div>  
+  
+          <!-- 操作按鈕 -->  
+          <div class="pt-2">  
+            <a href="https://jason-9981.github.io/2026-01/FLS-ITSM/dashboard.html" target="_blank"  
+              class="apple-btn-secondary w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 shadow-xs">  
+              <span>開啟「管理層營運與網絡監控駕駛艙」</span>  
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>  
+            </a>  
+          </div>  
+        </div>  
+  
+      </div>  
+    </section>  
+  
+    <!-- ==================== 第二部分：威黃物流全新官方企業網站與戰略架構 ==================== -->  
+    <section class="space-y-6">  
+      <div class="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[#D2D2D7] pb-3 gap-1">  
+        <div>  
+          <span class="text-xs font-bold text-[#0071E3] uppercase tracking-wider">Part 02</span>  
+          <h3 class="text-2xl font-extrabold text-[#1D1D1F] tracking-tight">威黃物流全新官方企業網站 與 戰略架構規劃</h3>  
+        </div>  
+        <p class="text-xs text-[#86868B]">現代品牌形象重塑、外判商務獲客與全站資訊架構藍圖</p>  
+      </div>  
+  
+      <!-- Bento Grid 佈局 -->  
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">  
+        <!-- 模組 2A：全新官方網站 (佔 6 格) -->  
+        <div class="lg:col-span-6 bento-card p-6 flex flex-col justify-between space-y-6">  
+          <div class="space-y-4">  
+            <div class="flex items-center justify-between">  
+              <div class="flex items-center space-x-2.5">  
+                <div class="w-9 h-9 rounded-2xl bg-slate-100 text-[#1D1D1F] flex items-center justify-center text-base">  
+                  <i class="fa-solid fa-globe"></i>  
+                </div>  
+                <div>  
+                  <h4 class="text-lg font-bold text-[#1D1D1F]">全新企業官方網站 (Official Website)</h4>  
+                  <p class="text-xs text-[#86868B]">面向公眾與外部商業夥伴的品牌門戶</p>  
+                </div>  
+              </div>  
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#0071E3] border border-blue-200">  
+                GitHub Pages 部署  
+              </span>  
+            </div>  
+  
+            <!-- 亮點清單 -->  
+            <div class="space-y-3 text-xs text-[#1D1D1F]">  
+              <div class="flex items-start space-x-3">  
+                <i class="fa-solid fa-mobile-screen text-[#0071E3] text-sm mt-0.5"></i>  
+                <div>  
+                  <div class="font-bold">現代響應式架構 (Mobile Responsive)</div>  
+                  <div class="text-[#86868B] mt-0.5">基於現代前端技術開發，支援手機、平板與電腦端流暢瀏覽。</div>  
+                </div>  
+              </div>  
+  
+              <div class="flex items-start space-x-3">  
+                <i class="fa-solid fa-truck-ramp-box text-[#0071E3] text-sm mt-0.5"></i>  
+                <div>  
+                  <div class="font-bold">全面涵蓋核心物流業務 + IT 外判支援</div>  
+                  <div class="text-[#86868B] mt-0.5">包含零售連鎖配送（支援 38 間門市）、倉儲庫存調配、電商物流，並將「企業 IT 系統支援外判」作為新增業務推廣。</div>  
+                </div>  
+              </div>  
+  
+              <div class="flex items-start space-x-3">  
+                <i class="fa-solid fa-envelope-open-text text-[#0071E3] text-sm mt-0.5"></i>  
+                <div>  
+                  <div class="font-bold">在線商務即時報價系統 (Formspree 整合)</div>  
+                  <div class="text-[#86868B] mt-0.5">外部商業客戶可直接在線填寫報價諮詢，直達公司業務郵箱（jason@fls.com.hk），開拓商業客源。</div>  
+                </div>  
+              </div>  
+  
+              <div class="flex items-start space-x-3">  
+                <i class="fa-solid fa-language text-[#0071E3] text-sm mt-0.5"></i>  
+                <div>  
+                  <div class="font-bold">國際化三語支援 (Multilingual)</div>  
+                  <div class="text-[#86868B] mt-0.5">繁體中文、英文、簡體中文三語架構，對接國際供應鏈夥伴。</div>  
+                </div>  
+              </div>  
+            </div>  
+          </div>  
+  
+          <!-- 操作按鈕 -->  
+          <div class="pt-2">  
+            <a href="https://jason-9981.github.io/2026-01/" target="_blank"  
+              class="apple-btn w-full py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 shadow-sm">  
+              <span>立即打開「威黃物流官方網站」瀏覽</span>  
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>  
+            </a>  
+          </div>  
+        </div>  
+  
+        <!-- 模組 2B：專業網站架構與戰略報告 (佔 6 格) -->  
+        <div class="lg:col-span-6 bento-card p-6 flex flex-col justify-between space-y-6">  
+          <div class="space-y-4">  
+            <div class="flex items-center justify-between">  
+              <div class="flex items-center space-x-2.5">  
+                <div class="w-9 h-9 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-base">  
+                  <i class="fa-solid fa-diagram-project"></i>  
+                </div>  
+                <div>  
+                  <h4 class="text-lg font-bold text-[#1D1D1F]">網站架構規劃與商業戰略報告</h4>  
+                  <p class="text-xs text-[#86868B]">展現 IT 在資訊架構與品牌重塑上的深度規劃能力</p>  
+                </div>  
+              </div>  
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">  
+                Gemini 戰略文檔  
+              </span>  
+            </div>  
+  
+            <!-- 兩份核心報告卡片 -->  
+            <div class="space-y-3 text-xs">  
+              <!-- 報告 1 -->  
+              <a href="https://gemini.google.com/share/1a44e0f4ec04?skid=a47b0a66-18fa-4870-a2f0-65ced29ed5ba" target="_blank"  
+                class="block bg-[#F5F5F7] hover:bg-[#EAEAEA] border border-[#E5E5EA] p-4 rounded-2xl transition space-y-1.5 group">  
+                <div class="flex items-center justify-between">  
+                  <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5 group-hover:text-[#0071E3] transition">  
+                    <i class="fa-solid fa-sitemap text-blue-600"></i>  
+                    <span>(FLS) 網站整體架構與 Sitemap 規劃</span>  
+                  </div>  
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[#86868B] text-xs"></i>  
+                </div>  
+                <p class="text-[#86868B] leading-relaxed">  
+                  完整定義首頁、關於威黃、物流服務、IT 方案及聯絡我們等五大維度 Sitemap 導航藍圖與頁面跳轉權限。  
+                </p>  
+              </a>  
+  
+              <!-- 報告 2 -->  
+              <a href="https://gemini.google.com/share/24294524ddfa?skid=29ad1f94-cdb9-498a-b211-8e8fe9450e81" target="_blank"  
+                class="block bg-[#F5F5F7] hover:bg-[#EAEAEA] border border-[#E5E5EA] p-4 rounded-2xl transition space-y-1.5 group">  
+                <div class="flex items-center justify-between">  
+                  <div class="font-bold text-[#1D1D1F] flex items-center space-x-1.5 group-hover:text-[#0071E3] transition">  
+                    <i class="fa-solid fa-file-invoice text-emerald-600"></i>  
+                    <span>(FLS) 網站重塑與戰略分析報告</span>  
+                  </div>  
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[#86868B] text-xs"></i>  
+                </div>  
+                <p class="text-[#86868B] leading-relaxed">  
+                  針對現代 B2B 供應鏈市場定位、SEO 獲客優化、舊有網站痛點分析及轉化率提升路徑的深度顧問報告。  
+                </p>  
+              </a>  
+            </div>  
+          </div>  
+  
+          <!-- 提示標籤 -->  
+          <div class="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-[11px] text-amber-900 leading-relaxed">  
+            <i class="fa-solid fa-circle-info mr-1 text-amber-600"></i>  
+            管理層可點擊上方任一卡片，直接在線閱讀完整的戰略架構與專業分析推導過程。  
+          </div>  
+        </div>  
+  
+      </div>  
+    </section>  
+  
+    <!-- ==================== 底部管理層重要聲明 ==================== -->  
+    <section class="bento-card p-6 bg-gradient-to-r from-slate-50 to-white border border-[#D2D2D7] text-center space-y-2">  
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">  
+        ⚠️ 階段性說明  
+      </div>  
+      <h4 class="text-base sm:text-lg font-black text-[#1D1D1F] tracking-tight">  
+        【重要備註】所有內容現處於測試階段，需要管理層下一步指示如何落實。  
+      </h4>  
+      <p class="text-xs text-[#86868B]">  
+        威黃物流服務有限公司 (FLS Logistics Services Limited) · 系統支援部 Jason Chow (2026 年 9 月)  
+      </p>  
+    </section>  
+  
+  </main>  
+  
+  <!-- 頁尾版權 (含版本編號) -->  
+  <footer class="bg-white border-t border-[#E5E5EA] py-6 text-center text-xs text-[#86868B] flex flex-col sm:flex-row items-center justify-center gap-2">  
+    <span>威黃物流服務有限公司 · Innovation & Technology Development · All rights reserved</span>  
+    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">  
+      <i class="fa-solid fa-code-commit text-[10px]"></i>v2.5 (2026年9月16日 00:46 版)  
+    </span>  
+  </footer>  
+  
+</body>  
 </html>
