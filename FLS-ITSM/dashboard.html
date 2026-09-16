@@ -81,7 +81,7 @@
             <span>IT 營運與門市使用狀況儀表板</span>  
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">管理層專閱</span>  
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 flex items-center gap-1">
-              <i class="fa-solid fa-code-commit text-[9px]"></i>v3.6 (2026年9月17日 緊湊一目了然版)
+              <i class="fa-solid fa-code-commit text-[9px]"></i>v3.8 (2026年9月17日 全功能正式版)
             </span>
           </h1>  
           <p class="text-xs text-slate-400">威黃物流服務有限公司 · IT&D - Jason Chow</p>  
@@ -311,7 +311,7 @@
         <table class="w-full text-left text-xs border-collapse compact-table">  
           <thead>  
             <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">  
-              <th class="py-2 px-2.5 whitespace-nowrap w-24">提交時間</th>  
+              <th class="py-2 px-2.5 whitespace-nowrap w-32">提交時間</th>  
               <th class="py-2 px-2 whitespace-nowrap w-28">工單號</th>  
               <th class="py-2 px-2.5 whitespace-nowrap w-28">門市代號</th>  
               <th class="py-2 px-2 whitespace-nowrap w-20">聯絡人</th>  
@@ -341,7 +341,7 @@
   <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-center gap-2">  
     <span>威黃物流服務有限公司 (Fenix Logistics Services Limited) · I&TD - Jason Chow</span>  
     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">  
-      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.6 (2026年9月17日 緊湊一目了然版)  
+      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.8 (2026年9月17日 全功能正式版)  
     </span>  
   </footer>  
 
@@ -461,14 +461,17 @@
     });
   });  
 
-  // 優先載入本地快取（防白板機制）
+  // 優先載入本地快取（防白板機制，自動過濾測試記錄並清洗快取）
   function loadCachedTickets() {
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         const data = JSON.parse(cached);
         if (Array.isArray(data) && data.length > 0) {
-          rawTickets = data;
+          rawTickets = data.map(t => sanitizeTicket(t));
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify(rawTickets));
+          } catch(e) {}
           applyFilters();
         }
       }
@@ -509,7 +512,7 @@
     return 0;
   }
 
-  // ★ 格式化日期：全面解決「不見了 S」或「ep 17 2026」截斷問題
+  // ★ 核心優化：統一時間格式為標準 YYYY-MM-DD HH:mm (例如 2026-09-17 17:23)
   function formatTicketTime(raw) {
     if (!raw) return '-';
     const s = String(raw).trim();
@@ -520,37 +523,45 @@
       const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
       const mo = months[mEng[1]] || '09';
       const day = mEng[2].padStart(2, '0');
-      return `${mo}-${day} ${mEng[4]}`;
+      const yr = mEng[3];
+      return `${yr}-${mo}-${day} ${mEng[4]}`;
     }
 
-    // 2. 標準 YYYY-MM-DD HH:mm 或 YYYY/MM/DD HH:mm
-    const mStd = s.match(/(?:(\d{4})[-/])?(\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{1,2})/);
+    // 2. 標準 YYYY-MM-DD HH:mm(:ss) 或 YYYY/MM/DD HH:mm(:ss)
+    const mStd = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{1,2})/);
     if (mStd) {
+      const yr = mStd[1];
       const mo = mStd[2].padStart(2, '0');
       const day = mStd[3].padStart(2, '0');
-      return `${mo}-${day} ${mStd[4]}`;
+      return `${yr}-${mo}-${day} ${mStd[4]}`;
     }
 
-    // 3. 已經是 MM-DD HH:mm 格式
+    // 3. 只有 MM-DD HH:mm 格式 (自動補齊 2026 年份)
     const mShort = s.match(/^(\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{1,2})/);
     if (mShort) {
-      return `${mShort[1].padStart(2, '0')}-${mShort[2].padStart(2, '0')} ${mShort[3]}`;
+      const mo = mShort[1].padStart(2, '0');
+      const day = mShort[2].padStart(2, '0');
+      return `2026-${mo}-${day} ${mShort[3]}`;
     }
 
     // 4. ISO 格式 2026-09-13T03:23:28
     const mIso = s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
     if (mIso) {
-      return `${mIso[2]}-${mIso[3]} ${mIso[4]}:${mIso[5]}`;
+      return `${mIso[1]}-${mIso[2]}-${mIso[3]} ${mIso[4]}:${mIso[5]}`;
     }
 
-    // 5. 任何純日期 YYYY-MM-DD
+    // 5. 純日期 YYYY-MM-DD
     const mDateOnly = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
     if (mDateOnly) {
-      return `${mDateOnly[2].padStart(2, '0')}-${mDateOnly[3].padStart(2, '0')}`;
+      const yr = mDateOnly[1];
+      const mo = mDateOnly[2].padStart(2, '0');
+      const day = mDateOnly[3].padStart(2, '0');
+      return `${yr}-${mo}-${day} 00:00`;
     }
 
     return s;
   }
+
 
   // 解析任何格式的日期（全面相容各類日期做時間範圍過濾與排序）
   function parseTicketDate(raw) {
