@@ -16,14 +16,60 @@
       position: -webkit-sticky;
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 40;
       background-color: #0f172a;
+    }
+
+    /* 緊湊單行表格樣式 */
+    .compact-table td, .compact-table th {
+      vertical-align: middle;
+    }
+
+    /* 列印專用高質感排版 (@media print) */
+    @media print {
+      .no-print, header .action-buttons, #filterSection, button, .modal-backdrop {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+        color: #0f172a !important;
+        font-size: 11px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      header.sticky-header {
+        position: static !important;
+        background: white !important;
+        color: #0f172a !important;
+        border-bottom: 2px solid #0f172a !important;
+        padding: 12px 0 !important;
+      }
+      header.sticky-header * {
+        color: #0f172a !important;
+      }
+      .bg-white, .glass {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      .print-break-inside-avoid {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .table-container {
+        overflow: visible !important;
+      }
+      table {
+        width: 100% !important;
+      }
+      #ticketModal {
+        display: none !important;
+      }
     }
   </style>  
 </head>  
 <body class="bg-slate-100 min-h-screen text-slate-800 text-sm flex flex-col justify-between">  
   
-  <!-- 頂部導航 (管理層專用，高 z-index 保證滑動時乾淨置頂，不遮擋錯位) -->  
+  <!-- 頂部導航 (管理層專用，支援快捷同步、PDF 列印與數據來源導出) -->  
   <header class="sticky-header text-white shadow-md border-b border-slate-800">  
     <div class="max-w-[1560px] mx-auto px-4 py-3 flex items-center justify-between">  
       <div class="flex items-center space-x-3">  
@@ -35,23 +81,34 @@
             <span>IT 營運與門市使用狀況儀表板</span>  
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">管理層專閱</span>  
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 flex items-center gap-1">
-              <i class="fa-solid fa-code-commit text-[9px]"></i>v3.0 (9月16日 18:15 完美版)
+              <i class="fa-solid fa-code-commit text-[9px]"></i>v3.6 (2026年9月17日 緊湊一目了然版)
             </span>
           </h1>  
           <p class="text-xs text-slate-400">威黃物流服務有限公司 · IT&D - Jason Chow</p>  
         </div>  
       </div>  
   
-      <!-- 快捷操作：Refresh 與 資料來源 -->  
-      <div class="flex items-center space-x-2">  
+      <!-- 快捷操作按鈕組 -->  
+      <div class="action-buttons flex items-center space-x-2">  
         <button onclick="fetchAllTickets(true)"   
-          class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5">  
+          class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5"
+          title="從 Google Sheets 重新同步最新數據">  
           <i id="refreshIcon" class="fa-solid fa-rotate-right"></i>  
           <span class="hidden sm:inline">即時同步</span>  
           <span>Refresh</span>  
         </button>  
+
+        <button onclick="window.print()" 
+          class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center space-x-1.5"
+          title="將儀表板轉換為 PDF 或列印">
+          <i class="fa-solid fa-print text-amber-400"></i>
+          <span class="hidden sm:inline">列印 / 存為</span>
+          <span>PDF</span>
+        </button>
+
         <a href="https://docs.google.com/spreadsheets/d/1DVopGt_YABciCY48kPr-CtHYtwmfVPirejj9mnufD1c/edit" target="_blank"  
-          class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center space-x-1">  
+          class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center space-x-1"
+          title="開啟底層 Google Sheet">  
           <i class="fa-solid fa-file-excel text-emerald-400"></i>  
           <span class="hidden sm:inline">開啟</span>  
           <span>試算表</span>  
@@ -66,7 +123,7 @@
     <!-- 1. 核心 KPI 數據卡片 (4 大核心指標，實時精確累計實體到店次數) -->  
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">  
       <!-- 總工單量 -->  
-      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between">  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
         <div>  
           <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">總工單累積量</div>  
           <div id="kpiTotalTickets" class="text-2xl lg:text-3xl font-black text-slate-900 mt-1">--</div>  
@@ -78,7 +135,7 @@
       </div>  
   
       <!-- 店舖到店維修總次數 (精確計算多次到店，包含單一工單多次到店) -->  
-      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between">  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
         <div>  
           <div class="text-xs text-purple-700 font-bold uppercase tracking-wider">年度到店維修次數</div>  
           <div id="kpiOnsiteVisits" class="text-2xl lg:text-3xl font-black text-purple-700 mt-1">--</div>  
@@ -90,11 +147,11 @@
       </div>  
   
       <!-- 自主排障成功攔截 (Deflection) -->  
-      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between">  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
         <div>  
           <div class="text-xs text-emerald-700 font-bold uppercase tracking-wider">自檢成功攔截次數</div>  
           <div id="kpiDeflected" class="text-2xl lg:text-3xl font-black text-emerald-600 mt-1">--</div>  
-          <div id="kpiDeflectedRate" class="text-[11px] text-emerald-600 mt-0.5 font-bold">攔截率: --%</div>  
+          <div id="kpiDeflectedRate" class="text-[11px] text-emerald-600 mt-0.5 font-bold">工單攔截率: --%</div>  
         </div>  
         <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">  
           <i class="fa-solid fa-shield-check"></i>  
@@ -102,7 +159,7 @@
       </div>  
   
       <!-- 進行中 / 待處理 -->  
-      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between">  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
         <div>  
           <div class="text-xs text-amber-700 font-bold uppercase tracking-wider">待處理 / 遠端中</div>  
           <div id="kpiActiveTickets" class="text-2xl lg:text-3xl font-black text-amber-600 mt-1">--</div>  
@@ -115,7 +172,7 @@
     </div>  
   
     <!-- 2. 靈活篩選控制器 (自選時間範圍，預設 2026 年) -->  
-    <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">  
+    <div id="filterSection" class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">  
       <div class="flex items-center justify-between">  
         <h3 class="text-xs font-extrabold text-slate-600 uppercase tracking-wider flex items-center space-x-1.5">  
           <i class="fa-solid fa-filter text-blue-600"></i>  
@@ -133,7 +190,7 @@
             <i class="fa-solid fa-calendar-days text-blue-600"></i>
             <span>工作時間範圍</span>
           </label>  
-          <select id="filterTimeRange" onchange="applyFilters()"  
+          <select id="filterTimeRange" onchange="applyFilters()"   
             class="w-full p-2 bg-blue-50/60 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
             <option value="2026" selected>2026 年全年度 (預設)</option>  
             <option value="1M">近 1 個月 (過去 30 天)</option>  
@@ -143,11 +200,11 @@
             <option value="ALL">全部歷史記錄</option>  
           </select>  
         </div>  
-
+  
         <!-- 門市篩選 -->  
         <div>  
           <label class="block text-xs font-bold text-slate-700 mb-1">目標門市</label>  
-          <select id="filterShop" onchange="applyFilters()"  
+          <select id="filterShop" onchange="applyFilters()"   
             class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
             <option value="ALL">全部 38 間實體門市</option>  
           </select>  
@@ -156,7 +213,7 @@
         <!-- 處理狀態篩選 -->  
         <div>  
           <label class="block text-xs font-bold text-slate-700 mb-1">處理狀態</label>  
-          <select id="filterStatus" onchange="applyFilters()"  
+          <select id="filterStatus" onchange="applyFilters()"   
             class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
             <option value="ALL">全部狀態</option>  
             <option value="待處理">待處理 / 已收單</option>  
@@ -170,21 +227,22 @@
         <!-- 問題分類篩選 -->  
         <div>  
           <label class="block text-xs font-bold text-slate-700 mb-1">問題分類</label>  
-          <select id="filterCategory" onchange="applyFilters()"  
+          <select id="filterCategory" onchange="applyFilters()"   
             class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
             <option value="ALL">全部問題類型</option>  
             <option value="網絡">網絡問題 (WiFi/卡機/上網)</option>  
             <option value="印單機">印單機 Jam 紙 / 故障</option>  
             <option value="音樂">背景音樂播放器</option>  
             <option value="電腦">電腦問題 (Hang機/好慢/死機)</option>  
+            <option value="硬件">其他硬件支援 / 採購</option>  
           </select>  
         </div>  
   
         <!-- 關鍵字搜尋 -->  
         <div>  
-          <label class="block text-xs font-bold text-slate-700 mb-1">關鍵字搜尋 (備註/詳情)</label>  
+          <label class="block text-xs font-bold text-slate-700 mb-1">關鍵字搜尋 (編號/人員/描述)</label>  
           <div class="relative">  
-            <input type="text" id="filterKeyword" oninput="applyFilters()" placeholder="搜尋編號、問題..."  
+            <input type="text" id="filterKeyword" oninput="applyFilters()" placeholder="搜尋編號、聯絡人、負責人..."   
               class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">  
             <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>  
           </div>  
@@ -193,7 +251,7 @@
     </div>  
   
     <!-- 3. 圖表分析區 (Chart.js) -->  
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">  
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5 print-break-inside-avoid">  
       <!-- 圖表 1：各門市到店維修次數排行榜 -->  
       <div class="lg:col-span-2 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">  
         <div class="flex items-center justify-between border-b border-slate-100 pb-2">  
@@ -226,64 +284,162 @@
       </div>  
     </div>  
   
-    <!-- 4. 詳細數據表格 (優化：完美自適應寬度，無多餘水平滾動，所有欄位及排障全文完整顯示) -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-      <!-- 表格標題與操作欄 (嚴格獨立關閉，絕不與表格容器產生 flex 擠壓) -->
-      <div class="p-3.5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">
-            <i class="fa-solid fa-table-list text-blue-600"></i>
-            <span>完整支援工單明細表</span>
-          </h4>
-          <p class="text-xs text-slate-400 mt-0.5">
-            符合篩選記錄：共 <b id="tableCount" class="text-blue-600">0</b> 筆（全欄位自適應適配螢幕，排障全文清晰完整呈現）
-          </p>
+    <!-- 4. 詳細數據表格 (升級：緊湊單行排版、行距縮窄、負責人獨立置前、操作按鈕完整顯示) -->  
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden print-break-inside-avoid">  
+      <!-- 表格標題與操作欄 -->  
+      <div class="p-3 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">  
+        <div>  
+          <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">  
+            <i class="fa-solid fa-table-list text-blue-600"></i>  
+            <span>完整支援工單明細表</span>  
+          </h4>  
+          <p class="text-xs text-slate-400 mt-0.5">  
+            符合篩選記錄：共 <b id="tableCount" class="text-blue-600">0</b> 筆（緊湊視圖：單行清晰對齊，點擊任意行展開完整對話與跟進詳情）  
+          </p>  
+        </div>  
+  
+        <div class="action-buttons flex items-center space-x-2 self-start sm:self-auto">  
+          <button onclick="exportCSV()" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold border border-slate-300 transition flex items-center space-x-1.5 shadow-2xs">  
+            <i class="fa-solid fa-download text-xs text-slate-600"></i>  
+            <span>匯出 CSV 報表</span>  
+          </button>  
+        </div>  
+      </div>  
+  
+      <!-- 表格主體 (緊湊高密度單行排版，每個資料佔一行，一目了然) -->  
+      <div class="w-full overflow-x-auto table-container">  
+        <table class="w-full text-left text-xs border-collapse compact-table">  
+          <thead>  
+            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">  
+              <th class="py-2 px-2.5 whitespace-nowrap w-24">提交時間</th>  
+              <th class="py-2 px-2 whitespace-nowrap w-28">工單號</th>  
+              <th class="py-2 px-2.5 whitespace-nowrap w-28">門市代號</th>  
+              <th class="py-2 px-2 whitespace-nowrap w-20">聯絡人</th>  
+              <th class="py-2 px-2 whitespace-nowrap w-24">問題類型</th>  
+              <th class="py-2 px-2.5 max-w-[200px]">門市補充說明</th>  
+              <th class="py-2 px-2 text-center whitespace-nowrap w-24">處理狀態</th>  
+              <th class="py-2 px-2 text-center whitespace-nowrap w-20 bg-blue-50/40 text-blue-900 border-x border-blue-100">負責人</th>  
+              <th class="py-2 px-2.5 max-w-[280px]">IT 最新跟進 / 預計到店</th>  
+              <th class="py-2 px-2.5 text-center whitespace-nowrap min-w-[76px] action-buttons">操作</th>  
+            </tr>  
+          </thead>  
+          <tbody id="ticketTableBody" class="divide-y divide-slate-100 text-slate-700">  
+            <tr>  
+              <td colspan="10" class="py-8 text-center text-slate-400">  
+                <i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-blue-600"></i>  
+                <div>正在載入工單數據...</div>  
+              </td>  
+            </tr>  
+          </tbody>  
+        </table>  
+      </div>  
+    </div>  
+  
+  </main>  
+  
+  <!-- 頁尾版權 -->  
+  <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-center gap-2">  
+    <span>威黃物流服務有限公司 (Fenix Logistics Services Limited) · I&TD - Jason Chow</span>  
+    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">  
+      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.6 (2026年9月17日 緊湊一目了然版)  
+    </span>  
+  </footer>  
+
+  <!-- ==================== 工單詳情彈窗 (Detail Modal) ==================== -->
+  <div id="ticketModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" onclick="handleModalBackdropClick(event)">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] transition-all" onclick="event.stopPropagation()">
+      <!-- Modal 頂部 Header -->
+      <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow">
+            <i class="fa-solid fa-ticket"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="modalTicketId" class="text-base font-extrabold tracking-tight">--</h3>
+              <span id="modalStatusBadge" class="px-2 py-0.5 rounded-full text-[11px] font-bold border">--</span>
+            </div>
+            <p id="modalShopTitle" class="text-xs text-slate-300 mt-0.5">--</p>
+          </div>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" title="關閉">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal 內容區 -->
+      <div class="p-6 overflow-y-auto space-y-4 text-xs leading-relaxed">
+        <!-- 屬性網格 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <div>
+            <span class="text-slate-400 block font-medium">提交時間</span>
+            <span id="modalTime" class="font-bold text-slate-800 mt-0.5 block font-mono">--</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">前線聯絡人</span>
+            <span id="modalContact" class="font-bold text-slate-800 mt-0.5 block flex items-center gap-1">
+              <i class="fa-regular fa-user text-blue-500"></i><span id="modalContactText">--</span>
+            </span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">IT 負責人</span>
+            <span id="modalAssignee" class="font-bold text-slate-800 mt-0.5 block flex items-center gap-1">
+              <i class="fa-solid fa-wrench text-amber-500"></i><span id="modalAssigneeText">--</span>
+            </span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">實體到店次數</span>
+            <span id="modalVisits" class="font-bold text-purple-700 mt-0.5 block">--</span>
+          </div>
         </div>
 
-        <div class="flex items-center space-x-2 self-start sm:self-auto">
-          <button onclick="exportCSV()" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold border border-slate-300 transition flex items-center space-x-1.5 shadow-2xs">
-            <i class="fa-solid fa-download text-xs text-slate-600"></i>
-            <span>匯出 CSV 報表</span>
+        <!-- 問題類型 -->
+        <div class="flex items-center gap-2">
+          <span class="text-slate-500 font-bold">問題分類：</span>
+          <span id="modalCategory" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 font-bold border border-blue-200">--</span>
+        </div>
+
+        <!-- 門市問題描述 -->
+        <div>
+          <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <i class="fa-regular fa-comment-dots text-blue-600"></i> 門市原聲描述 / 補充說明
+          </h4>
+          <div id="modalDesc" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-medium whitespace-pre-wrap leading-relaxed">
+            --
+          </div>
+        </div>
+
+        <!-- IT 最新處理日誌與備註 -->
+        <div>
+          <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-laptop-code text-blue-600"></i> IT 最新跟進與預計到店安排
+          </h4>
+          <div id="modalNotesContainer" class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-blue-950 font-medium whitespace-pre-wrap leading-relaxed">
+            --
+          </div>
+        </div>
+
+        <!-- 完成時間 (若有) -->
+        <div id="modalResolvedSection" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 flex items-center justify-between">
+          <span class="font-bold flex items-center gap-1.5">
+            <i class="fa-regular fa-circle-check text-emerald-600"></i> 結案完成時間
+          </span>
+          <span id="modalResolvedTime" class="font-mono font-bold">--</span>
+        </div>
+      </div>
+
+      <!-- Modal 底部操作欄 -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <span class="text-[11px] text-slate-400">FLS ITSM 支援工單管理</span>
+        <div class="flex items-center space-x-2">
+          <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-xs">
+            關閉
           </button>
         </div>
       </div>
-
-      <!-- 表格主體 (寬度 100% 自適應，各欄位依內容自然展開，完全消除右側欄位被推擠出界問題) -->
-      <div class="w-full overflow-x-auto table-container">
-        <table class="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">
-              <th class="py-2.5 px-3 whitespace-nowrap w-24">提交時間</th>
-              <th class="py-2.5 px-2.5 whitespace-nowrap w-24">工單號</th>
-              <th class="py-2.5 px-3 whitespace-nowrap w-32">門市編號</th>
-              <th class="py-2.5 px-3 whitespace-nowrap w-36">問題類型</th>
-              <th class="py-2.5 px-3 w-[24%] min-w-[180px]">門市說明</th>
-              <th class="py-2.5 px-2 text-center whitespace-nowrap w-24">處理狀態</th>
-              <th class="py-2.5 pl-3 pr-4 w-[34%] min-w-[260px]">IT 最新跟進 / 預計到店</th>
-            </tr>
-          </thead>
-          <tbody id="ticketTableBody" class="divide-y divide-slate-100 text-slate-700">
-            <tr>
-              <td colspan="7" class="py-10 text-center text-slate-400">
-                <i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-blue-600"></i>
-                <div>正在載入工單數據...</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
-
-  </main>
-
-  <!-- 頁尾版權 -->
-  <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-center gap-2">
-    <span>威黃物流服務有限公司 (Fenix Logistics Services Limited) · I&TD - Jason Chow</span>
-    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">
-      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.0 (2026年9月16日 18:15 完美版)
-    </span>
-  </footer>
-
+  </div>
+  
   <script>  
   const STORES = {"1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"}, "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"}, "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"}, "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"}, "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"}, "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"}, "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"}, "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"}, "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"}, "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"}, "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"}, "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"}, "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"}, "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"}, "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"}, "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"}, "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"}, "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"}, "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"}, "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"}, "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"}, "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"}, "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"}, "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"}, "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"}, "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"}, "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"}, "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"}, "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"}, "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"}, "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"}, "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"}, "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"}, "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"}, "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"}, "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"}, "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"}, "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"}, "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"}};  
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";  
@@ -298,8 +454,14 @@
     populateShopDropdown();  
     loadCachedTickets();  
     fetchAllTickets();  
+
+    // 支援 ESC 鍵關閉 Modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
   });  
 
+  // 優先載入本地快取（防白板機制）
   function loadCachedTickets() {
     try {
       const cached = localStorage.getItem(CACHE_KEY);
@@ -328,6 +490,10 @@
   
   // 精確計算單一工單的實體到店次數
   function getTicketVisits(t) {
+    if (t.visits !== null && t.visits !== undefined && !isNaN(parseInt(t.visits, 10))) {
+      const parsed = parseInt(t.visits, 10);
+      if (parsed >= 0) return parsed;
+    }
     const content = `${t.it_notes || ''} ${t.description || ''} ${t.status || ''}`.toLowerCase();
     const m = content.match(/(?:到店|落點|現場|出勤)(?:次數)?[:：\s]*(\d+)\s*次?/);
     if (m) {
@@ -343,19 +509,88 @@
     return 0;
   }
 
-  // 解析任何格式的日期
+  // ★ 格式化日期：全面解決「不見了 S」或「ep 17 2026」截斷問題
+  function formatTicketTime(raw) {
+    if (!raw) return '-';
+    const s = String(raw).trim();
+
+    // 1. 英文標準日期字串：Thu Sep 17 2026 17:23:00 ...
+    const mEng = s.match(/([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{2}:\d{2})/);
+    if (mEng) {
+      const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+      const mo = months[mEng[1]] || '09';
+      const day = mEng[2].padStart(2, '0');
+      return `${mo}-${day} ${mEng[4]}`;
+    }
+
+    // 2. 標準 YYYY-MM-DD HH:mm 或 YYYY/MM/DD HH:mm
+    const mStd = s.match(/(?:(\d{4})[-/])?(\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{1,2})/);
+    if (mStd) {
+      const mo = mStd[2].padStart(2, '0');
+      const day = mStd[3].padStart(2, '0');
+      return `${mo}-${day} ${mStd[4]}`;
+    }
+
+    // 3. 已經是 MM-DD HH:mm 格式
+    const mShort = s.match(/^(\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{1,2})/);
+    if (mShort) {
+      return `${mShort[1].padStart(2, '0')}-${mShort[2].padStart(2, '0')} ${mShort[3]}`;
+    }
+
+    // 4. ISO 格式 2026-09-13T03:23:28
+    const mIso = s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (mIso) {
+      return `${mIso[2]}-${mIso[3]} ${mIso[4]}:${mIso[5]}`;
+    }
+
+    // 5. 任何純日期 YYYY-MM-DD
+    const mDateOnly = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (mDateOnly) {
+      return `${mDateOnly[2].padStart(2, '0')}-${mDateOnly[3].padStart(2, '0')}`;
+    }
+
+    return s;
+  }
+
+  // 解析任何格式的日期（全面相容各類日期做時間範圍過濾與排序）
   function parseTicketDate(raw) {
     if (!raw) return null;
     const s = String(raw).trim();
+
+    const mEng = s.match(/([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
+    if (mEng) {
+      const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+      const mo = months[mEng[1]] !== undefined ? months[mEng[1]] : 8;
+      const day = parseInt(mEng[2], 10);
+      const yr = parseInt(mEng[3], 10);
+      const hr = parseInt(mEng[4], 10);
+      const mi = parseInt(mEng[5], 10);
+      const se = mEng[6] ? parseInt(mEng[6], 10) : 0;
+      return new Date(yr, mo, day, hr, mi, se);
+    }
+
     const m1 = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
     if (m1) {
-      return new Date(parseInt(m1[1], 10), parseInt(m1[2], 10) - 1, parseInt(m1[3], 10));
+      const year = parseInt(m1[1], 10);
+      const month = parseInt(m1[2], 10) - 1;
+      const day = parseInt(m1[3], 10);
+      const tMatch = s.match(/(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?/);
+      const hour = tMatch ? parseInt(tMatch[1], 10) : 0;
+      const minute = tMatch ? parseInt(tMatch[2], 10) : 0;
+      const second = (tMatch && tMatch[3]) ? parseInt(tMatch[3], 10) : 0;
+      return new Date(year, month, day, hour, minute, second);
     }
-    const m2 = s.match(/^(\d{1,2})[-/](\d{1,2})/);
+
+    const m2 = s.match(/^(\d{1,2})[-/](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
     if (m2) {
-      return new Date(2026, parseInt(m2[1], 10) - 1, parseInt(m2[2], 10));
+      const month = parseInt(m2[1], 10) - 1;
+      const day = parseInt(m2[2], 10);
+      const hour = m2[3] ? parseInt(m2[3], 10) : 0;
+      const minute = m2[4] ? parseInt(m2[4], 10) : 0;
+      return new Date(2026, month, day, hour, minute, 0);
     }
-    const parsed = Date.parse(s);
+
+    const parsed = Date.parse(s.replace(/\(.*?\)/g, '').trim());
     if (!isNaN(parsed)) {
       const d = new Date(parsed);
       if (d.getFullYear() === 2001) d.setFullYear(2026);
@@ -400,7 +635,7 @@
     return true;
   }
 
-  // 核心數據淨化函數  
+  // 核心數據淨化函數 (完整解析 聯絡人、負責人、到店次數、完成時間)
   function sanitizeTicket(t) {  
     let tid = String(t.ticket_id || '').trim();  
     let shop = String(t.shop_code || '').trim();  
@@ -409,18 +644,23 @@
     let st = String(t.status || '待處理').trim();  
     let itNote = String(t.it_notes || '').trim();  
     let rawTime = String(t.timestamp || '').trim();  
+    let contact = String(t.contact_person || t.contact || '').trim();
+    let assignee = String(t.assignee || t.it_assignee || '').trim();
+    let resolvedTime = String(t.resolved_time || '').trim();
+    let rawVisits = t.visits !== undefined ? t.visits : (t['到場/店支援次數'] !== undefined ? t['到場/店支援次數'] : null);
   
+    // 舊版逗號混合資料容錯
     if (tid.includes(',') || shop.includes(',') || cat.includes(',')) {  
       const fullStr = [tid, shop, cat, desc, st, itNote].join(',');  
       const parts = fullStr.split(',');  
   
-      const idPart = parts.find(p => p.trim().startsWith('#'));  
+      const idPart = parts.find(p => p.trim().startsWith('#') || /^\d{4}-\d{3}/.test(p.trim()));  
       if (idPart) tid = idPart.trim();  
   
       const shopPart = parts.find(p => /^\d{4}-[A-Z0-9]+-[A-Z0-9]+$/.test(p.trim()) || /^\d{4}/.test(p.trim()));  
       if (shopPart) shop = shopPart.trim();  
   
-      const catPart = parts.find(p => p.includes('網絡') || p.includes('印單機') || p.includes('電腦') || p.includes('音樂') || p.includes('排障'));  
+      const catPart = parts.find(p => p.includes('網絡') || p.includes('印單機') || p.includes('電腦') || p.includes('音樂') || p.includes('排障') || p.includes('硬件'));  
       if (catPart) cat = catPart.trim();  
   
       if (fullStr.includes('自主排障')) st = '自主排障已解決';  
@@ -435,28 +675,26 @@
       desc = parts.find(p => p === 'not ok' || p.includes('test') || p.includes('卡紙') || p.includes('斷線') || p.includes('登記')) || '無補充';  
     }  
   
-    let displayTime = rawTime;
-    const mTime = rawTime.match(/(?:\d{4}[-/])?(\d{2})[-/](\d{2})\s+(\d{2}:\d{2})/);  
-    if (mTime) {  
-      displayTime = `${mTime[1]}-${mTime[2]} ${mTime[3]}`;  
-    } else if (rawTime.length > 16) {  
-      displayTime = rawTime.substring(5, 16);  
-    }  
+    // 透過專門的日期函數格式化，絕不生硬截斷字串
+    const displayTime = formatTicketTime(rawTime);
   
     return {  
       raw_timestamp: rawTime,
       timestamp: displayTime,  
-      ticket_id: tid,  
-      shop_code: shop || '1220-LG-TLS',  
+      ticket_id: tid || '未編號',  
+      shop_code: shop || '未知門市',  
       category: cat || '設備支援',  
-      description: desc,  
+      description: desc || '-',  
       status: st,  
       it_notes: itNote,  
-      resolved_time: t.resolved_time || ''  
+      contact_person: contact || '門市同事',
+      assignee: assignee || 'Jason',
+      visits: rawVisits,
+      resolved_time: resolvedTime  
     };  
   }  
   
-  // 從 Google Apps Script 獲取工單  
+  // 從 Google Apps Script 獲取工單 (非同步，具備防中斷快取保護)
   async function fetchAllTickets(isRefresh = false) {  
     const icon = document.getElementById('refreshIcon');  
     if (icon) icon.classList.add('fa-spin');  
@@ -474,16 +712,16 @@
         applyFilters();  
       }  
     } catch (err) {  
-      console.error('抓取失敗：', err);  
+      console.warn('雲端更新連線延遲，自動保持本地快取工單數據：', err);  
     } finally {  
       if (icon) icon.classList.remove('fa-spin');  
       if (!rawTickets || rawTickets.length === 0) {  
-        applyFilters();  
+        loadCachedTickets();  
       }  
     }  
   }  
   
-  // 套用篩選條件  
+  // 套用篩選條件並排序 (最新工單永遠置頂)
   function applyFilters() {  
     const timeFilter = document.getElementById('filterTimeRange').value;
     const shopFilter = document.getElementById('filterShop').value;  
@@ -507,12 +745,20 @@
       }  
   
       if (keyword) {  
-        const matchStr = `${t.ticket_id} ${t.description} ${t.it_notes} ${t.category} ${t.shop_code}`.toLowerCase();  
+        const matchStr = `${t.ticket_id} ${t.description} ${t.it_notes} ${t.category} ${t.shop_code} ${t.contact_person} ${t.assignee}`.toLowerCase();  
         if (!matchStr.includes(keyword)) return false;  
       }  
   
       return true;  
     });  
+
+    // 最新工單排在最上方
+    filteredTickets.sort((a, b) => {
+      const da = parseTicketDate(a.raw_timestamp || a.timestamp);
+      const db = parseTicketDate(b.raw_timestamp || b.timestamp);
+      if (da && db) return db.getTime() - da.getTime();
+      return String(b.ticket_id || '').localeCompare(String(a.ticket_id || ''));
+    });
   
     updateKPIs(filteredTickets);  
     renderCharts(filteredTickets);  
@@ -648,14 +894,24 @@
     });  
   }  
   
-  // ★ 核心優化 v3.0：全欄位自然展開換行，全文無截斷無折疊，清晰分離人手行動與 AI 推斷
-  function formatITNotes(text) {
+  // 工具函數：防止 XSS
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // ★ 格式化 Modal 內的詳細 IT 處理備註
+  function formatITNotesModal(text, assignee) {
     if (!text || text.trim() === '' || text.trim() === '-') {
-      return '<span class="text-slate-300 text-xs">-</span>';
+      return '<span class="text-slate-400">目前尚無 IT 跟進備註</span>';
     }
     const clean = text.trim();
     
-    // 檢查是否有 AI 推斷段落
     const aiMatch = clean.match(/\(AI推斷[：:](.*?)\)/);
     let mainText = clean;
     let aiText = '';
@@ -664,13 +920,13 @@
       aiText = aiMatch[1].trim();
     }
     
-    let html = '<div class="bg-blue-50/70 border border-blue-200/80 rounded-xl p-2.5 shadow-2xs space-y-1.5 whitespace-normal break-words">';
-    html += `<div class="text-xs font-semibold text-blue-950 leading-relaxed">${mainText}</div>`;
+    let html = '<div class="space-y-2">';
+    html += `<div class="text-xs font-semibold text-blue-950 leading-relaxed">${escapeHtml(mainText)}</div>`;
     if (aiText) {
       html += `
-        <div class="pt-1.5 mt-1 border-t border-blue-200/60 flex items-start gap-1.5 text-[11px] text-blue-800 leading-normal">
+        <div class="pt-1.5 mt-1 border-t border-blue-200/60 flex items-start gap-1 text-[11px] text-blue-800 leading-normal">
           <i class="fa-solid fa-wand-magic-sparkles text-blue-600 mt-0.5 shrink-0"></i>
-          <span><strong class="font-bold text-blue-950">AI推斷：</strong>${aiText}</span>
+          <span><strong class="font-bold text-blue-950">AI推斷：</strong>${escapeHtml(aiText)}</span>
         </div>
       `;
     }
@@ -678,12 +934,13 @@
     return html;
   }
 
+  // ★ 核心優化：緊湊單行表格排版（縮窄行距、負責人獨立置前、單行一目了然）
   function renderTable(tickets) {  
     const tbody = document.getElementById('ticketTableBody');  
     document.getElementById('tableCount').textContent = tickets.length;  
   
     if (!tickets || tickets.length === 0) {  
-      tbody.innerHTML = `<tr><td colspan="7" class="py-10 text-center text-slate-400">沒有符合篩選條件的工單。</td></tr>`;  
+      tbody.innerHTML = `<tr><td colspan="10" class="py-8 text-center text-slate-400">沒有符合篩選條件的工單。</td></tr>`;  
       return;  
     }  
   
@@ -698,37 +955,77 @@
     };  
   
     let html = '';  
-    tickets.forEach(t => {  
+    tickets.forEach((t) => {  
       const st = t.status || '待處理';  
       const stClass = statusMap[st] || 'bg-slate-100 text-slate-800 border-slate-300';  
       const visits = getTicketVisits(t);
 
       let visitBadge = '';
       if (visits >= 2) {
-        visitBadge = `<div class="mt-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-black bg-purple-100 text-purple-800 border border-purple-300 whitespace-nowrap inline-flex items-center gap-0.5"><i class="fa-solid fa-van-shuttle text-[9px]"></i>到店 ${visits} 次</span></div>`;
+        visitBadge = `<span class="ml-1 px-1 py-0.2 rounded text-[9px] font-black bg-purple-100 text-purple-800 border border-purple-300 whitespace-nowrap" title="實體到店 ${visits} 次"><i class="fa-solid fa-van-shuttle"></i> ${visits}次</span>`;
       } else if (visits === 1) {
-        visitBadge = `<div class="mt-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 whitespace-nowrap inline-flex items-center gap-0.5"><i class="fa-solid fa-van-shuttle text-[8px]"></i>到店 1 次</span></div>`;
+        visitBadge = `<span class="ml-1 px-1 py-0.2 rounded text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200 whitespace-nowrap" title="實體到店 1 次"><i class="fa-solid fa-van-shuttle"></i> 1次</span>`;
       }
 
+      // 單行純文字清理（移除可能換行）
+      const cleanDesc = (t.description || '-').replace(/\r?\n/g, ' ');
+      const cleanNotes = (t.it_notes || '-').replace(/\r?\n/g, ' ');
+
       html += `  
-        <tr class="hover:bg-slate-50/80 transition border-b border-slate-100 align-top">  
-          <td class="py-3 px-3 font-medium whitespace-nowrap text-slate-500 text-xs">${t.timestamp || ''}</td>  
-          <td class="py-3 px-2.5 font-bold text-blue-600 whitespace-nowrap text-xs">  
-            <div>${t.ticket_id || ''}</div>  
-            ${visitBadge}  
+        <tr class="hover:bg-blue-50/50 transition border-b border-slate-100 cursor-pointer group h-9" onclick="openModal('${escapeHtml(t.ticket_id)}')">  
+          <!-- 1. 提交時間 (完全解決缺失 S 問題，顯示 09-17 17:23) -->
+          <td class="py-1.5 px-2.5 font-semibold whitespace-nowrap text-slate-500 text-xs font-mono">${t.timestamp || ''}</td>  
+          
+          <!-- 2. 工單號 (單行紧凑，帶落點次數標籤) -->
+          <td class="py-1.5 px-2 font-bold text-blue-600 whitespace-nowrap text-xs">  
+            <span class="group-hover:underline">${escapeHtml(t.ticket_id)}</span>${visitBadge}  
           </td>  
-          <td class="py-3 px-3 font-extrabold text-slate-900 whitespace-nowrap text-xs">${t.shop_code || ''}</td>  
-          <td class="py-3 px-3 font-bold text-slate-800 text-xs whitespace-nowrap">${t.category || ''}</td>  
-          <td class="py-3 px-3 text-xs leading-relaxed whitespace-normal break-words text-slate-700">  
-            ${t.description || '-'}  
+          
+          <!-- 3. 門市代號 -->
+          <td class="py-1.5 px-2.5 whitespace-nowrap text-xs font-extrabold text-slate-900">${escapeHtml(t.shop_code)}</td>  
+          
+          <!-- 4. 聯絡人 -->
+          <td class="py-1.5 px-2 whitespace-nowrap text-xs text-slate-700">  
+            <span class="inline-flex items-center gap-1 font-medium">
+              <i class="fa-regular fa-user text-[10px] text-blue-500"></i>${escapeHtml(t.contact_person || '門市同事')}
+            </span>
           </td>  
-          <td class="py-3 px-2 text-center whitespace-nowrap">  
-            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold border inline-block ${stClass}">  
-              ${st}  
+          
+          <!-- 5. 問題類型 -->
+          <td class="py-1.5 px-2 whitespace-nowrap text-xs text-slate-700">  
+            <span class="inline-block px-1.5 py-0.5 rounded bg-slate-100 font-medium text-[11px]">${escapeHtml(t.category)}</span>  
+          </td>  
+          
+          <!-- 6. 門市補充說明 (單行截短，滑鼠停留顯示全文) -->
+          <td class="py-1.5 px-2.5 text-xs text-slate-600 truncate max-w-[200px]" title="${escapeHtml(cleanDesc)}">  
+            ${escapeHtml(cleanDesc)}  
+          </td>  
+          
+          <!-- 7. 處理狀態 (單行微章) -->
+          <td class="py-1.5 px-2 text-center whitespace-nowrap">  
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border inline-block ${stClass}">  
+              ${escapeHtml(st)}  
             </span>  
           </td>  
-          <td class="py-3 pl-3 pr-4 text-xs leading-relaxed whitespace-normal break-words">  
-            ${formatITNotes(t.it_notes)}  
+          
+          <!-- 8. ★ 獨立負責人欄位 (放在 IT 最新跟進前邊，單行清晰呈現) -->
+          <td class="py-1.5 px-2 text-center whitespace-nowrap text-xs font-bold text-blue-900 bg-blue-50/30 border-x border-blue-100">  
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white border border-blue-200 shadow-3xs">
+              <i class="fa-solid fa-wrench text-amber-500 text-[9px]"></i>${escapeHtml(t.assignee || 'Jason')}
+            </span>
+          </td>  
+          
+          <!-- 9. IT 最新跟進 / 預計到店 (單行截短，滑鼠停留顯示全文) -->
+          <td class="py-1.5 px-2.5 text-xs text-slate-800 font-medium truncate max-w-[280px]" title="${escapeHtml(cleanNotes)}">  
+            ${cleanNotes !== '-' ? escapeHtml(cleanNotes) : '<span class="text-slate-300">-</span>'}  
+          </td>  
+          
+          <!-- 10. 操作欄位 (完整呈現按鈕與圖標，絕不被截斷) -->
+          <td class="py-1.5 px-2.5 text-center whitespace-nowrap min-w-[76px] action-buttons" onclick="event.stopPropagation()">  
+            <button onclick="openModal('${escapeHtml(t.ticket_id)}')"   
+              class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg border border-blue-200 transition text-[11px] inline-flex items-center justify-center gap-1 shadow-2xs whitespace-nowrap">  
+              <i class="fa-regular fa-eye text-blue-600"></i><span>詳情</span>  
+            </button>  
           </td>  
         </tr>  
       `;  
@@ -736,23 +1033,98 @@
   
     tbody.innerHTML = html;  
   }  
+
+  // ==================== Modal 視窗操作函數 ====================
+  function openModal(ticketId) {
+    const t = rawTickets.find(item => item.ticket_id === ticketId);
+    if (!t) return;
+
+    document.getElementById('modalTicketId').textContent = t.ticket_id || '未編號';
+    
+    // 狀態 Badge
+    const stBadge = document.getElementById('modalStatusBadge');
+    stBadge.textContent = t.status || '待處理';
+    stBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-bold border ';
+    if (t.status.includes('已完成')) {
+      stBadge.className += 'bg-emerald-50 text-emerald-900 border-emerald-300';
+    } else if (t.status.includes('自主排障')) {
+      stBadge.className += 'bg-teal-50 text-teal-900 border-teal-300';
+    } else if (t.status.includes('已安排到店')) {
+      stBadge.className += 'bg-purple-50 text-purple-900 border-purple-300 font-bold';
+    } else if (t.status.includes('進行中')) {
+      stBadge.className += 'bg-blue-50 text-blue-900 border-blue-300';
+    } else {
+      stBadge.className += 'bg-amber-50 text-amber-900 border-amber-300';
+    }
+
+    // 門市與品牌名稱解析
+    let shopName = t.shop_code || '未知門市';
+    let brandName = '';
+    const mCode = shopName.match(/^(\d{4})/);
+    if (mCode && STORES[mCode[1]]) {
+      brandName = STORES[mCode[1]].brand;
+    }
+    document.getElementById('modalShopTitle').textContent = `${shopName} ${brandName ? '· ' + brandName : ''}`;
+
+    // 日期時間規範顯示
+    document.getElementById('modalTime').textContent = formatTicketTime(t.raw_timestamp || t.timestamp) + (t.raw_timestamp && t.raw_timestamp.includes('2026') ? ' (2026)' : '');
+    document.getElementById('modalContactText').textContent = t.contact_person || '門市同事';
+    document.getElementById('modalAssigneeText').textContent = t.assignee || 'Jason';
+    
+    const visits = getTicketVisits(t);
+    document.getElementById('modalVisits').textContent = visits > 0 ? `${visits} 次` : '0 次 (遠端處理)';
+
+    document.getElementById('modalCategory').textContent = t.category || '一般支援';
+    document.getElementById('modalDesc').textContent = t.description || '無詳細說明';
+    
+    // IT 備註 (Modal 內支援完整多行展開與 AI 推斷)
+    const notesEl = document.getElementById('modalNotesContainer');
+    notesEl.innerHTML = formatITNotesModal(t.it_notes, t.assignee);
+
+    // 完成時間
+    const resSec = document.getElementById('modalResolvedSection');
+    if (t.resolved_time && t.resolved_time.trim() !== '') {
+      document.getElementById('modalResolvedTime').textContent = formatTicketTime(t.resolved_time);
+      resSec.classList.remove('hidden');
+    } else {
+      resSec.classList.add('hidden');
+    }
+
+    // 顯示 Modal
+    const modal = document.getElementById('ticketModal');
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('ticketModal');
+    modal.classList.add('hidden');
+  }
+
+  function handleModalBackdropClick(e) {
+    if (e.target.id === 'ticketModal') {
+      closeModal();
+    }
+  }
   
+  // 匯出完整 CSV 報表 (包含前線聯絡人與獨立負責人)
   function exportCSV() {  
     if (!filteredTickets || filteredTickets.length === 0) {  
       alert('目前無可匯出的數據！');  
       return;  
     }  
   
-    let csv = "\uFEFF提交時間,工單編號,門市代號,問題分類,補充描述,處理狀態,實體到店次數,IT跟進與預計到店,完成時間\n";  
+    let csv = "\uFEFF提交時間,工單編號,門市代號,聯絡人,問題分類,補充描述,處理狀態,負責人,實體到店次數,IT跟進與預計到店,完成時間\n";  
     filteredTickets.forEach(t => {  
       const v = getTicketVisits(t);
       const row = [  
         `"${t.raw_timestamp || t.timestamp || ''}"`,  
         `"${t.ticket_id || ''}"`,  
         `"${t.shop_code || ''}"`,  
+        `"${(t.contact_person || '').replace(/"/g, '""')}"`,  
         `"${t.category || ''}"`,  
         `"${(t.description || '').replace(/"/g, '""')}"`,  
         `"${t.status || ''}"`,  
+        `"${(t.assignee || '').replace(/"/g, '""')}"`,
         `"${v} 次"`,
         `"${(t.it_notes || '').replace(/"/g, '""')}"`,  
         `"${t.resolved_time || ''}"`  
