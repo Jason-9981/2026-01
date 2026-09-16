@@ -12,12 +12,19 @@
     .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }  
     details > summary::-webkit-details-marker { display: none; }
     .table-container { -webkit-overflow-scrolling: touch; }
+    header.sticky-header {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: #0f172a;
+    }
   </style>  
 </head>  
-<body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between text-sm">  
+<body class="bg-slate-100 min-h-screen text-slate-800 text-sm flex flex-col justify-between">  
   
-  <!-- 頂部導航 (管理層專用，含版本編號) -->  
-  <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-50">  
+  <!-- 頂部導航 (管理層專用，高 z-index 保證滑動時乾淨置頂，不遮擋錯位) -->  
+  <header class="sticky-header text-white shadow-md border-b border-slate-800">  
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">  
       <div class="flex items-center space-x-3">  
         <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow">  
@@ -28,7 +35,7 @@
             <span>IT 營運與門市使用狀況儀表板</span>  
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">管理層專閱</span>  
             <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 flex items-center gap-1">
-              <i class="fa-solid fa-code-commit text-[9px]"></i>v2.7 (9月16日 01:45 版)
+              <i class="fa-solid fa-code-commit text-[9px]"></i>v2.8 (9月16日 09:40 版)
             </span>
           </h1>  
           <p class="text-xs text-slate-400">威黃物流服務有限公司 · IT&D - Jason Chow</p>  
@@ -70,7 +77,7 @@
         </div>  
       </div>  
   
-      <!-- 店舖到店維修總次數 (精確計算多次到店) -->  
+      <!-- 店舖到店維修總次數 (精確計算多次到店，包含單一工單多次到店) -->  
       <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between">  
         <div>  
           <div class="text-xs text-purple-700 font-bold uppercase tracking-wider">年度到店維修次數</div>  
@@ -120,7 +127,7 @@
       </div>  
   
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">  
-        <!-- 時間範圍篩選 -->  
+        <!-- 時間範圍篩選 (預設 2026 今年) -->  
         <div>  
           <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
             <i class="fa-solid fa-calendar-days text-blue-600"></i>
@@ -219,7 +226,7 @@
       </div>  
     </div>  
   
-    <!-- 4. 詳細數據表格 (優化：中間空間收緊，右側 IT 跟進大幅拓寬並預留右側安全邊距，絕不裁切) -->  
+    <!-- 4. 詳細數據表格 (優化：前段欄位緊湊，右側空間寬裕，預覽充分展開，絕不被截斷) -->  
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">  
       <div class="p-3 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">  
         <div>  
@@ -228,7 +235,7 @@
             <span>完整支援工單明細表</span>  
           </h4>  
           <p class="text-xs text-slate-400 mt-0.5">  
-            符合篩選記錄：共 <b id="tableCount" class="text-blue-600">0</b> 筆（前段欄位緊湊收窄，右側排障備註空間充足）  
+            符合篩選記錄：共 <b id="tableCount" class="text-blue-600">0</b> 筆（前段欄位緊湊收窄，右側排障備註空間充足完整顯示）  
           </p>  
         </div>  
   
@@ -239,16 +246,16 @@
       </div>  
   
       <div class="overflow-x-auto w-full table-container">  
-        <table class="w-full text-left text-xs border-collapse table-auto min-w-[950px]">  
+        <table class="w-full text-left text-xs border-collapse table-auto min-w-[960px]">  
           <thead>  
             <tr class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">  
               <th class="py-2.5 px-2.5 whitespace-nowrap w-24">提交時間</th>  
               <th class="py-2.5 px-2 whitespace-nowrap w-20">工單號</th>  
               <th class="py-2.5 px-2.5 whitespace-nowrap w-32">門市編號</th>  
               <th class="py-2.5 px-2.5 whitespace-nowrap w-44">問題類型</th>  
-              <th class="py-2.5 px-2.5 w-[20%] min-w-[160px] max-w-[220px]">門市說明</th>  
+              <th class="py-2.5 px-2.5 w-[20%] min-w-[150px] max-w-[210px]">門市說明</th>  
               <th class="py-2.5 px-2 text-center whitespace-nowrap w-24">處理狀態</th>  
-              <th class="py-2.5 pl-3 pr-8 min-w-[300px]">IT 最新跟進 / 預計到店</th>  
+              <th class="py-2.5 pl-3 pr-6 min-w-[320px]">IT 最新跟進 / 預計到店</th>  
             </tr>  
           </thead>  
           <tbody id="ticketTableBody" class="divide-y divide-slate-100 text-slate-700">  
@@ -269,7 +276,7 @@
   <footer class="bg-white border-t border-slate-200 py-3.5 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-center gap-2">  
     <span>威黃物流服務有限公司 (Fenix Logistics Services Limited) · I&TD - Jason Chow</span>  
     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">  
-      <i class="fa-solid fa-code-commit text-[10px]"></i>v2.7 (2026年9月16日 01:45 版)  
+      <i class="fa-solid fa-code-commit text-[10px]"></i>v2.8 (2026年9月16日 09:40 版)  
     </span>  
   </footer>  
   
@@ -638,7 +645,7 @@
     });  
   }  
   
-  // ★ 緊湊單行摺疊儲存格：右側預留邊距，文字絕不被截斷
+  // ★ 核心修復：取消 span 寬度死限，預覽長度擴至 36 字，省略號與句子完整呈現
   function createCompactCell(text, previewLen = 22, isNote = false) {
     if (!text || text.trim() === '' || text.trim() === '-') {
       return '<span class="text-slate-300 text-xs">-</span>';
@@ -657,12 +664,16 @@
       ? 'bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200' 
       : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200';
 
+    const maxWClass = isNote 
+      ? 'max-w-[340px] md:max-w-[420px] lg:max-w-[500px] xl:max-w-[620px]' 
+      : 'max-w-[150px] md:max-w-[190px] lg:max-w-[240px]';
+
     return `
       <details class="group cursor-pointer">
         <summary class="list-none outline-none select-none flex items-center gap-1.5 hover:opacity-80 transition py-0.5 cursor-pointer whitespace-nowrap">
           <span class="${btnColor} text-[10px] font-bold px-1.5 py-0.5 rounded border group-open:hidden shrink-0">展開 ▼</span>
           <span class="bg-slate-200 text-slate-700 text-[10px] font-bold px-1.5 py-0.5 rounded border hidden group-open:inline-flex shrink-0">收起 ▲</span>
-          <span class="truncate text-xs ${isNote ? 'text-blue-900 font-medium' : 'text-slate-700'} group-open:hidden max-w-[160px] md:max-w-[200px] lg:max-w-[260px] inline-block align-middle">${preview}</span>
+          <span class="truncate text-xs ${isNote ? 'text-blue-950 font-medium' : 'text-slate-700'} group-open:hidden ${maxWClass} inline-block align-middle">${preview}</span>
         </summary>
         <div class="mt-1.5 p-2.5 rounded-xl text-xs leading-relaxed break-words whitespace-pre-wrap ${noteClass} shadow-2xs mr-2">
           ${clean}
@@ -720,8 +731,8 @@
               ${st}  
             </span>  
           </td>  
-          <td class="py-2 pl-3 pr-8 text-xs leading-normal">  
-            ${createCompactCell(t.it_notes, 25, true)}
+          <td class="py-2 pl-3 pr-6 text-xs leading-normal">  
+            ${createCompactCell(t.it_notes, 36, true)}
           </td>  
         </tr>  
       `;  
