@@ -65,7 +65,46 @@
         display: none !important;
       }
     }
-  </style>  
+  
+    /* 自動定時更新 Toggle Switch 樣式 */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #475569;
+      transition: .3s;
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    input:checked + .slider {
+      background-color: #10b981;
+    }
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+</style>  
 </head>  
 <body class="bg-slate-100 min-h-screen text-slate-800 text-sm flex flex-col justify-between">  
   
@@ -89,7 +128,22 @@
       </div>  
   
       <!-- 快捷操作按鈕組 -->  
-      <div class="action-buttons flex items-center space-x-2">  
+      <div class="action-buttons flex items-center space-x-2">
+        <!-- 自動更新開關 (預設關閉，切換開啟後定時 30 秒輪詢最新資料) -->
+        <div class="flex items-center space-x-2 bg-slate-800/90 px-3 py-1 rounded-xl border border-slate-700 select-none">
+          <label class="switch">
+            <input type="checkbox" id="autoUpdateToggle" onchange="toggleAutoRefresh(this.checked)">
+            <span class="slider"></span>
+          </label>
+          <div class="text-left text-xs">
+            <div class="font-bold text-slate-200 flex items-center gap-1 leading-tight">
+              <span>自動更新</span>
+              <span id="autoUpdateIndicator" class="hidden w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </div>
+            <div id="autoUpdateLabel" class="text-[10px] text-slate-400 leading-tight">預設關閉</div>
+          </div>
+        </div>
+  
         <button onclick="fetchAllTickets(true)"   
           class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5"
           title="從 Google Sheets 重新同步最新數據">  
@@ -440,7 +494,38 @@
     </div>
   </div>
   
-  <script>  
+  <script>
+  // ★ 自動定時更新控制器 (預設關閉，支援可開關切換)
+  let autoRefreshTimer = null;
+  const AUTO_REFRESH_INTERVAL_MS = 30000; // 30 秒定時刷新
+
+  function toggleAutoRefresh(enable) {
+    const label = document.getElementById('autoUpdateLabel');
+    const indicator = document.getElementById('autoUpdateIndicator');
+
+    if (enable) {
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      autoRefreshTimer = setInterval(() => {
+        fetchAllTickets(false); // 靜默背景刷新
+      }, AUTO_REFRESH_INTERVAL_MS);
+      if (label) {
+        label.textContent = '進行中 (30s)';
+        label.className = 'text-[10px] text-emerald-400 font-bold leading-tight';
+      }
+      if (indicator) indicator.classList.remove('hidden');
+    } else {
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+      }
+      if (label) {
+        label.textContent = '預設關閉';
+        label.className = 'text-[10px] text-slate-400 leading-tight';
+      }
+      if (indicator) indicator.classList.add('hidden');
+    }
+  }
+  
   const STORES = {"1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"}, "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"}, "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"}, "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"}, "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"}, "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"}, "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"}, "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"}, "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"}, "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"}, "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"}, "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"}, "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"}, "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"}, "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"}, "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"}, "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"}, "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"}, "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"}, "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"}, "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"}, "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"}, "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"}, "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"}, "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"}, "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"}, "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"}, "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"}, "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"}, "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"}, "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"}, "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"}, "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"}, "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"}, "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"}, "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"}, "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"}, "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"}, "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"}};  
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";  
   const CACHE_KEY = "fls_dashboard_cached_tickets";
@@ -450,7 +535,11 @@
   let chartVisitsInstance = null;  
   let chartCategoryInstance = null;  
   
-  window.addEventListener('DOMContentLoaded', () => {  
+  window.addEventListener('DOMContentLoaded', () => {
+    // 確保自動更新開關預設為關閉
+    const autoToggle = document.getElementById('autoUpdateToggle');
+    if (autoToggle) autoToggle.checked = false;
+  
     populateShopDropdown();  
     loadCachedTickets();  
     fetchAllTickets();  

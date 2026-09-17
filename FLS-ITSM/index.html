@@ -377,7 +377,7 @@
   <footer class="text-center py-3.5 text-xs text-slate-400 border-t border-slate-200 bg-white flex flex-col sm:flex-row items-center justify-center gap-2">  
     <span>威黃物流服務有限公司 (FLS) · 系統支援部 Jason Chow</span>  
     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">  
-      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.5 (2026年9月17日 秒速提交版)  
+      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.9 (2026年9月17日 ITD全權限修復版)  
     </span>  
   </footer>  
   
@@ -425,40 +425,239 @@
   </div>  
   
   <!-- JavaScript 邏輯 -->  
-  <script>  
-  const STORES = {"1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"}, "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"}, "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"}, "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"}, "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"}, "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"}, "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"}, "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"}, "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"}, "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"}, "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"}, "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"}, "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"}, "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"}, "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"}, "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"}, "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"}, "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"}, "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"}, "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"}, "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"}, "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"}, "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"}, "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"}, "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"}, "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"}, "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"}, "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"}, "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"}, "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"}, "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"}, "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"}, "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"}, "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"}, "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"}, "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"}, "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"}, "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"}, "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"}};  
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";  
-  const JASON_MOBILE = "97242234";  
-  
-  let currentStore = null;  
-  let selectedCategory = '';  
-  
-  // ★ 統一時間格式：全線生成標準 YYYY-MM-DD HH:mm
-  function getNowLocalTime() {  
-    const now = new Date();  
+  <script>
+  // 門市資料庫 (對接 ShopDate_All_Location-.xlsx + ITD 系統支援)
+  const STORES = {
+    "1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"},
+    "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"},
+    "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"},
+    "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"},
+    "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"},
+    "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"},
+    "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"},
+    "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"},
+    "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"},
+    "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"},
+    "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"},
+    "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"},
+    "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"},
+    "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"},
+    "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"},
+    "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"},
+    "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"},
+    "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"},
+    "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"},
+    "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"},
+    "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"},
+    "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"},
+    "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"},
+    "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"},
+    "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"},
+    "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"},
+    "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"},
+    "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"},
+    "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"},
+    "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"},
+    "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"},
+    "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"},
+    "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"},
+    "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"},
+    "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"},
+    "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"},
+    "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"},
+    "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"},
+    "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"},
+    "itd":  {"pw": "Tc5525", "name": "FLS-ITD 科技發展部", "brand": "ITD", "location": "HQ", "isAdmin": true}
+  };
+
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";
+  const JASON_MOBILE = "97242234";
+
+  let currentStore = null;
+  let selectedCategory = '';
+
+  // 統一時間格式：全線生成標準 YYYY-MM-DD HH:mm
+  function getNowLocalTime() {
+    const now = new Date();
     const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, '0');  
-    const d = String(now.getDate()).padStart(2, '0');  
-    const h = String(now.getHours()).padStart(2, '0');  
-    const min = String(now.getMinutes()).padStart(2, '0');  
-    return `${y}-${m}-${d} ${h}:${min}`;  
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const h = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    return `${y}-${m}-${d} ${h}:${min}`;
   }
 
-  
-  function cleanDisplayTime(raw) {  
-    if (!raw) return getNowLocalTime();  
-    let s = String(raw).trim();  
-    if (/^\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(s)) return s;  
+  // 智能尋找門市 Key：支援 itd 管理員、4 位純數字、全名或縮寫 (已移除 9999 及 HQ)
+  function findStoreKey(input) {
+    if (!input) return null;
+    const cleanInput = input.trim().toLowerCase();
+
+    // 1. itd 管理帳號識別 (支援 itd, it&d, fls-itd)
+    if (cleanInput === 'itd' || cleanInput === 'it&d' || cleanInput === 'fls-itd') {
+      return 'itd';
+    }
+
+    // 2. 精確匹配 Key (如純 4 位數字代號)
+    if (STORES[cleanInput]) return cleanInput;
+
+    // 3. 匹配字串中的 4 位數字代號
+    const digitMatch = cleanInput.match(/\d{4}/);
+    if (digitMatch && STORES[digitMatch[0]]) return digitMatch[0];
+
+    // 4. 模糊匹配門市名稱 (排除 itd 以免誤判)
+    for (const [key, store] of Object.entries(STORES)) {
+      if (key !== 'itd' && store.name && store.name.toLowerCase().includes(cleanInput)) {
+        return key;
+      }
+    }
+    return null;
+  }
+
+  // 頁面載入時自動讀取記憶的門市身份
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedCode = localStorage.getItem('fls_itsm_code');
+    const savedPw = localStorage.getItem('fls_itsm_pw');
+    if (savedCode && savedPw) {
+      const matchedKey = findStoreKey(savedCode);
+      if (matchedKey && STORES[matchedKey]) {
+        const storePw = (STORES[matchedKey].pw || '').toLowerCase();
+        const inputPw = savedPw.trim().toLowerCase();
+        const isItdMatch = (matchedKey === 'itd') && (inputPw === 'tc5525' || inputPw === 'itd' || savedPw.trim() === 'Sidefame168#');
+        if (storePw === inputPw || isItdMatch) {
+          setStoreLoggedIn(matchedKey);
+        }
+      }
+    }
+  });
+
+  // 處理門市登入 (支援大小寫容錯與全名輸入)
+  function handleLogin(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const codeInput = document.getElementById('loginCode').value.trim();
+    const pwInput = document.getElementById('loginPw').value.trim();
+    const remember = document.getElementById('rememberMe').checked;
+
+    const errBox = document.getElementById('loginError');
+    if (errBox) errBox.classList.add('hidden');
+
+    const matchedKey = findStoreKey(codeInput);
+    if (!matchedKey || !STORES[matchedKey]) {
+      if (errBox) errBox.classList.remove('hidden');
+      return;
+    }
+
+    const storePw = (STORES[matchedKey].pw || '').toLowerCase();
+    const inputPw = pwInput.toLowerCase();
+    const isItdMatch = (matchedKey === 'itd') && (inputPw === 'tc5525' || inputPw === 'itd' || pwInput === 'Sidefame168#');
+
+    if (storePw === inputPw || isItdMatch) {
+      if (remember) {
+        localStorage.setItem('fls_itsm_code', matchedKey);
+        localStorage.setItem('fls_itsm_pw', pwInput);
+      }
+      setStoreLoggedIn(matchedKey);
+    } else {
+      if (errBox) errBox.classList.remove('hidden');
+    }
+  }
+
+  // 登入成功切換視圖
+  function setStoreLoggedIn(code) {
+    currentStore = STORES[code];
+    document.getElementById('loginSection').classList.add('hidden');
+    document.getElementById('appSection').classList.remove('hidden');
+    document.getElementById('navStoreBadge').classList.remove('hidden');
+    document.getElementById('navStoreName').textContent = currentStore.name;
+    document.getElementById('currentStoreTitle').textContent = currentStore.isAdmin 
+      ? `${currentStore.name} (管理員·全數據權限)` 
+      : currentStore.name;
+    document.getElementById('formStoreDisplay').textContent = currentStore.name;
+    loadStoreTickets();
+  }
+
+  // 登出 / 切換門市
+  function logout() {
+    if (confirm('確定要切換門市或登出嗎？')) {
+      localStorage.removeItem('fls_itsm_code');
+      localStorage.removeItem('fls_itsm_pw');
+      location.reload();
+    }
+  }
+
+  // 切換 Tab 頁面 (申請報修 vs 維修進度與紀錄)
+  function switchTab(tab) {
+    const btnNew = document.getElementById('tabBtnNew');
+    const btnHistory = document.getElementById('tabBtnHistory');
+    const contentNew = document.getElementById('tabContentNew');
+    const contentHistory = document.getElementById('tabContentHistory');
+
+    if (tab === 'new') {
+      btnNew.className = "flex-1 py-2.5 rounded-xl text-sm font-extrabold transition flex items-center justify-center space-x-1.5 bg-white text-blue-900 shadow-sm";
+      btnHistory.className = "flex-1 py-2.5 rounded-xl text-sm font-extrabold transition flex items-center justify-center space-x-1.5 text-slate-600 hover:text-slate-900";
+      contentNew.classList.remove('hidden');
+      contentHistory.classList.add('hidden');
+    } else {
+      btnHistory.className = "flex-1 py-2.5 rounded-xl text-sm font-extrabold transition flex items-center justify-center space-x-1.5 bg-white text-blue-900 shadow-sm";
+      btnNew.className = "flex-1 py-2.5 rounded-xl text-sm font-extrabold transition flex items-center justify-center space-x-1.5 text-slate-600 hover:text-slate-900";
+      contentHistory.classList.remove('hidden');
+      contentNew.classList.add('hidden');
+      loadStoreTickets(true);
+    }
+  }
+
+  // 選擇問題類型 (對齊 5 大分類按鈕)
+  function selectIssue(type) {
+    document.querySelectorAll('.issue-btn').forEach(btn => {
+      btn.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-400');
+    });
+    const targetBtn = document.getElementById('btn_' + type);
+    if (targetBtn) {
+      targetBtn.classList.add('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-400');
+    }
+
+    const titles = {
+      'pos_hardware': '電腦問題',
+      'printer': '列印機問題',
+      'network': 'WiFi/網絡/卡機問題',
+      'hardware_procure': '其他硬件支援/採購',
+      'other': '其他'
+    };
+    selectedCategory = titles[type] || '其他';
+    document.getElementById('formCategoryDisplay').value = selectedCategory;
+
+    document.getElementById('troubleshootSection').classList.remove('hidden');
+    ['network', 'printer', 'pos_hardware', 'hardware_procure', 'other'].forEach(t => {
+      const g = document.getElementById('guide_' + t);
+      if (g) g.classList.add('hidden');
+    });
+    const activeGuide = document.getElementById('guide_' + type);
+    if (activeGuide) activeGuide.classList.remove('hidden');
     
-    // 匹配 YYYY-MM-DD HH:mm:ss 或 YYYY/MM/DD
-    const m1 = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\s+|T)(\d{1,2}:\d{1,2})/);  
+    document.getElementById('ticketFormSection').classList.add('hidden');
+    document.getElementById('troubleshootSection').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // 到店支援次數計算
+  function calculateOnsiteVisits(t) {
+    const content = ((t.it_notes || '') + ' ' + (t.description || '') + ' ' + (t.status || '')).toLowerCase();
+    const match = content.match(/(?:到店|落點)(?:次數)?[:：\s]*(\d+)\s*次?/);
+    if (match) return parseInt(match[1], 10);
+    if (/(再次到店|第二度到店|二次測試|兩次到店|第2次到店|二次到店|複測|第二趟)/.test(content)) return 2;
+    if (content.includes('到店') || content.includes('落點') || content.includes('現場') || (t.status && t.status.includes('到店'))) return 1;
+    return 0;
+  }
+
+  // 時間格式清理
+  function cleanDisplayTime(raw) {
+    if (!raw) return getNowLocalTime();
+    let s = String(raw).trim();
+    if (/^\d{2}-\d{2}\s+\d{2}:\d{2}$/.test(s)) return s;
+    const m1 = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\s+|T)(\d{1,2}:\d{1,2})/);
     if (m1) {
       const mm = String(m1[2]).padStart(2, '0');
       const dd = String(m1[3]).padStart(2, '0');
       return `${mm}-${dd} ${m1[4]}`;
     }
-
-    // 嘗試用 Date 解析 (解決例如 Thu Sep 17 2026... 顯示為 ep 17 的問題)
     const d = new Date(s);
     if (!isNaN(d.getTime())) {
       const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -467,34 +666,33 @@
       const min = String(d.getMinutes()).padStart(2, '0');
       return `${mm}-${dd} ${hh}:${min}`;
     }
-
     return s;
-  }  
-  
-  function parseCleanStatus(st_raw) {  
-    let st = String(st_raw || '').trim();  
-    if (st.includes(',') || st.length > 20) {  
-      if (st.includes('自主排障')) return '自主排障成功';  
-      if (st.includes('已完成')) return '已完成';  
-      if (st.includes('進行中')) return '遠端排障中';  
-      if (st.includes('已安排到店')) return '已安排到店';  
-      return '待處理 / 已收單';  
-    }  
-    if (st === '待處理 / 已收 Order' || st === '待處理') return '待處理 / 已收單';  
-    if (st === '進行中' || st === '進行中 (遠端排障)') return '遠端排障中';  
-    if (st === '自主排障已解決') return '自主排障成功';  
-    return st || '待處理 / 已收單';  
-  }  
-  
-  
-  // ★ 核心優化：0.001 秒即時本地計算流水號，徹底免除等候伺服器網絡延遲
+  }
+
+  // 狀態清理與正規化
+  function parseCleanStatus(st_raw) {
+    let st = String(st_raw || '').trim();
+    if (st.includes(',') || st.length > 20) {
+      if (st.includes('自主排障')) return '自主排障成功';
+      if (st.includes('已完成')) return '已完成';
+      if (st.includes('進行中')) return '遠端排障中';
+      if (st.includes('已安排到店')) return '已安排到店';
+      return '待處理 / 已收單';
+    }
+    if (st === '待處理 / 已收 Order' || st === '待處理') return '待處理 / 已收單';
+    if (st === '進行中' || st === '進行中 (遠端排障)') return '遠端排障中';
+    if (st === '自主排障已解決') return '自主排障成功';
+    return st || '待處理 / 已收單';
+  }
+
+  // 本地即時生成流水工單編號 (0 延遲)
   function getNextTicketIdFast() {
     const now = new Date();
     const yy = String(now.getFullYear()).slice(-2);
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const prefix = `${yy}${mm}-`;
 
-    let maxSeq = 21; // 目前已登記至 21 單
+    let maxSeq = 21;
     try {
       const localList = JSON.parse(localStorage.getItem('fls_my_tickets') || '[]');
       localList.forEach(t => {
@@ -513,124 +711,138 @@
     return `${prefix}${String(nextNum).padStart(3, '0')}_S`;
   }
 
-  function handleSolved(btn) {  
-    const localTime = getNowLocalTime();  
-    const solvedId = getNextTicketIdFast();  
-    const solvedTicket = {  
-      ticket_id: solvedId,  
-      timestamp: localTime,  
-      shop_code: currentStore.name,  
+  // 點擊「已解決！」(自主排障)
+  function handleSolved(btn) {
+    const localTime = getNowLocalTime();
+    const solvedId = getNextTicketIdFast();
+    const solvedTicket = {
+      ticket_id: solvedId,
+      timestamp: localTime,
+      shop_code: currentStore.name,
       contact_person: "門市自檢",
-      category: selectedCategory + " [自主排障]",  
-      description: "【門市自檢成功】前線根據 30 秒指引已自行排除故障。",  
+      category: selectedCategory,
+      description: "門市依照自檢指引成功排除故障",
+      status: "自主排障已解決",
+      it_notes: "前線門市按指引自行排除完畢，系統自動結案記功。",
+      resolved_time: localTime,
       onsite_visits: 0,
-      assignee: "Jason",
-      status: "自主排障已解決",  
-      it_notes: "系統自動記錄：門市自主修復，已恢復正常營業。"  
-    };  
-  
-    // 本地立即儲存
-    saveLocalTicket(solvedTicket);  
-  
-    // 背景非同步發送給雲端，不阻塞操作
-    fetch(SCRIPT_URL, {  
-      method: 'POST',  
-      mode: 'no-cors',  
-      headers: { 'Content-Type': 'application/json' },  
-      body: JSON.stringify(solvedTicket)  
-    }).catch(err => console.log('自檢雲端同步提示：', err));  
-  
-    alert('🎉 太好喇！系統已為門市自動記錄今次「自主排障成功」！\n\n感謝你協助減輕 IT 支援負擔，祝工作順利！');  
-    resetSelection();  
-    loadStoreTickets();  
-  }  
+      assignee: "Jason"
+    };
 
-  function handleNotSolved() {  
-    document.getElementById('troubleshootSection').classList.add('hidden');  
-    document.getElementById('ticketFormSection').classList.remove('hidden');  
-    document.getElementById('ticketFormSection').scrollIntoView({ behavior: 'smooth' });  
-  }  
-  
-  function resetSelection() {  
-    document.getElementById('troubleshootSection').classList.add('hidden');  
-    document.getElementById('ticketFormSection').classList.add('hidden');  
-    document.querySelectorAll('.issue-btn').forEach(btn => {  
-      btn.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-400');  
-    });  
-    selectedCategory = '';  
-  }  
-  
-  function submitTicket(e) {  
-    e.preventDefault();  
-  
+    saveLocalTicket(solvedTicket);
+
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = `<i class="fa-solid fa-check mr-1.5"></i>已記錄成功！`;
+    btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+    btn.classList.add('bg-emerald-800');
+
+    setTimeout(() => {
+      resetSelection();
+      btn.innerHTML = origHtml;
+      btn.classList.remove('bg-emerald-800');
+      btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      switchTab('history');
+    }, 1200);
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'add_ticket',
+        ...solvedTicket
+      })
+    }).catch(e => console.warn('雲端發送提示：', e));
+  }
+
+  // 點擊「未解決，填單報修」
+  function handleNotSolved() {
+    document.getElementById('troubleshootSection').classList.add('hidden');
+    document.getElementById('ticketFormSection').classList.remove('hidden');
+    document.getElementById('ticketFormSection').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // 重置選擇狀態
+  function resetSelection() {
+    selectedCategory = '';
+    document.querySelectorAll('.issue-btn').forEach(btn => {
+      btn.classList.remove('border-blue-600', 'bg-blue-50', 'ring-2', 'ring-blue-400');
+    });
+    document.getElementById('troubleshootSection').classList.add('hidden');
+    document.getElementById('ticketFormSection').classList.add('hidden');
+    document.getElementById('formDescription').value = '';
+    document.getElementById('formContactPerson').value = '';
+  }
+
+  // 提交工單 (秒速彈窗 + 靜默寫入雲端)
+  function submitTicket(e) {
+    e.preventDefault();
+    if (!currentStore || !selectedCategory) return;
+
     const contact = document.getElementById('formContactPerson').value.trim();
-    const desc = document.getElementById('formDescription').value.trim();  
-    const localTime = getNowLocalTime();  
-    const newTicketId = getNextTicketIdFast();  
-  
-    const payload = {  
-      ticket_id: newTicketId,  
-      timestamp: localTime,  
-      shop_code: currentStore.name,  
+    const desc = document.getElementById('formDescription').value.trim();
+    const newTicketId = getNextTicketIdFast();
+    const localTime = getNowLocalTime();
+
+    const payload = {
+      action: 'add_ticket',
+      ticket_id: newTicketId,
+      timestamp: localTime,
+      shop_code: currentStore.name,
       contact_person: contact || "門市同事",
-      category: selectedCategory,  
-      description: desc || "無詳細補充",  
-      onsite_visits: 0,
-      assignee: "Jason",
-      status: "待處理 / 已收 Order",  
-      it_notes: "我們已收到 Order，IT 正準備排查，請保持電腦開機及 TeamViewer 連線。"  
-    };  
-  
-    // 1. 本地立即存檔，維修紀錄即刻多一筆
-    saveLocalTicket(payload);  
-  
-    // 2. ★ 核心優化：0.05 秒即刻彈出成功彈窗，完全毋須等待十幾秒！
-    document.getElementById('modalTicketId').textContent = newTicketId;  
-    document.getElementById('modalStoreName').textContent = currentStore.name;  
-    document.getElementById('modalCategory').textContent = selectedCategory;  
-  
-    const waMsg = `【IT報修 ${newTicketId}】${currentStore.name}\n聯絡人：${contact || '門市同事'}\n時間：${localTime}\n問題：${selectedCategory}\n詳情：${desc || '無補充'}\n門市電腦已開機，備妥 TeamViewer，請 Jason 遠端協助，謝謝！`;  
-    const waUrl = `https://wa.me/852${JASON_MOBILE}?text=${encodeURIComponent(waMsg)}`;  
-    document.getElementById('btnWhatsApp').href = waUrl;  
-    document.getElementById('successModal').classList.remove('hidden');  
-  
-    // 3. 背景發送給 Google 試算表 (完全在後台靜默執行，不卡住用戶畫面)
-    fetch(SCRIPT_URL, {  
-      method: 'POST',  
-      mode: 'no-cors',  
-      headers: { 'Content-Type': 'application/json' },  
-      body: JSON.stringify(payload)  
+      category: selectedCategory,
+      description: desc || "無補充",
+      status: "待處理 / 已收 Order",
+      it_notes: "我們已收到 Order，IT 正準備排查，請保持電腦開機及 TeamViewer 連線。"
+    };
+
+    saveLocalTicket(payload);
+
+    document.getElementById('modalTicketId').textContent = newTicketId;
+    document.getElementById('modalStoreName').textContent = currentStore.name;
+    document.getElementById('modalCategory').textContent = selectedCategory;
+
+    const waMsg = `【IT報修 ${newTicketId}】${currentStore.name}\n聯絡人：${contact || '門市同事'}\n時間：${localTime}\n問題：${selectedCategory}\n詳情：${desc || '無補充'}\n門市電腦已開機，備妥 TeamViewer，請 Jason 遠端協助，謝謝！`;
+    const waUrl = `https://wa.me/852${JASON_MOBILE}?text=${encodeURIComponent(waMsg)}`;
+    document.getElementById('btnWhatsApp').href = waUrl;
+    document.getElementById('successModal').classList.remove('hidden');
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
     }).catch(err => {
       console.warn('雲端發送提示：', err);
     });
-  }  
+  }
 
-  function viewHistoryAfterSubmit() {  
-    document.getElementById('successModal').classList.add('hidden');  
-    resetSelection();  
-    switchTab('history');  
-  }  
-  
-  function resetForm() {  
-    document.getElementById('successModal').classList.add('hidden');  
-    resetSelection();  
-  }  
-  
-  function saveLocalTicket(ticket) {  
+  function viewHistoryAfterSubmit() {
+    document.getElementById('successModal').classList.add('hidden');
+    resetSelection();
+    switchTab('history');
+  }
+
+  function resetForm() {
+    document.getElementById('successModal').classList.add('hidden');
+    resetSelection();
+  }
+
+  function saveLocalTicket(ticket) {
     ticket._created_ms = Date.now();
-    let localList = JSON.parse(localStorage.getItem('fls_my_tickets') || '[]');  
-    localList.unshift(ticket);  
-    localStorage.setItem('fls_my_tickets', JSON.stringify(localList.slice(0, 50)));  
-  }  
+    let localList = JSON.parse(localStorage.getItem('fls_my_tickets') || '[]');
+    localList.unshift(ticket);
+    localStorage.setItem('fls_my_tickets', JSON.stringify(localList.slice(0, 100)));
+  }
 
-  // 門市歷史工單收合簡潔卡片渲染 (預設收起，可點擊展開)
+  // 門市歷史工單收合簡潔卡片渲染 (管理員顯示門市徽章)
   function renderStoreTicketCards(tickets) {
     const container = document.getElementById('ticketHistoryList');
     if (!tickets || tickets.length === 0) {
       container.innerHTML = `
         <div class="text-center py-10 bg-white rounded-2xl border border-slate-200 p-6 text-slate-400 text-xs">
           <i class="fa-solid fa-clipboard-check text-2xl mb-2 text-slate-300"></i>
-          <div>本店暫無任何支援工單或維修記錄。</div>
+          <div>${(currentStore && currentStore.isAdmin) ? '目前系統內暫無工單記錄。' : '本店暫無任何支援工單或維修記錄。'}</div>
         </div>
       `;
       return;
@@ -691,12 +903,18 @@
       const visitBadge = visits > 0 
         ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700 border border-purple-200 ml-1.5">實體到店 ${visits} 次</span>` 
         : '';
+      
+      // 管理員視圖特別顯示所屬門市
+      const shopBadge = (currentStore && currentStore.isAdmin && t.shop_code)
+        ? `<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-blue-100 text-blue-800 border border-blue-200 ml-1.5 shrink-0"><i class="fa-solid fa-shop mr-1"></i>${t.shop_code}</span>`
+        : '';
 
       html += `
         <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2 transition hover:shadow-sm">
           <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-1.5">
+            <div class="flex items-center space-x-1.5 flex-wrap">
               <span class="font-black text-blue-600 text-sm">${t.ticket_id || '#----'}</span>
+              ${shopBadge}
               ${visitBadge}
             </div>
             <span class="px-2.5 py-0.5 rounded-full text-xs font-bold border ${stClass}">
@@ -730,13 +948,14 @@
 
     container.innerHTML = html;
   }
-  
-  async function loadStoreTickets(isManual = false) {  
-    const icon = document.getElementById('refreshIcon');  
-    if (icon) icon.classList.add('fa-spin');  
-    const container = document.getElementById('ticketHistoryList');  
-  
-    // 1. 本地安全快取立即渲染，保證 0 秒開，絕不中途變空白
+
+  // 讀取門市支援工單 (如果是 itd 權限，則讀取全線所有資料)
+  async function loadStoreTickets(isManual = false) {
+    const icon = document.getElementById('refreshIcon');
+    if (icon) icon.classList.add('fa-spin');
+    const container = document.getElementById('ticketHistoryList');
+
+    // 1. 本地快取立即渲染，保證 0 秒呈現
     let localTickets = JSON.parse(localStorage.getItem('fls_my_tickets') || '[]');
     localTickets = localTickets.filter(lt => String(lt.ticket_id || '').length <= 25 && !String(lt.ticket_id || '').includes(','));
     
@@ -744,7 +963,8 @@
     const seen = new Set();
     localTickets.forEach(t => {
       const sc = String(t.shop_code || '');
-      if (currentStore && sc.includes(currentStore.name)) {
+      // 管理員 (isAdmin) 可以看到所有資料，普通門市只看本店
+      if (currentStore && (currentStore.isAdmin || sc.includes(currentStore.name))) {
         const tid = String(t.ticket_id || '').trim();
         if (!seen.has(tid)) {
           seen.add(tid);
@@ -753,7 +973,6 @@
       }
     });
 
-    // 依單號及時間倒序排列 (最新在頂部)
     storeTickets.sort((a, b) => String(b.ticket_id || '').localeCompare(String(a.ticket_id || '')));
 
     if (storeTickets.length > 0) {
@@ -761,16 +980,16 @@
       updateTabBadge(storeTickets);
     }
 
-    try {  
-      const url = `${SCRIPT_URL}?action=get_all_tickets&_t=${Date.now()}`;  
+    try {
+      const url = `${SCRIPT_URL}?action=get_all_tickets&_t=${Date.now()}`;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 秒超時保護
       
-      const resp = await fetch(url, { signal: controller.signal });  
+      const resp = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
-      const data = await resp.json();  
-  
-      if (data && data.status === 'success' && Array.isArray(data.tickets) && data.tickets.length > 0) {  
+      const data = await resp.json();
+
+      if (data && data.status === 'success' && Array.isArray(data.tickets) && data.tickets.length > 0) {
         const remoteTickets = data.tickets;
         const allCombined = [...localTickets, ...remoteTickets];
         const refreshedTickets = [];
@@ -778,7 +997,8 @@
         
         allCombined.forEach(t => {
           const sc = String(t.shop_code || '');
-          if (currentStore && sc.includes(currentStore.name)) {
+          // 管理員 (isAdmin) 可以看到所有資料，普通門市只看本店
+          if (currentStore && (currentStore.isAdmin || sc.includes(currentStore.name))) {
             const tid = String(t.ticket_id || '').trim();
             if (!seenRemote.has(tid)) {
               seenRemote.add(tid);
@@ -790,37 +1010,37 @@
         refreshedTickets.sort((a, b) => String(b.ticket_id || '').localeCompare(String(a.ticket_id || '')));
         renderStoreTicketCards(refreshedTickets);
         updateTabBadge(refreshedTickets);
-        localStorage.setItem('fls_my_tickets', JSON.stringify(refreshedTickets.slice(0, 50)));
+        localStorage.setItem('fls_my_tickets', JSON.stringify(refreshedTickets.slice(0, 100)));
       } else if (storeTickets.length === 0) {
         renderStoreTicketCards([]);
+        updateTabBadge([]);
       }
-  
-    } catch (err) {  
-      console.warn('雲端更新略過（保持已載入資料）：', err);  
+    } catch (err) {
+      console.warn('網路同步提示 (離線或慢速)：', err);
       if (storeTickets.length === 0) {
         renderStoreTicketCards([]);
       }
-    } finally {  
-      if (icon) icon.classList.remove('fa-spin');  
-    }  
-  }
-
-  function updateTabBadge(tickets) {
-    const activeCount = tickets.filter(t => {  
-      const st = String(t.status || '');  
-      return st.includes('待處理') || st.includes('進行中') || st.includes('到店');  
-    }).length;  
-
-    const badge = document.getElementById('tabCountBadge');  
-    if (badge) {
-      if (activeCount > 0) {  
-        badge.textContent = activeCount;  
-        badge.classList.remove('hidden');  
-      } else {  
-        badge.classList.add('hidden');  
-      }
+    } finally {
+      if (icon) icon.classList.remove('fa-spin');
     }
   }
-  </script>  
-</body>  
+
+  // 更新分頁徽章數字
+  function updateTabBadge(tickets) {
+    const badge = document.getElementById('tabCountBadge');
+    if (!badge) return;
+    const pendingCount = tickets.filter(t => {
+      const st = String(t.status || '');
+      return st.includes('待處理') || st.includes('進行中') || st.includes('已收');
+    }).length;
+
+    if (pendingCount > 0) {
+      badge.textContent = pendingCount;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+</script>
+</body>
 </html>
