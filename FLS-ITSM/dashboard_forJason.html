@@ -1,0 +1,2082 @@
+<!DOCTYPE html>  
+<html lang="zh-HK">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>威黃物流 FLS - IT 營運與門市使用狀況儀表板 (Dashboard - forJason)</title>  
+  <script src="https://cdn.tailwindcss.com"></script>  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
+  <style>  
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans HK', sans-serif; }  
+    .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }  
+    details > summary::-webkit-details-marker { display: none; }
+    .table-container { -webkit-overflow-scrolling: touch; }
+    header.sticky-header {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background-color: #0f172a;
+    }
+
+    /* 緊湊單行表格樣式 */
+    .compact-table td, .compact-table th {
+      vertical-align: middle;
+    }
+
+    /* 列印專用高質感排版 (@media print) */
+    @media print {
+      .no-print, header .action-buttons, #filterSection, button, .modal-backdrop {
+        display: none !important;
+      }
+      body {
+        background: white !important;
+        color: #0f172a !important;
+        font-size: 11px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      header.sticky-header {
+        position: static !important;
+        background: white !important;
+        color: #0f172a !important;
+        border-bottom: 2px solid #0f172a !important;
+        padding: 12px 0 !important;
+      }
+      header.sticky-header * {
+        color: #0f172a !important;
+      }
+      .bg-white, .glass {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+      }
+      .print-break-inside-avoid {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .table-container {
+        overflow: visible !important;
+      }
+      table {
+        width: 100% !important;
+      }
+      #ticketModal {
+        display: none !important;
+      }
+    }
+  
+    /* 自動定時更新 Toggle Switch 樣式 */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #475569;
+      transition: .3s;
+      border-radius: 22px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    input:checked + .slider {
+      background-color: #10b981;
+    }
+    input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+</style>  
+</head>  
+<body class="bg-slate-100 min-h-screen text-slate-800 text-sm flex flex-col justify-between">  
+  
+  <!-- 頂部導航 (管理層專用，支援快捷同步、PDF 列印與數據來源導出) -->  
+  <header class="sticky-header text-white shadow-md border-b border-slate-800">  
+    <div class="max-w-[1560px] mx-auto px-4 py-2.5 sm:py-3 flex flex-col md:flex-row md:items-center justify-between gap-2.5 md:gap-4">  
+      <div class="flex items-center space-x-3 min-w-0">  
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow shrink-0">  
+          FLS  
+        </div>  
+        <div class="min-w-0 flex-1">  
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">  
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white">  
+              IT 營運與門市使用狀況儀表板 (forJason)  
+            </h1>  
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                <i class="fa-solid fa-user-check text-[9px]"></i>forJason 專用版
+              </span>
+              <span class="whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 flex items-center gap-1">
+                <i class="fa-solid fa-code-commit text-[9px]"></i>v3.8 (forJason)
+              </span>
+            </div>
+          </div>  
+          <p class="text-xs text-slate-400 mt-0.5 truncate">威黃物流服務有限公司 · IT&D - Jason Chow (外勤外出 WhatsApp 報備專用)</p>  
+        </div>  
+      </div>  
+  
+      <!-- 快捷操作按鈕組 -->  
+      <div class="action-buttons flex flex-wrap items-center gap-2 shrink-0">
+        <!-- 自動更新開關 (預設關閉，切換開啟後定時 30 秒輪詢最新資料) -->
+        <div class="flex items-center space-x-2 bg-slate-800/90 px-3 py-1 rounded-xl border border-slate-700 select-none">
+          <label class="switch">
+            <input type="checkbox" id="autoUpdateToggle" onchange="toggleAutoRefresh(this.checked)">
+            <span class="slider"></span>
+          </label>
+          <div class="text-left text-xs">
+            <div class="font-bold text-slate-200 flex items-center gap-1 leading-tight">
+              <span>自動更新</span>
+              <span id="autoUpdateIndicator" class="hidden w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            </div>
+            <div id="autoUpdateLabel" class="text-[10px] text-slate-400 leading-tight">預設關閉</div>
+          </div>
+        </div>
+  
+        <!-- AI 門市回覆助手按鈕 -->
+        <button onclick="openStoreReplyModal()" 
+          class="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5"
+          title="輸入門市查詢，AI 自動分析並生成排障建議與回覆">
+          <i class="fa-solid fa-robot text-xs text-indigo-200"></i>
+          <span class="hidden sm:inline">AI 門市回覆</span>
+          <span>AI 建議</span>
+        </button>
+
+        <button onclick="fetchAllTickets(true)"   
+          class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow transition flex items-center space-x-1.5"
+          title="從 Google Sheets 重新同步最新數據">  
+          <i id="refreshIcon" class="fa-solid fa-rotate-right"></i>  
+          <span class="hidden sm:inline">即時同步</span>  
+          <span>Refresh</span>  
+        </button>  
+
+        <button onclick="window.print()" 
+          class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center space-x-1.5"
+          title="將儀表板轉換為 PDF 或列印">
+          <i class="fa-solid fa-print text-amber-400"></i>
+          <span class="hidden sm:inline">列印 / 存為</span>
+          <span>PDF</span>
+        </button>
+
+        <a href="https://docs.google.com/spreadsheets/d/1DVopGt_YABciCY48kPr-CtHYtwmfVPirejj9mnufD1c/edit" target="_blank"  
+          class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center space-x-1"
+          title="開啟底層 Google Sheet">  
+          <i class="fa-solid fa-file-excel text-emerald-400"></i>  
+          <span class="hidden sm:inline">開啟</span>  
+          <span>試算表</span>  
+        </a>
+
+        <!-- 專屬鎖定 / 登出按鈕 -->
+        <button onclick="jasonLogout()" 
+          class="px-2.5 py-1.5 bg-slate-800 hover:bg-red-900/50 hover:text-red-300 text-slate-400 rounded-xl text-xs font-bold border border-slate-700 transition flex items-center space-x-1" 
+          title="鎖定工作台 / 登出">
+          <i class="fa-solid fa-lock text-slate-400"></i>
+          <span class="hidden sm:inline">鎖定</span>
+        </button>  
+      </div>  
+    </div>  
+  </header>  
+  
+  <!-- 主內容區 -->  
+  <main class="max-w-[1560px] mx-auto px-4 py-5 w-full flex-grow space-y-4">  
+  
+    <!-- 1. 核心 KPI 數據卡片 (4 大核心指標，實時精確累計實體到店次數) -->  
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">  
+      <!-- 總工單量 -->  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
+        <div>  
+          <div class="text-xs text-slate-500 font-bold uppercase tracking-wider">總工單累積量</div>  
+          <div id="kpiTotalTickets" class="text-2xl lg:text-3xl font-black text-slate-900 mt-1">--</div>  
+          <div class="text-[11px] text-slate-400 mt-0.5">累計所有支援項目</div>  
+        </div>  
+        <div class="w-11 h-11 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">  
+          <i class="fa-solid fa-ticket"></i>  
+        </div>  
+      </div>  
+  
+      <!-- 店舖到店維修總次數 (精確計算多次到店，包含單一工單多次到店) -->  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
+        <div>  
+          <div class="text-xs text-purple-700 font-bold uppercase tracking-wider">年度到店維修次數</div>  
+          <div id="kpiOnsiteVisits" class="text-2xl lg:text-3xl font-black text-purple-700 mt-1">--</div>  
+          <div class="text-[11px] text-purple-600/80 mt-0.5">累計實體到店次數 (含複測)</div>  
+        </div>  
+        <div class="w-11 h-11 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg">  
+          <i class="fa-solid fa-van-shuttle"></i>  
+        </div>  
+      </div>  
+  
+      <!-- 自主排障成功攔截 (Deflection) -->  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
+        <div>  
+          <div class="text-xs text-emerald-700 font-bold uppercase tracking-wider">自檢成功攔截次數</div>  
+          <div id="kpiDeflected" class="text-2xl lg:text-3xl font-black text-emerald-600 mt-1">--</div>  
+          <div id="kpiDeflectedRate" class="text-[11px] text-emerald-600 mt-0.5 font-bold">工單攔截率: --%</div>  
+        </div>  
+        <div class="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">  
+          <i class="fa-solid fa-shield-check"></i>  
+        </div>  
+      </div>  
+  
+      <!-- 進行中 / 待處理 -->  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs flex items-center justify-between print-break-inside-avoid">  
+        <div>  
+          <div class="text-xs text-amber-700 font-bold uppercase tracking-wider">待處理 / 遠端中</div>  
+          <div id="kpiActiveTickets" class="text-2xl lg:text-3xl font-black text-amber-600 mt-1">--</div>  
+          <div class="text-[11px] text-amber-600/80 mt-0.5">即時跟進中工單</div>  
+        </div>  
+        <div class="w-11 h-11 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg">  
+          <i class="fa-solid fa-hourglass-half"></i>  
+        </div>  
+      </div>  
+    </div>  
+  
+    <!-- 2. 靈活篩選控制器 (自選時間範圍，預設 2026 年) -->  
+    <div id="filterSection" class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">  
+      <div class="flex items-center justify-between">  
+        <h3 class="text-xs font-extrabold text-slate-600 uppercase tracking-wider flex items-center space-x-1.5">  
+          <i class="fa-solid fa-filter text-blue-600"></i>  
+          <span>多維度數據篩選器</span>  
+        </h3>  
+        <button onclick="resetFilters()" class="text-xs text-blue-600 font-bold hover:underline">  
+          重置篩選  
+        </button>  
+      </div>  
+  
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">  
+        <!-- 時間範圍篩選 (預設 2026 今年) -->  
+        <div>  
+          <label class="block text-xs font-bold text-slate-700 mb-1 flex items-center gap-1">
+            <i class="fa-solid fa-calendar-days text-blue-600"></i>
+            <span>工作時間範圍</span>
+          </label>  
+          <select id="filterTimeRange" onchange="applyFilters()"   
+            class="w-full p-2 bg-blue-50/60 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
+            <option value="2026" selected>2026 年全年度 (預設)</option>  
+            <option value="1M">近 1 個月 (過去 30 天)</option>  
+            <option value="2M">近 2 個月 (過去 60 天)</option>  
+            <option value="3M">近 3 個月 (本季度 90 天)</option>  
+            <option value="6M">近半年 (過去 180 天)</option>  
+            <option value="ALL">全部歷史記錄</option>  
+          </select>  
+        </div>  
+  
+        <!-- 門市篩選 -->  
+        <div>  
+          <label class="block text-xs font-bold text-slate-700 mb-1">目標門市</label>  
+          <select id="filterShop" onchange="applyFilters()"   
+            class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
+            <option value="ALL">全部 38 間實體門市</option>  
+          </select>  
+        </div>  
+  
+        <!-- 處理狀態篩選 -->  
+        <div>  
+          <label class="block text-xs font-bold text-slate-700 mb-1">處理狀態</label>  
+          <select id="filterStatus" onchange="applyFilters()"   
+            class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
+            <option value="ALL">全部狀態</option>  
+            <option value="待處理">待處理 / 已收單</option>  
+            <option value="進行中">進行中 (遠端排障)</option>  
+            <option value="已安排到店">已安排到店維修</option>  
+            <option value="已完成">已完成</option>  
+            <option value="自主排障">自主排障成功 (攔截)</option>  
+          </select>  
+        </div>  
+  
+        <!-- 問題分類篩選 -->  
+        <div>  
+          <label class="block text-xs font-bold text-slate-700 mb-1">問題分類</label>  
+          <select id="filterCategory" onchange="applyFilters()"   
+            class="w-full p-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">  
+            <option value="ALL">全部問題類型</option>  
+            <option value="網絡">網絡問題 (WiFi/卡機/上網)</option>  
+            <option value="印單機">印單機 Jam 紙 / 故障</option>  
+            <option value="音樂">背景音樂播放器</option>  
+            <option value="電腦">電腦問題 (Hang機/好慢/死機)</option>  
+            <option value="硬件">其他硬件支援 / 採購</option>  
+          </select>  
+        </div>  
+  
+        <!-- 關鍵字搜尋 -->  
+        <div>  
+          <label class="block text-xs font-bold text-slate-700 mb-1">關鍵字搜尋 (編號/人員/描述)</label>  
+          <div class="relative">  
+            <input type="text" id="filterKeyword" oninput="applyFilters()" placeholder="搜尋編號、聯絡人、負責人..."   
+              class="w-full pl-8 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">  
+            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>  
+          </div>  
+        </div>  
+      </div>  
+    </div>  
+  
+    <!-- 3. 圖表分析區 (Chart.js) -->  
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3.5 print-break-inside-avoid">  
+      <!-- 圖表 1：各門市到店維修次數排行榜 -->  
+      <div class="lg:col-span-2 bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">  
+        <div class="flex items-center justify-between border-b border-slate-100 pb-2">  
+          <div>  
+            <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">  
+              <i class="fa-solid fa-chart-column text-blue-600"></i>  
+              <span>各門市年度到店維修與報修排行榜</span>  
+            </h4>  
+            <p class="text-[11px] text-slate-400 mt-0.5">實體紫色長條精確統計落點次數（含單一工單多次到店）</p>  
+          </div>  
+          <span class="text-xs font-bold text-slate-400" id="chartTopCount">Top 門市</span>  
+        </div>  
+        <div class="h-60 relative">  
+          <canvas id="chartStoreVisits"></canvas>  
+        </div>  
+      </div>  
+  
+      <!-- 圖表 2：常見故障類型佔比 -->  
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-xs space-y-2.5">  
+        <div class="border-b border-slate-100 pb-2">  
+          <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">  
+            <i class="fa-solid fa-chart-pie text-emerald-600"></i>  
+            <span>故障類別與排障分佈</span>  
+          </h4>  
+          <p class="text-[11px] text-slate-400 mt-0.5">分析前線最常出現的技術問題</p>  
+        </div>  
+        <div class="h-60 relative flex items-center justify-center">  
+          <canvas id="chartCategoryPie"></canvas>  
+        </div>  
+      </div>  
+    </div>  
+  
+    <!-- 4. 詳細數據表格 (升級：緊湊單行排版、行距縮窄、負責人獨立置前、操作按鈕完整顯示) -->  
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden print-break-inside-avoid">  
+      <!-- 表格標題與操作欄 -->  
+      <div class="p-3 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">  
+        <div>  
+          <h4 class="text-sm font-extrabold text-slate-900 flex items-center space-x-2">  
+            <i class="fa-solid fa-table-list text-blue-600"></i>  
+            <span>完整支援工單明細表</span>  
+          </h4>  
+          <p class="text-xs text-slate-400 mt-0.5">  
+            符合篩選記錄：共 <b id="tableCount" class="text-blue-600">0</b> 筆（緊湊視圖：單行清晰對齊，點擊任意行展開完整對話與跟進詳情）  
+          </p>  
+        </div>  
+  
+        <div class="action-buttons flex items-center space-x-2 self-start sm:self-auto">  
+          <button onclick="exportCSV()" class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold border border-slate-300 transition flex items-center space-x-1.5 shadow-2xs">  
+            <i class="fa-solid fa-download text-xs text-slate-600"></i>  
+            <span>匯出 CSV 報表</span>  
+          </button>  
+        </div>  
+      </div>  
+  
+      <!-- 表格主體 (緊湊高密度單行排版，每個資料佔一行，一目了然) -->  
+      <div class="w-full overflow-x-auto table-container">  
+        <table class="w-full text-left text-xs border-collapse compact-table">  
+          <thead>  
+            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">  
+              <th class="py-2 px-2.5 whitespace-nowrap w-32">提交時間</th>  
+              <th class="py-2 px-2 whitespace-nowrap w-28">工單號</th>  
+              <th class="py-2 px-2.5 whitespace-nowrap w-28">門市代號</th>  
+              <th class="py-2 px-2 whitespace-nowrap w-20">聯絡人</th>  
+              <th class="py-2 px-2 whitespace-nowrap w-24">問題類型</th>  
+              <th class="py-2 px-2.5 max-w-[200px]">門市補充說明</th>  
+              <th class="py-2 px-2 text-center whitespace-nowrap w-24">處理狀態</th>  
+              <th class="py-2 px-2 text-center whitespace-nowrap w-20 bg-blue-50/40 text-blue-900 border-x border-blue-100">負責人</th>  
+              <th class="py-2 px-2.5 max-w-[280px]">IT 最新跟進 / 預計到店</th>  
+              <th class="py-2 px-2.5 text-center whitespace-nowrap min-w-[145px] action-buttons">外出報備 / 操作</th>  
+            </tr>  
+          </thead>  
+          <tbody id="ticketTableBody" class="divide-y divide-slate-100 text-slate-700">  
+            <tr>  
+              <td colspan="10" class="py-8 text-center text-slate-400">  
+                <i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-blue-600"></i>  
+                <div>正在載入工單數據...</div>  
+              </td>  
+            </tr>  
+          </tbody>  
+        </table>  
+      </div>  
+    </div>  
+  
+  </main>  
+  
+  <!-- 頁尾版權 -->  
+  <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-center gap-2">  
+    <span>威黃物流服務有限公司 (Fenix Logistics Services Limited) · I&TD - Jason Chow</span>  
+    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">  
+      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.8 (2026年9月17日 全功能正式版)  
+    </span>  
+  </footer>  
+
+  <!-- ==================== 工單詳情彈窗 (Detail Modal) ==================== -->
+  <div id="ticketModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" onclick="handleModalBackdropClick(event)">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] transition-all" onclick="event.stopPropagation()">
+      <!-- Modal 頂部 Header -->
+      <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow">
+            <i class="fa-solid fa-ticket"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="modalTicketId" class="text-base font-extrabold tracking-tight">--</h3>
+              <span id="modalStatusBadge" class="px-2 py-0.5 rounded-full text-[11px] font-bold border">--</span>
+            </div>
+            <p id="modalShopTitle" class="text-xs text-slate-300 mt-0.5">--</p>
+          </div>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" title="關閉">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal 內容區 -->
+      <div class="p-6 overflow-y-auto space-y-4 text-xs leading-relaxed">
+        <!-- 屬性網格 -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <div>
+            <span class="text-slate-400 block font-medium">提交時間</span>
+            <span id="modalTime" class="font-bold text-slate-800 mt-0.5 block font-mono">--</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">前線聯絡人</span>
+            <span id="modalContact" class="font-bold text-slate-800 mt-0.5 block flex items-center gap-1">
+              <i class="fa-regular fa-user text-blue-500"></i><span id="modalContactText">--</span>
+            </span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">IT 負責人</span>
+            <span id="modalAssignee" class="font-bold text-slate-800 mt-0.5 block flex items-center gap-1">
+              <i class="fa-solid fa-wrench text-amber-500"></i><span id="modalAssigneeText">--</span>
+            </span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">實體到店次數</span>
+            <span id="modalVisits" class="font-bold text-purple-700 mt-0.5 block">--</span>
+          </div>
+        </div>
+
+        <!-- 問題類型 -->
+        <div class="flex items-center gap-2">
+          <span class="text-slate-500 font-bold">問題分類：</span>
+          <span id="modalCategory" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 font-bold border border-blue-200">--</span>
+        </div>
+
+        <!-- 門市問題描述 -->
+        <div>
+          <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <i class="fa-regular fa-comment-dots text-blue-600"></i> 門市原聲描述 / 補充說明
+          </h4>
+          <div id="modalDesc" class="p-3 bg-slate-50 rounded-xl border border-slate-200 text-slate-800 font-medium whitespace-pre-wrap leading-relaxed">
+            --
+          </div>
+        </div>
+
+        <!-- IT 最新處理日誌與備註 -->
+        <div>
+          <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-laptop-code text-blue-600"></i> IT 最新跟進與預計到店安排
+          </h4>
+          <div id="modalNotesContainer" class="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-blue-950 font-medium whitespace-pre-wrap leading-relaxed">
+            --
+          </div>
+        </div>
+
+        <!-- 完成時間 (若有) -->
+        <div id="modalResolvedSection" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 flex items-center justify-between">
+          <span class="font-bold flex items-center gap-1.5">
+            <i class="fa-regular fa-circle-check text-emerald-600"></i> 結案完成時間
+          </span>
+          <span id="modalResolvedTime" class="font-mono font-bold">--</span>
+        </div>
+
+        <!-- ★ forJason 專屬：WhatsApp 外出工作報備專區 -->
+        <div class="p-4 bg-emerald-50/90 border border-emerald-300 rounded-xl text-emerald-950 space-y-2.5 shadow-2xs">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="text-xs font-extrabold text-emerald-900 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i>
+                <span>通知上司外出工作 (WhatsApp 報備)</span>
+              </h4>
+              <div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-white border border-emerald-300 text-[11px] font-bold text-slate-800 shadow-3xs">
+                <i class="fa-solid fa-user-tie text-emerald-600 text-[10px]"></i>
+                <span class="text-slate-500">上司：</span>
+                <span class="text-blue-700">Fenix-Andrew Chan</span>
+                <span class="text-emerald-700 font-mono">(6411 1668)</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 text-[11px] flex-wrap">
+              <span class="text-emerald-700 font-bold">快速時段：</span>
+              <button type="button" onclick="setModalTimeSlot('今日上午')" class="px-2 py-0.5 rounded-md bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold transition text-[10px]">今日上午</button>
+              <button type="button" onclick="setModalTimeSlot('今日下午')" class="px-2 py-0.5 rounded-md bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold transition text-[10px]">今日下午</button>
+              <button type="button" onclick="setModalTimeSlot('明日上午')" class="px-2 py-0.5 rounded-md bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold transition text-[10px]">明日上午</button>
+              <button type="button" onclick="setModalTimeSlot('明日下午')" class="px-2 py-0.5 rounded-md bg-white hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold transition text-[10px]">明日下午</button>
+            </div>
+          </div>
+          <p class="text-[11px] text-emerald-800/80 leading-tight">
+            系統已根據工單資訊與當前時間自動填好格式，你亦可於下方即時微調後發送：
+          </p>
+          <textarea id="modalWhatsAppText" rows="4" class="w-full p-2.5 bg-white border border-emerald-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-none font-medium leading-relaxed"></textarea>
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <span class="text-[11px] text-emerald-700 font-medium flex items-center gap-1">
+              <i class="fa-solid fa-link text-emerald-600"></i>附帶儀表板公用網址供上司點擊查閱
+            </span>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="openStoreReplyFromCurrentTicket()" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold rounded-lg border border-indigo-200 transition text-xs inline-flex items-center gap-1.5 shadow-2xs" title="為此門市生成 AI 排障建議與回覆">
+                <i class="fa-solid fa-robot text-indigo-600"></i><span>AI 回覆門市</span>
+              </button>
+              <button type="button" onclick="copyModalWhatsAppText()" class="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-lg border border-slate-300 transition text-xs inline-flex items-center gap-1.5 shadow-2xs">
+                <i class="fa-regular fa-copy text-slate-500"></i><span id="copyBtnText">複製文字</span>
+              </button>
+              <button type="button" onclick="openModalWhatsApp()" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-lg transition text-xs inline-flex items-center gap-1.5 shadow-xs" title="直接開啟 WhatsApp 傳送給 Andrew Chan (6411 1668)">
+                <i class="fa-brands fa-whatsapp text-white text-sm"></i><span>傳送給 Andrew (6411 1668)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal 底部操作欄 -->
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
+        <span class="text-[11px] text-slate-400">FLS ITSM 支援工單管理</span>
+        <div class="flex items-center space-x-2">
+          <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-xs">
+            關閉
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+  // ★ 自動定時更新控制器 (預設關閉，支援可開關切換)
+  let autoRefreshTimer = null;
+  const AUTO_REFRESH_INTERVAL_MS = 30000; // 30 秒定時刷新
+
+  function toggleAutoRefresh(enable) {
+    const label = document.getElementById('autoUpdateLabel');
+    const indicator = document.getElementById('autoUpdateIndicator');
+
+    if (enable) {
+      if (autoRefreshTimer) clearInterval(autoRefreshTimer);
+      autoRefreshTimer = setInterval(() => {
+        fetchAllTickets(false); // 靜默背景刷新
+      }, AUTO_REFRESH_INTERVAL_MS);
+      if (label) {
+        label.textContent = '進行中 (30s)';
+        label.className = 'text-[10px] text-emerald-400 font-bold leading-tight';
+      }
+      if (indicator) indicator.classList.remove('hidden');
+    } else {
+      if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+      }
+      if (label) {
+        label.textContent = '預設關閉';
+        label.className = 'text-[10px] text-slate-400 leading-tight';
+      }
+      if (indicator) indicator.classList.add('hidden');
+    }
+  }
+  
+  const STORES = {"1138": {"pw": "Cb7749", "name": "1138-PP-CT", "brand": "AT Cocktail", "location": "PP"}, "1139": {"pw": "Cb7749", "name": "1139-FW-CT", "brand": "AT Cocktail", "location": "FW"}, "1146": {"pw": "Cb7749", "name": "1146-LG-CT", "brand": "AT Cocktail", "location": "LG"}, "1148": {"pw": "Cb7749", "name": "1148-CP-CT", "brand": "AT Cocktail", "location": "CP"}, "1170": {"pw": "Tc5525", "name": "1170-FW-TY", "brand": "AT Tayama", "location": "FW"}, "1172": {"pw": "Tc5525", "name": "1172-LG-TY", "brand": "AT Tayama", "location": "LG"}, "1175": {"pw": "Tc5525", "name": "1175-KT-TY", "brand": "AT Tayama", "location": "KT"}, "1180": {"pw": "Tc5525", "name": "1180-SG-TY", "brand": "AT Tayama", "location": "SG"}, "1191": {"pw": "Tc5525", "name": "1191-IFC-TY", "brand": "AT Tayama", "location": "IFC"}, "1192": {"pw": "Tc5525", "name": "1192-HC-TY", "brand": "AT Tayama", "location": "HC"}, "1194": {"pw": "Tc5525", "name": "1194-TS-TY", "brand": "AT Tayama (AT)", "location": "TS"}, "1196": {"pw": "Cb7749", "name": "1196-EL-CT", "brand": "AT Cocktail", "location": "EL"}, "1220": {"pw": "Tb8216", "name": "1220-LG-TLS", "brand": "The Little Shop", "location": "LG"}, "1350": {"pw": "Ak3927", "name": "1350-LG-AP", "brand": "Anteprima", "location": "LG"}, "1360": {"pw": "Ak3927", "name": "1360-HC-AP", "brand": "Anteprima", "location": "HC"}, "1361": {"pw": "Ak3927", "name": "1361-SG-AP", "brand": "Anteprima", "location": "SG"}, "1362": {"pw": "Ak3927", "name": "1362-EL-AP", "brand": "Anteprima", "location": "EL"}, "1364": {"pw": "Ak3927", "name": "1364-CTG-AP", "brand": "Anteprima", "location": "CTG"}, "1365": {"pw": "Ak3927", "name": "1365-FW-AP", "brand": "Anteprima", "location": "FW"}, "1388": {"pw": "Wp3618", "name": "1388-OT-AP", "brand": "Wirebag", "location": "OT"}, "1390": {"pw": "Ak3927", "name": "1390-IFC-AP", "brand": "Anteprima", "location": "IFC"}, "1396": {"pw": "Wp3618", "name": "1396-TS-AP", "brand": "Wirebag", "location": "TS"}, "1501": {"pw": "Wp3618", "name": "1501-PP-AP", "brand": "Wirebag", "location": "PP"}, "3620": {"pw": "Mc8864", "name": "3620-LT-MM", "brand": "Marimekko", "location": "LT"}, "3622": {"pw": "Mc8864", "name": "3622-CP-MM", "brand": "Marimekko", "location": "CP"}, "3623": {"pw": "Mc8864", "name": "3623-NT-MM", "brand": "Marimekko", "location": "NT"}, "3625": {"pw": "Mc8864", "name": "3625-HC-MM", "brand": "Marimekko", "location": "HC"}, "3626": {"pw": "Mc8864", "name": "3626-FW-MM", "brand": "Marimekko", "location": "FW"}, "3627": {"pw": "Mc8864", "name": "3627-SG-MM", "brand": "Marimekko", "location": "SG"}, "3628": {"pw": "Mc8864", "name": "3628-PP-MM", "brand": "Marimekko", "location": "PP"}, "3629": {"pw": "Mc8864", "name": "3629-CTG-MM", "brand": "Marimekko", "location": "CTG"}, "3630": {"pw": "Mc8864", "name": "3630-MB-MM", "brand": "Marimekko", "location": "MB"}, "4520": {"pw": "Rb9981", "name": "4520-HC-45R", "brand": "45rpm", "location": "HC"}, "4530": {"pw": "Rb9981", "name": "4530-SS-45R", "brand": "45rpm", "location": "SS"}, "4533": {"pw": "Rb9981", "name": "4533-IFC-45R", "brand": "45rpm", "location": "IFC"}, "4534": {"pw": "Rb9981", "name": "4534-LG-45R", "brand": "45rpm", "location": "LG"}, "4538": {"pw": "Rb9981", "name": "4538-FW-45R", "brand": "45rpm", "location": "FW"}, "6666": {"pw": "Ot8648", "name": "6666-HZ-OUTLET", "brand": "Outlet", "location": "HZ"}, "8888": {"pw": "Ot8648", "name": "8888-CTG-OUTLET", "brand": "Outlet", "location": "CTG"}};  
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";  
+  const CACHE_KEY = "fls_dashboard_cached_tickets";
+  
+  let rawTickets = [];  
+  let filteredTickets = [];  
+  let chartVisitsInstance = null;  
+  let chartCategoryInstance = null;  
+  
+  window.addEventListener('DOMContentLoaded', () => {
+    // 確保自動更新開關預設為關閉
+    const autoToggle = document.getElementById('autoUpdateToggle');
+    if (autoToggle) autoToggle.checked = false;
+  
+    populateShopDropdown();  
+    loadCachedTickets();  
+    fetchAllTickets();  
+
+    // 支援 ESC 鍵關閉 Modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  });  
+
+  // 優先載入本地快取（防白板機制，自動過濾測試記錄並清洗快取）
+  function loadCachedTickets() {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const data = JSON.parse(cached);
+        if (Array.isArray(data) && data.length > 0) {
+          rawTickets = data.map(t => sanitizeTicket(t));
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify(rawTickets));
+          } catch(e) {}
+          applyFilters();
+        }
+      }
+    } catch (e) {
+      console.log('快取讀取略過：', e);
+    }
+  }
+  
+  function populateShopDropdown() {  
+    const select = document.getElementById('filterShop');  
+    const sortedCodes = Object.keys(STORES).sort();  
+    sortedCodes.forEach(code => {  
+      const opt = document.createElement('option');  
+      opt.value = STORES[code].name;  
+      opt.textContent = `${STORES[code].name} (${STORES[code].brand})`;  
+      select.appendChild(opt);  
+    });  
+  }  
+  
+  // 精確計算單一工單的實體到店次數
+  function getTicketVisits(t) {
+    if (t.visits !== null && t.visits !== undefined && !isNaN(parseInt(t.visits, 10))) {
+      const parsed = parseInt(t.visits, 10);
+      if (parsed >= 0) return parsed;
+    }
+    const content = `${t.it_notes || ''} ${t.description || ''} ${t.status || ''}`.toLowerCase();
+    const m = content.match(/(?:到店|落點|現場|出勤)(?:次數)?[:：\s]*(\d+)\s*次?/);
+    if (m) {
+      const v = parseInt(m[1], 10);
+      if (!isNaN(v) && v > 0) return v;
+    }
+    if (/(再次到店|第二度到店|二次測試|兩次到店|第2次到店|二次到店|網絡複測|複測|第二趟|再次到門市|再次前往|再次到場|再度到店|兩趟)/.test(content)) {
+      return 2;
+    }
+    if (/(到店|落點|現場|親身前往)/.test(content) || (t.status && t.status.includes('到店'))) {
+      return 1;
+    }
+    return 0;
+  }
+
+  // ★ 核心優化：統一時間格式為標準 YYYY-MM-DD HH:mm (例如 2026-09-17 17:23)
+  function formatTicketTime(raw) {
+    if (!raw) return '-';
+    const s = String(raw).trim();
+
+    // 1. 英文標準日期字串：Thu Sep 17 2026 17:23:00 ...
+    const mEng = s.match(/([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{2}:\d{2})/);
+    if (mEng) {
+      const months = {Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+      const mo = months[mEng[1]] || '09';
+      const day = mEng[2].padStart(2, '0');
+      const yr = mEng[3];
+      return `${yr}-${mo}-${day} ${mEng[4]}`;
+    }
+
+    // 2. 標準 YYYY-MM-DD HH:mm(:ss) 或 YYYY/MM/DD HH:mm(:ss)
+    const mStd = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{1,2})/);
+    if (mStd) {
+      const yr = mStd[1];
+      const mo = mStd[2].padStart(2, '0');
+      const day = mStd[3].padStart(2, '0');
+      return `${yr}-${mo}-${day} ${mStd[4]}`;
+    }
+
+    // 3. 只有 MM-DD HH:mm 格式 (自動補齊 2026 年份)
+    const mShort = s.match(/^(\d{1,2})[-/](\d{1,2})\s+(\d{1,2}:\d{1,2})/);
+    if (mShort) {
+      const mo = mShort[1].padStart(2, '0');
+      const day = mShort[2].padStart(2, '0');
+      return `2026-${mo}-${day} ${mShort[3]}`;
+    }
+
+    // 4. ISO 格式 2026-09-13T03:23:28
+    const mIso = s.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (mIso) {
+      return `${mIso[1]}-${mIso[2]}-${mIso[3]} ${mIso[4]}:${mIso[5]}`;
+    }
+
+    // 5. 純日期 YYYY-MM-DD
+    const mDateOnly = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (mDateOnly) {
+      const yr = mDateOnly[1];
+      const mo = mDateOnly[2].padStart(2, '0');
+      const day = mDateOnly[3].padStart(2, '0');
+      return `${yr}-${mo}-${day} 00:00`;
+    }
+
+    return s;
+  }
+
+
+  // 解析任何格式的日期（全面相容各類日期做時間範圍過濾與排序）
+  function parseTicketDate(raw) {
+    if (!raw) return null;
+    const s = String(raw).trim();
+
+    const mEng = s.match(/([A-Za-z]{3})\s+(\d{1,2})\s+(\d{4})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
+    if (mEng) {
+      const months = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+      const mo = months[mEng[1]] !== undefined ? months[mEng[1]] : 8;
+      const day = parseInt(mEng[2], 10);
+      const yr = parseInt(mEng[3], 10);
+      const hr = parseInt(mEng[4], 10);
+      const mi = parseInt(mEng[5], 10);
+      const se = mEng[6] ? parseInt(mEng[6], 10) : 0;
+      return new Date(yr, mo, day, hr, mi, se);
+    }
+
+    const m1 = s.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+    if (m1) {
+      const year = parseInt(m1[1], 10);
+      const month = parseInt(m1[2], 10) - 1;
+      const day = parseInt(m1[3], 10);
+      const tMatch = s.match(/(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?/);
+      const hour = tMatch ? parseInt(tMatch[1], 10) : 0;
+      const minute = tMatch ? parseInt(tMatch[2], 10) : 0;
+      const second = (tMatch && tMatch[3]) ? parseInt(tMatch[3], 10) : 0;
+      return new Date(year, month, day, hour, minute, second);
+    }
+
+    const m2 = s.match(/^(\d{1,2})[-/](\d{1,2})(?:\s+(\d{1,2}):(\d{1,2}))?/);
+    if (m2) {
+      const month = parseInt(m2[1], 10) - 1;
+      const day = parseInt(m2[2], 10);
+      const hour = m2[3] ? parseInt(m2[3], 10) : 0;
+      const minute = m2[4] ? parseInt(m2[4], 10) : 0;
+      return new Date(2026, month, day, hour, minute, 0);
+    }
+
+    const parsed = Date.parse(s.replace(/\(.*?\)/g, '').trim());
+    if (!isNaN(parsed)) {
+      const d = new Date(parsed);
+      if (d.getFullYear() === 2001) d.setFullYear(2026);
+      return d;
+    }
+    return null;
+  }
+
+  // 時間範圍過濾函數
+  function isWithinTimeRange(rawTime, mode) {
+    if (!mode || mode === 'ALL') return true;
+    const dt = parseTicketDate(rawTime);
+    if (!dt) return true;
+
+    if (mode === '2026') {
+      return dt.getFullYear() === 2026;
+    }
+
+    let anchorTime = Date.now();
+    if (Array.isArray(rawTickets) && rawTickets.length > 0) {
+      for (let t of rawTickets) {
+        let tDate = parseTicketDate(t.raw_timestamp || t.timestamp);
+        if (tDate && tDate.getTime() > anchorTime) {
+          anchorTime = tDate.getTime();
+        }
+      }
+    }
+    const anchorDate = new Date(anchorTime);
+
+    const diffMs = anchorDate.getTime() - dt.getTime();
+    const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+    if (mode === '1M') {
+      return diffDays >= 0 && diffDays <= 31;
+    } else if (mode === '2M') {
+      return diffDays >= 0 && diffDays <= 62;
+    } else if (mode === '3M') {
+      return diffDays >= 0 && diffDays <= 93;
+    } else if (mode === '6M') {
+      return diffDays >= 0 && diffDays <= 186;
+    }
+    return true;
+  }
+
+  // 核心數據淨化函數 (完整解析 聯絡人、負責人、到店次數、完成時間)
+  function sanitizeTicket(t) {  
+    let tid = String(t.ticket_id || '').trim();  
+    let shop = String(t.shop_code || '').trim();  
+    let cat = String(t.category || '').trim();  
+    let desc = String(t.description || '').trim();  
+    let st = String(t.status || '待處理').trim();  
+    let itNote = String(t.it_notes || '').trim();  
+    let rawTime = String(t.timestamp || '').trim();  
+    let contact = String(t.contact_person || t.contact || '').trim();
+    let assignee = String(t.assignee || t.it_assignee || '').trim();
+    let resolvedTime = String(t.resolved_time || '').trim();
+    let rawVisits = t.visits !== undefined ? t.visits : (t['到場/店支援次數'] !== undefined ? t['到場/店支援次數'] : null);
+  
+    // 舊版逗號混合資料容錯
+    if (tid.includes(',') || shop.includes(',') || cat.includes(',')) {  
+      const fullStr = [tid, shop, cat, desc, st, itNote].join(',');  
+      const parts = fullStr.split(',');  
+  
+      const idPart = parts.find(p => p.trim().startsWith('#') || /^\d{4}-\d{3}/.test(p.trim()));  
+      if (idPart) tid = idPart.trim();  
+  
+      const shopPart = parts.find(p => /^\d{4}-[A-Z0-9]+-[A-Z0-9]+$/.test(p.trim()) || /^\d{4}/.test(p.trim()));  
+      if (shopPart) shop = shopPart.trim();  
+  
+      const catPart = parts.find(p => p.includes('網絡') || p.includes('印單機') || p.includes('電腦') || p.includes('音樂') || p.includes('排障') || p.includes('硬件'));  
+      if (catPart) cat = catPart.trim();  
+  
+      if (fullStr.includes('自主排障')) st = '自主排障已解決';  
+      else if (fullStr.includes('已完成')) st = '已完成';  
+      else if (fullStr.includes('進行中')) st = '進行中 (遠端排障)';  
+      else if (fullStr.includes('已安排到店') || fullStr.includes('到店')) st = '已安排到店';  
+      else st = '待處理 / 已收 Order';  
+  
+      const notePart = parts.find(p => p.includes('我們已收到') || p.includes('系統自動記錄') || p.includes('預計') || p.includes('排障') || p.includes('測試') || p.includes('到店'));  
+      if (notePart) itNote = notePart.trim();  
+  
+      desc = parts.find(p => p === 'not ok' || p.includes('test') || p.includes('卡紙') || p.includes('斷線') || p.includes('登記')) || '無補充';  
+    }  
+  
+    // 透過專門的日期函數格式化，絕不生硬截斷字串
+    const displayTime = formatTicketTime(rawTime);
+  
+    return {  
+      raw_timestamp: rawTime,
+      timestamp: displayTime,  
+      ticket_id: tid || '未編號',  
+      shop_code: shop || '未知門市',  
+      category: cat || '設備支援',  
+      description: desc || '-',  
+      status: st,  
+      it_notes: itNote,  
+      contact_person: contact || '門市同事',
+      assignee: assignee || 'Jason',
+      visits: rawVisits,
+      resolved_time: resolvedTime  
+    };  
+  }  
+  
+  // 從 Google Apps Script 獲取工單 (非同步，具備防中斷快取保護)
+  async function fetchAllTickets(isRefresh = false) {  
+    const icon = document.getElementById('refreshIcon');  
+    if (icon) icon.classList.add('fa-spin');  
+  
+    try {  
+      const url = `${SCRIPT_URL}?action=get_all_tickets&_t=${Date.now()}`;  
+      const response = await fetch(url);  
+      const data = await response.json();  
+  
+      if (data && data.status === 'success' && Array.isArray(data.tickets)) {  
+        rawTickets = data.tickets.map(t => sanitizeTicket(t));  
+        try {  
+          localStorage.setItem(CACHE_KEY, JSON.stringify(rawTickets));  
+        } catch (e) {}  
+        applyFilters();  
+      }  
+    } catch (err) {  
+      console.warn('雲端更新連線延遲，自動保持本地快取工單數據：', err);  
+    } finally {  
+      if (icon) icon.classList.remove('fa-spin');  
+      if (!rawTickets || rawTickets.length === 0) {  
+        loadCachedTickets();  
+      }  
+    }  
+  }  
+  
+  // 套用篩選條件並排序 (最新工單永遠置頂)
+  function applyFilters() {  
+    const timeFilter = document.getElementById('filterTimeRange').value;
+    const shopFilter = document.getElementById('filterShop').value;  
+    const statusFilter = document.getElementById('filterStatus').value;  
+    const categoryFilter = document.getElementById('filterCategory').value;  
+    const keyword = document.getElementById('filterKeyword').value.trim().toLowerCase();  
+  
+    filteredTickets = rawTickets.filter(t => {  
+      if (!isWithinTimeRange(t.raw_timestamp || t.timestamp, timeFilter)) return false;
+
+      if (shopFilter !== 'ALL') {  
+        if (!t.shop_code.includes(shopFilter) && !shopFilter.includes(t.shop_code)) return false;  
+      }  
+  
+      if (statusFilter !== 'ALL') {  
+        if (!t.status.includes(statusFilter)) return false;  
+      }  
+  
+      if (categoryFilter !== 'ALL') {  
+        if (!t.category.includes(categoryFilter)) return false;  
+      }  
+  
+      if (keyword) {  
+        const matchStr = `${t.ticket_id} ${t.description} ${t.it_notes} ${t.category} ${t.shop_code} ${t.contact_person} ${t.assignee}`.toLowerCase();  
+        if (!matchStr.includes(keyword)) return false;  
+      }  
+  
+      return true;  
+    });  
+
+    // 最新工單排在最上方
+    filteredTickets.sort((a, b) => {
+      const da = parseTicketDate(a.raw_timestamp || a.timestamp);
+      const db = parseTicketDate(b.raw_timestamp || b.timestamp);
+      if (da && db) return db.getTime() - da.getTime();
+      return String(b.ticket_id || '').localeCompare(String(a.ticket_id || ''));
+    });
+  
+    updateKPIs(filteredTickets);  
+    renderCharts(filteredTickets);  
+    renderTable(filteredTickets);  
+  }  
+  
+  function resetFilters() {  
+    document.getElementById('filterTimeRange').value = '2026';
+    document.getElementById('filterShop').value = 'ALL';  
+    document.getElementById('filterStatus').value = 'ALL';  
+    document.getElementById('filterCategory').value = 'ALL';  
+    document.getElementById('filterKeyword').value = '';  
+    applyFilters();  
+  }  
+  
+  // 計算 KPI 指標  
+  function updateKPIs(tickets) {  
+    const total = tickets.length;  
+    document.getElementById('kpiTotalTickets').textContent = total;  
+  
+    const totalOnsiteVisits = tickets.reduce((acc, t) => acc + getTicketVisits(t), 0);
+    document.getElementById('kpiOnsiteVisits').textContent = `${totalOnsiteVisits} 次`;  
+  
+    const deflected = tickets.filter(t =>   
+      (t.category && t.category.includes('自主排障')) ||   
+      (t.status && t.status.includes('自主排障'))  
+    ).length;  
+    document.getElementById('kpiDeflected').textContent = `${deflected} 次`;  
+  
+    const rate = total > 0 ? ((deflected / total) * 100).toFixed(1) : 0;  
+    document.getElementById('kpiDeflectedRate').textContent = `工單攔截率: ${rate}%`;  
+  
+    const active = tickets.filter(t =>   
+      t.status && (t.status.includes('待處理') || t.status.includes('進行中'))  
+    ).length;  
+    document.getElementById('kpiActiveTickets').textContent = active;  
+  }  
+  
+  // 渲染圖表  
+  function renderCharts(tickets) {  
+    renderStoreVisitsChart(tickets);  
+    renderCategoryPieChart(tickets);  
+  }  
+  
+  function renderStoreVisitsChart(tickets) {  
+    const storeCounts = {};  
+    const storeVisits = {};  
+  
+    tickets.forEach(t => {  
+      let sc = t.shop_code || '未知門市';  
+      if (sc.length > 20) sc = sc.substring(0, 15);  
+      storeCounts[sc] = (storeCounts[sc] || 0) + 1;  
+      
+      const v = getTicketVisits(t);
+      if (v > 0) {  
+        storeVisits[sc] = (storeVisits[sc] || 0) + v;  
+      }  
+    });  
+  
+    const sorted = Object.keys(storeCounts).sort((a,b) => storeCounts[b] - storeCounts[a]).slice(0, 10);  
+    const labels = sorted;  
+    const totalData = sorted.map(k => storeCounts[k]);  
+    const visitData = sorted.map(k => storeVisits[k] || 0);  
+  
+    const ctx = document.getElementById('chartStoreVisits').getContext('2d');  
+    if (chartVisitsInstance) chartVisitsInstance.destroy();  
+  
+    chartVisitsInstance = new Chart(ctx, {  
+      type: 'bar',  
+      data: {  
+        labels: labels,  
+        datasets: [  
+          {  
+            label: '總報修工單量',  
+            data: totalData,  
+            backgroundColor: '#3B82F6',  
+            borderRadius: 6  
+          },  
+          {  
+            label: '實體到店次數 (含複測)',  
+            data: visitData,  
+            backgroundColor: '#8B5CF6',  
+            borderRadius: 6  
+          }  
+        ]  
+      },  
+      options: {  
+        responsive: true,  
+        maintainAspectRatio: false,  
+        plugins: {  
+          legend: { position: 'top', labels: { font: { size: 11 } } }  
+        },  
+        scales: {  
+          y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } } },  
+          x: { ticks: { font: { size: 11, weight: 'bold' } } }  
+        }  
+      }  
+    });  
+  }  
+  
+  function renderCategoryPieChart(tickets) {  
+    let network = 0, printer = 0, music = 0, pos = 0, selfHelp = 0, other = 0;  
+  
+    tickets.forEach(t => {  
+      const c = t.category || '';  
+      if (c.includes('自主排障')) selfHelp++;  
+      else if (c.includes('網絡') || c.includes('上唔到網') || c.includes('wifi') || c.includes('卡機')) network++;  
+      else if (c.includes('印單機') || c.includes('Jam')) printer++;  
+      else if (c.includes('音樂')) music++;  
+      else if (c.includes('電腦') || c.includes('死機') || c.includes('hang') || c.includes('慢')) pos++;  
+      else other++;  
+    });  
+  
+    const ctx = document.getElementById('chartCategoryPie').getContext('2d');  
+    if (chartCategoryInstance) chartCategoryInstance.destroy();  
+  
+    chartCategoryInstance = new Chart(ctx, {  
+      type: 'doughnut',  
+      data: {  
+        labels: ['印單機故障', '網絡問題 (WiFi/卡機)', '自主排障攔截', '電腦問題 (Hang機/好慢)', '背景音樂', '其他'],  
+        datasets: [{  
+          data: [printer, network, selfHelp, pos, music, other],  
+          backgroundColor: ['#10B981', '#3B82F6', '#14B8A6', '#F59E0B', '#8B5CF6', '#94A3B8']  
+        }]  
+      },  
+      options: {  
+        responsive: true,  
+        maintainAspectRatio: false,  
+        plugins: {  
+          legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }  
+        }  
+      }  
+    });  
+  }  
+  
+  // 工具函數：防止 XSS
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  // ★ 格式化 Modal 內的詳細 IT 處理備註
+  function formatITNotesModal(text, assignee) {
+    if (!text || text.trim() === '' || text.trim() === '-') {
+      return '<span class="text-slate-400">目前尚無 IT 跟進備註</span>';
+    }
+    const clean = text.trim();
+    
+    const aiMatch = clean.match(/\(AI推斷[：:](.*?)\)/);
+    let mainText = clean;
+    let aiText = '';
+    if (aiMatch) {
+      mainText = clean.substring(0, aiMatch.index).trim();
+      aiText = aiMatch[1].trim();
+    }
+    
+    let html = '<div class="space-y-2">';
+    html += `<div class="text-xs font-semibold text-blue-950 leading-relaxed">${escapeHtml(mainText)}</div>`;
+    if (aiText) {
+      html += `
+        <div class="pt-1.5 mt-1 border-t border-blue-200/60 flex items-start gap-1 text-[11px] text-blue-800 leading-normal">
+          <i class="fa-solid fa-wand-magic-sparkles text-blue-600 mt-0.5 shrink-0"></i>
+          <span><strong class="font-bold text-blue-950">AI推斷：</strong>${escapeHtml(aiText)}</span>
+        </div>
+      `;
+    }
+    html += '</div>';
+    return html;
+  }
+
+  // ★ 核心優化：緊湊單行表格排版（縮窄行距、負責人獨立置前、單行一目了然）
+  function renderTable(tickets) {  
+    const tbody = document.getElementById('ticketTableBody');  
+    document.getElementById('tableCount').textContent = tickets.length;  
+  
+    if (!tickets || tickets.length === 0) {  
+      tbody.innerHTML = `<tr><td colspan="10" class="py-8 text-center text-slate-400">沒有符合篩選條件的工單。</td></tr>`;  
+      return;  
+    }  
+  
+    const statusMap = {  
+      '待處理 / 已收 Order': 'bg-amber-50 text-amber-900 border-amber-300',  
+      '待處理': 'bg-amber-50 text-amber-900 border-amber-300',  
+      '進行中': 'bg-blue-50 text-blue-900 border-blue-300',  
+      '進行中 (遠端排障)': 'bg-blue-50 text-blue-900 border-blue-300',  
+      '已安排到店': 'bg-purple-50 text-purple-900 border-purple-300 font-bold',  
+      '已完成': 'bg-emerald-50 text-emerald-900 border-emerald-300',  
+      '自主排障已解決': 'bg-teal-50 text-teal-900 border-teal-300'  
+    };  
+  
+    let html = '';  
+    tickets.forEach((t) => {  
+      const st = t.status || '待處理';  
+      const stClass = statusMap[st] || 'bg-slate-100 text-slate-800 border-slate-300';  
+      const visits = getTicketVisits(t);
+
+      let visitBadge = '';
+      if (visits >= 2) {
+        visitBadge = `<span class="ml-1 px-1 py-0.2 rounded text-[9px] font-black bg-purple-100 text-purple-800 border border-purple-300 whitespace-nowrap" title="實體到店 ${visits} 次"><i class="fa-solid fa-van-shuttle"></i> ${visits}次</span>`;
+      } else if (visits === 1) {
+        visitBadge = `<span class="ml-1 px-1 py-0.2 rounded text-[9px] font-bold bg-purple-50 text-purple-700 border border-purple-200 whitespace-nowrap" title="實體到店 1 次"><i class="fa-solid fa-van-shuttle"></i> 1次</span>`;
+      }
+
+      // 單行純文字清理（移除可能換行）
+      const cleanDesc = (t.description || '-').replace(/\r?\n/g, ' ');
+      const cleanNotes = (t.it_notes || '-').replace(/\r?\n/g, ' ');
+
+      html += `  
+        <tr class="hover:bg-blue-50/50 transition border-b border-slate-100 cursor-pointer group h-9" onclick="openModal('${escapeHtml(t.ticket_id)}')">  
+          <!-- 1. 提交時間 (完全解決缺失 S 問題，顯示 09-17 17:23) -->
+          <td class="py-1.5 px-2.5 font-semibold whitespace-nowrap text-slate-500 text-xs font-mono">${t.timestamp || ''}</td>  
+          
+          <!-- 2. 工單號 (單行紧凑，帶落點次數標籤) -->
+          <td class="py-1.5 px-2 font-bold text-blue-600 whitespace-nowrap text-xs">  
+            <span class="group-hover:underline">${escapeHtml(t.ticket_id)}</span>${visitBadge}  
+          </td>  
+          
+          <!-- 3. 門市代號 -->
+          <td class="py-1.5 px-2.5 whitespace-nowrap text-xs font-extrabold text-slate-900">${escapeHtml(t.shop_code)}</td>  
+          
+          <!-- 4. 聯絡人 -->
+          <td class="py-1.5 px-2 whitespace-nowrap text-xs text-slate-700">  
+            <span class="inline-flex items-center gap-1 font-medium">
+              <i class="fa-regular fa-user text-[10px] text-blue-500"></i>${escapeHtml(t.contact_person || '門市同事')}
+            </span>
+          </td>  
+          
+          <!-- 5. 問題類型 -->
+          <td class="py-1.5 px-2 whitespace-nowrap text-xs text-slate-700">  
+            <span class="inline-block px-1.5 py-0.5 rounded bg-slate-100 font-medium text-[11px]">${escapeHtml(t.category)}</span>  
+          </td>  
+          
+          <!-- 6. 門市補充說明 (單行截短，滑鼠停留顯示全文) -->
+          <td class="py-1.5 px-2.5 text-xs text-slate-600 truncate max-w-[200px]" title="${escapeHtml(cleanDesc)}">  
+            ${escapeHtml(cleanDesc)}  
+          </td>  
+          
+          <!-- 7. 處理狀態 (單行微章) -->
+          <td class="py-1.5 px-2 text-center whitespace-nowrap">  
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border inline-block ${stClass}">  
+              ${escapeHtml(st)}  
+            </span>  
+          </td>  
+          
+          <!-- 8. ★ 獨立負責人欄位 (放在 IT 最新跟進前邊，單行清晰呈現) -->
+          <td class="py-1.5 px-2 text-center whitespace-nowrap text-xs font-bold text-blue-900 bg-blue-50/30 border-x border-blue-100">  
+            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white border border-blue-200 shadow-3xs">
+              <i class="fa-solid fa-wrench text-amber-500 text-[9px]"></i>${escapeHtml(t.assignee || 'Jason')}
+            </span>
+          </td>  
+          
+          <!-- 9. IT 最新跟進 / 預計到店 (單行截短，滑鼠停留顯示全文) -->
+          <td class="py-1.5 px-2.5 text-xs text-slate-800 font-medium truncate max-w-[280px]" title="${escapeHtml(cleanNotes)}">  
+            ${cleanNotes !== '-' ? escapeHtml(cleanNotes) : '<span class="text-slate-300">-</span>'}  
+          </td>  
+          
+          <!-- 10. 操作欄位 (通知外出 WhatsApp + 詳情按鈕) -->
+          <td class="py-1.5 px-2.5 text-center whitespace-nowrap min-w-[145px] action-buttons" onclick="event.stopPropagation()">  
+            <div class="inline-flex items-center gap-1.5 justify-center">
+              <button onclick="sendWhatsAppNotice('${escapeHtml(t.ticket_id)}')"   
+                class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-lg transition text-[11px] inline-flex items-center justify-center gap-1 shadow-2xs whitespace-nowrap"
+                title="一鍵打開 WhatsApp 發送外出報備給 Andrew Chan (6411 1668)">  
+                <i class="fa-brands fa-whatsapp text-white text-xs"></i><span>通知 Andrew</span>  
+              </button>
+              <button onclick="openModal('${escapeHtml(t.ticket_id)}')"   
+                class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg border border-blue-200 transition text-[11px] inline-flex items-center justify-center gap-1 shadow-2xs whitespace-nowrap"
+                title="查看工單完整詳情與報備預覽">  
+                <i class="fa-regular fa-eye text-blue-600"></i><span>詳情</span>  
+              </button>
+            </div>
+          </td>  
+        </tr>  
+      `;  
+    });  
+  
+    tbody.innerHTML = html;  
+  }  
+
+  // ==================== Modal 視窗操作函數 ====================
+  function openModal(ticketId) {
+    const t = rawTickets.find(item => item.ticket_id === ticketId);
+    if (!t) return;
+
+    document.getElementById('modalTicketId').textContent = t.ticket_id || '未編號';
+    
+    // 狀態 Badge
+    const stBadge = document.getElementById('modalStatusBadge');
+    stBadge.textContent = t.status || '待處理';
+    stBadge.className = 'px-2 py-0.5 rounded-full text-[11px] font-bold border ';
+    if (t.status.includes('已完成')) {
+      stBadge.className += 'bg-emerald-50 text-emerald-900 border-emerald-300';
+    } else if (t.status.includes('自主排障')) {
+      stBadge.className += 'bg-teal-50 text-teal-900 border-teal-300';
+    } else if (t.status.includes('已安排到店')) {
+      stBadge.className += 'bg-purple-50 text-purple-900 border-purple-300 font-bold';
+    } else if (t.status.includes('進行中')) {
+      stBadge.className += 'bg-blue-50 text-blue-900 border-blue-300';
+    } else {
+      stBadge.className += 'bg-amber-50 text-amber-900 border-amber-300';
+    }
+
+    // 門市與品牌名稱解析
+    let shopName = t.shop_code || '未知門市';
+    let brandName = '';
+    const mCode = shopName.match(/^(\d{4})/);
+    if (mCode && STORES[mCode[1]]) {
+      brandName = STORES[mCode[1]].brand;
+    }
+    document.getElementById('modalShopTitle').textContent = `${shopName} ${brandName ? '· ' + brandName : ''}`;
+
+    // 日期時間規範顯示
+    document.getElementById('modalTime').textContent = formatTicketTime(t.raw_timestamp || t.timestamp) + (t.raw_timestamp && t.raw_timestamp.includes('2026') ? ' (2026)' : '');
+    document.getElementById('modalContactText').textContent = t.contact_person || '門市同事';
+    document.getElementById('modalAssigneeText').textContent = t.assignee || 'Jason';
+    
+    const visits = getTicketVisits(t);
+    document.getElementById('modalVisits').textContent = visits > 0 ? `${visits} 次` : '0 次 (遠端處理)';
+
+    document.getElementById('modalCategory').textContent = t.category || '一般支援';
+    document.getElementById('modalDesc').textContent = t.description || '無詳細說明';
+    
+    // IT 備註 (Modal 內支援完整多行展開與 AI 推斷)
+    const notesEl = document.getElementById('modalNotesContainer');
+    notesEl.innerHTML = formatITNotesModal(t.it_notes, t.assignee);
+
+    // 完成時間
+    const resSec = document.getElementById('modalResolvedSection');
+    if (t.resolved_time && t.resolved_time.trim() !== '') {
+      document.getElementById('modalResolvedTime').textContent = formatTicketTime(t.resolved_time);
+      resSec.classList.remove('hidden');
+    } else {
+      resSec.classList.add('hidden');
+    }
+
+    // ★ 設定 forJason 專屬的 WhatsApp 預設報備內容
+    currentModalTicket = t;
+    const waTextarea = document.getElementById('modalWhatsAppText');
+    if (waTextarea) {
+      waTextarea.value = getWhatsAppNoticeMessage(t);
+    }
+    const copyBtn = document.getElementById('copyBtnText');
+    if (copyBtn) copyBtn.textContent = '複製文字';
+
+    // 顯示 Modal
+    const modal = document.getElementById('ticketModal');
+    modal.classList.remove('hidden');
+  }
+
+  function closeModal() {
+    const modal = document.getElementById('ticketModal');
+    modal.classList.add('hidden');
+  }
+
+  function handleModalBackdropClick(e) {
+    if (e.target.id === 'ticketModal') {
+      closeModal();
+    }
+  }
+  
+  // 匯出完整 CSV 報表 (包含前線聯絡人與獨立負責人)
+  function exportCSV() {  
+    if (!filteredTickets || filteredTickets.length === 0) {  
+      alert('目前無可匯出的數據！');  
+      return;  
+    }  
+  
+    let csv = "\uFEFF提交時間,工單編號,門市代號,聯絡人,問題分類,補充描述,處理狀態,負責人,實體到店次數,IT跟進與預計到店,完成時間\n";  
+    filteredTickets.forEach(t => {  
+      const v = getTicketVisits(t);
+      const row = [  
+        `"${t.raw_timestamp || t.timestamp || ''}"`,  
+        `"${t.ticket_id || ''}"`,  
+        `"${t.shop_code || ''}"`,  
+        `"${(t.contact_person || '').replace(/"/g, '""')}"`,  
+        `"${t.category || ''}"`,  
+        `"${(t.description || '').replace(/"/g, '""')}"`,  
+        `"${t.status || ''}"`,  
+        `"${(t.assignee || '').replace(/"/g, '""')}"`,
+        `"${v} 次"`,
+        `"${(t.it_notes || '').replace(/"/g, '""')}"`,  
+        `"${t.resolved_time || ''}"`  
+      ];  
+      csv += row.join(",") + "\n";  
+    });  
+  
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });  
+    const link = document.createElement("a");  
+    link.href = URL.createObjectURL(blob);  
+    link.setAttribute("download", `FLS_ITSM_Report_${new Date().toISOString().slice(0,10)}.csv`);  
+    document.body.appendChild(link);  
+    link.click();  
+    document.body.removeChild(link);  
+  }  
+  
+  // ==================== ★ forJason 專屬：WhatsApp 外出報備核心邏輯 ====================
+  const SUPERVISOR_PHONE = '85264111668';
+  const SUPERVISOR_NAME = 'Fenix-Andrew Chan (6411 1668)';
+  let currentModalTicket = null;
+
+  // 智能生成 WhatsApp 外出報備文字
+  function getWhatsAppNoticeMessage(t, customTimeSlot = null) {
+    if (!t) return '';
+    const shopCode = t.shop_code || '門市';
+    
+    // 1. 判斷時段（上午 / 下午 / 明日）
+    let timeSlot = '今日下午';
+    if (customTimeSlot) {
+      timeSlot = customTimeSlot;
+    } else {
+      const notes = ((t.it_notes || '') + ' ' + (t.description || '')).toLowerCase();
+      const hour = new Date().getHours();
+      
+      if (notes.includes('明日') || notes.includes('明天')) {
+        timeSlot = (notes.includes('上午') || notes.includes('早上')) ? '明日上午' : ((notes.includes('下午') || notes.includes('中午')) ? '明日下午' : '明日');
+      } else if (notes.includes('今日上午') || notes.includes('今早') || notes.includes('今晨')) {
+        timeSlot = '今日上午';
+      } else if (notes.includes('今日下午') || notes.includes('今午')) {
+        timeSlot = '今日下午';
+      } else {
+        timeSlot = hour < 12 ? '今日上午' : (hour < 18 ? '今日下午' : '今日');
+      }
+    }
+    
+    // 2. 智能提煉最自然、精簡的問題摘要
+    let issue = '相關系統問題';
+    const desc = (t.description || '').toLowerCase();
+    const cat = (t.category || '').toLowerCase();
+    
+    // 優先從詳細描述中解析精準關鍵字
+    if (desc.includes('卡機') || desc.includes('信用卡')) {
+      issue = '信用卡機連線問題';
+    } else if (desc.includes('wi-fi') || desc.includes('wifi')) {
+      issue = 'wi-fi連接問題';
+    } else if (desc.includes('寬頻') || desc.includes('modem') || desc.includes('router') || desc.includes('switch') || desc.includes('hub') || desc.includes('上網') || desc.includes('網絡')) {
+      issue = '網絡及寬頻連線問題';
+    } else if (desc.includes('印表機') || desc.includes('印單機') || desc.includes('打印機') || desc.includes('卡紙')) {
+      issue = '印單機打印問題';
+    } else if (desc.includes('滑鼠') || desc.includes('mouse')) {
+      issue = '門市電腦滑鼠故障';
+    } else if (desc.includes('相架') || desc.includes('數碼相架') || desc.includes('支架')) {
+      issue = '數碼相架及硬件設備事宜';
+    } else if (desc.includes('excel') || desc.includes('hang') || desc.includes('死機') || desc.includes('電腦') || desc.includes('windows')) {
+      issue = '門市電腦及系統運作問題';
+    } else if (desc.includes('回收') || desc.includes('歐綠保')) {
+      issue = 'IT設備回收交收事宜';
+    } else if (desc.includes('審計') || desc.includes('稽核') || desc.includes('deloitte')) {
+      issue = 'IT資訊保安稽核工作';
+    } else if (cat.includes('卡機')) {
+      issue = '信用卡機連線問題';
+    } else if (cat.includes('wifi') || cat.includes('網絡')) {
+      issue = 'wi-fi連接問題';
+    } else if (cat.includes('列印')) {
+      issue = '印單機打印問題';
+    } else if (cat.includes('電腦')) {
+      issue = '門市電腦及系統問題';
+    } else if (cat.includes('硬件')) {
+      issue = '硬件設備支援事宜';
+    } else if (t.category) {
+      issue = t.category.replace(/問題/g, '').replace(/\[.*?\]/g, '').trim() + '問題';
+    }
+
+    // 嚴格依照用戶指定格式：
+    // 你好, 
+    // 我今日下午會到 1180-SG-TY 跟進wi-fi連接問題, 詳情可到以下網址查看, 多謝！
+    // 
+    // https://jason-9981.github.io/2026-01/FLS-ITSM/dashboard.html
+    return `你好,\n我${timeSlot}會到 ${shopCode} 跟進${issue}, 詳情可到以下網址查看, 多謝！\n\nhttps://jason-9981.github.io/2026-01/FLS-ITSM/dashboard.html\n\n(Content generated by AI)`;
+  }
+
+  // 1. 表格按鈕：直接打開 WhatsApp 填入外出報備資料（並自動複製文字備用）
+  function sendWhatsAppNotice(ticketId) {
+    const t = rawTickets.find(item => item.ticket_id === ticketId);
+    if (!t) return;
+    const msg = getWhatsAppNoticeMessage(t);
+    
+    // 自動複製文字至剪貼簿
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msg).catch(() => {});
+    }
+    
+    const waUrl = 'https://api.whatsapp.com/send?phone=' + SUPERVISOR_PHONE + '&text=' + encodeURIComponent(msg);
+    window.open(waUrl, '_blank');
+    showToast(`🟢 已打開 WhatsApp 發送外出報備給 Andrew Chan (6411 1668)！`);
+  }
+
+  // 2. Modal 內自訂時段
+  function setModalTimeSlot(slot) {
+    if (!currentModalTicket) return;
+    const textarea = document.getElementById('modalWhatsAppText');
+    if (textarea) {
+      textarea.value = getWhatsAppNoticeMessage(currentModalTicket, slot);
+      showToast(`已切換時段為【${slot}】`, 'fa-regular fa-clock');
+    }
+  }
+
+  // 3. Modal 內複製文字
+  function copyModalWhatsAppText() {
+    const textarea = document.getElementById('modalWhatsAppText');
+    if (!textarea || !textarea.value) return;
+    navigator.clipboard.writeText(textarea.value).then(() => {
+      const btn = document.getElementById('copyBtnText');
+      if (btn) btn.textContent = '已複製！';
+      showToast('📋 已複製 WhatsApp 外出報備文字', 'fa-regular fa-copy');
+      setTimeout(() => {
+        if (btn) btn.textContent = '複製文字';
+      }, 2000);
+    }).catch(() => {
+      showToast('請手動選取文字複製', 'fa-solid fa-circle-exclamation');
+    });
+  }
+
+  // 4. Modal 內打開 WhatsApp 發送
+  function openModalWhatsApp() {
+    const textarea = document.getElementById('modalWhatsAppText');
+    if (!textarea || !textarea.value) return;
+    const waUrl = 'https://api.whatsapp.com/send?phone=' + SUPERVISOR_PHONE + '&text=' + encodeURIComponent(textarea.value);
+    window.open(waUrl, '_blank');
+    showToast(`🟢 已打開 WhatsApp 發送外出報備給 Andrew Chan (6411 1668)！`);
+  }
+
+  // 5. Toast 浮動提示元件
+  function showToast(msg, icon = 'fa-brands fa-whatsapp') {
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMsg');
+    const toastIcon = document.getElementById('toastIcon');
+    if (!toast || !toastMsg) return;
+    toastMsg.textContent = msg;
+    if (toastIcon) toastIcon.innerHTML = `<i class="${icon}"></i>`;
+    toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+    }, 3500);
+  }
+
+  
+  // ==================== ★ 密碼驗證邏輯 (密碼：24871968) ====================
+  const JASON_SECRET_PW = '24871968';
+  const AUTH_STORAGE_KEY = 'fls_jason_auth_status';
+
+  function checkJasonAuth() {
+    const isAuth = localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
+    const modal = document.getElementById('jasonLoginModal');
+    if (isAuth === JASON_SECRET_PW) {
+      if (modal) modal.classList.add('hidden');
+      return true;
+    } else {
+      if (modal) {
+        modal.classList.remove('hidden');
+        const pwInput = document.getElementById('jasonPasswordInput');
+        if (pwInput) pwInput.focus();
+      }
+      return false;
+    }
+  }
+
+  function handleJasonLogin(e) {
+    e.preventDefault();
+    const pwInput = document.getElementById('jasonPasswordInput');
+    const rememberMe = document.getElementById('rememberMeCheckbox').checked;
+    const errorEl = document.getElementById('loginErrorMsg');
+    
+    if (pwInput && pwInput.value === JASON_SECRET_PW) {
+      if (rememberMe) {
+        localStorage.setItem(AUTH_STORAGE_KEY, JASON_SECRET_PW);
+      } else {
+        sessionStorage.setItem(AUTH_STORAGE_KEY, JASON_SECRET_PW);
+      }
+      if (errorEl) errorEl.classList.add('hidden');
+      const modal = document.getElementById('jasonLoginModal');
+      if (modal) modal.classList.add('hidden');
+      showToast('🟢 歡迎回來 Jason！工作台已成功解鎖。', 'fa-solid fa-lock-open');
+    } else {
+      if (errorEl) errorEl.classList.remove('hidden');
+      if (pwInput) {
+        pwInput.value = '';
+        pwInput.focus();
+      }
+    }
+  }
+
+  function jasonLogout() {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
+    const modal = document.getElementById('jasonLoginModal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      const pwInput = document.getElementById('jasonPasswordInput');
+      if (pwInput) pwInput.value = '';
+    }
+    showToast('🔒 工作台已鎖定', 'fa-solid fa-lock');
+  }
+
+  function togglePasswordVisibility() {
+    const pwInput = document.getElementById('jasonPasswordInput');
+    const eyeIcon = document.getElementById('pwEyeIcon');
+    if (!pwInput || !eyeIcon) return;
+    if (pwInput.type === 'password') {
+      pwInput.type = 'text';
+      eyeIcon.className = 'fa-regular fa-eye-slash';
+    } else {
+      pwInput.type = 'password';
+      eyeIcon.className = 'fa-regular fa-eye';
+    }
+  }
+
+  // ==================== ★ AI 門市查詢分析與排障回覆助手 ====================
+  // 門市別名對照字典 (支援地點、品牌、口語、縮寫)
+  const STORE_LOC_ALIASES = {
+    '又一城': 'FW', 'festival': 'FW', 'fw': 'FW',
+    '海港城': 'HC', 'harbour': 'HC', 'hc': 'HC',
+    '太古廣場': 'PP', 'pacific': 'PP', 'pp': 'PP',
+    '太古城': 'CP', 'cityplaza': 'CP', 'cp': 'CP',
+    '利園': 'LG', 'lee garden': 'LG', 'lg': 'LG',
+    '時代廣場': 'TS', 'times square': 'TS', 'ts': 'TS',
+    '崇光': 'SG', 'sogo': 'SG', 'sg': 'SG',
+    'ifc': 'IFC', '中環': 'IFC',
+    '圓方': 'EL', 'elements': 'EL', 'el': 'EL',
+    '東薈城': 'CTG', '東涌': 'CTG', 'citygate': 'CTG', 'ctg': 'CTG',
+    '海運': 'OT', 'ocean terminal': 'OT', 'ot': 'OT',
+    '朗豪坊': 'LT', 'langham': 'LT', 'lt': 'LT',
+    '沙田': 'NT', '新城市': 'NT', 'nt': 'NT',
+    '啟德': 'KT', 'twins': 'KT', 'kt': 'KT',
+    '星街': 'SS', '灣仔': 'SS', 'ss': 'SS',
+    'megabox': 'MB', '九龍灣': 'MB', 'mb': 'MB',
+    '海怡': 'HZ', 'hz': 'HZ'
+  };
+
+  const STORE_BRAND_ALIASES = {
+    'cocktail': 'CT', 'ct': 'CT',
+    'tayama': 'TY', 'ty': 'TY',
+    'anteprima': 'AP', 'ap': 'AP',
+    'wirebag': 'WB', 'wb': 'WB',
+    'marimekko': 'MM', 'mm': 'MM',
+    '45r': '45R', '45rpm': '45R',
+    'little shop': 'TLS', 'tls': 'TLS',
+    'outlet': 'OUTLET'
+  };
+
+  function parseStoreFromText(text) {
+    if (!text) return '1139-FW-CT';
+    const q = text.toLowerCase();
+    
+    // 1. 直接匹配 4 位數字 code
+    const numMatch = q.match(/\b(\d{4})\b/);
+    if (numMatch && STORES[numMatch[1]]) {
+      return STORES[numMatch[1]].name;
+    }
+
+    // 2. 地點比對
+    let foundLoc = null;
+    for (const [key, loc] of Object.entries(STORE_LOC_ALIASES)) {
+      if (q.includes(key)) {
+        foundLoc = loc;
+        break;
+      }
+    }
+
+    // 3. 品牌比對
+    let foundBrand = null;
+    for (const [key, brand] of Object.entries(STORE_BRAND_ALIASES)) {
+      if (q.includes(key)) {
+        foundBrand = brand;
+        break;
+      }
+    }
+
+    // 4. 精確雙重交叉匹配 (例如 又一城 + ct => 1139-FW-CT)
+    if (foundLoc && foundBrand) {
+      for (const [code, info] of Object.entries(STORES)) {
+        if (info.location === foundLoc && (info.name.includes('-' + foundBrand) || info.brand.toUpperCase().includes(foundBrand))) {
+          return info.name;
+        }
+      }
+    }
+
+    // 次選單一匹配
+    if (foundLoc) {
+      for (const [code, info] of Object.entries(STORES)) {
+        if (info.location === foundLoc) return info.name;
+      }
+    }
+
+    return '1139-FW-CT';
+  }
+
+  function initStoreReplyDropdown() {
+    const select = document.getElementById('detectedStoreSelect');
+    if (!select || select.options.length > 0) return;
+    for (const [code, info] of Object.entries(STORES)) {
+      const opt = document.createElement('option');
+      opt.value = info.name;
+      opt.textContent = `${info.name} (${info.brand})`;
+      select.appendChild(opt);
+    }
+  }
+
+  function openStoreReplyModal() {
+    initStoreReplyDropdown();
+    const modal = document.getElementById('storeReplyModal');
+    if (modal) modal.classList.remove('hidden');
+    // 如果輸入框為空，預設填入範例
+    const input = document.getElementById('storeInquiryInput');
+    if (input && !input.value.trim()) {
+      input.value = '又一城 ct, 我哋個wi-fi好有問題可唔可以幫我哋睇睇？';
+      generateStoreReply();
+    }
+  }
+
+  function closeStoreReplyModal() {
+    const modal = document.getElementById('storeReplyModal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function handleStoreReplyBackdropClick(e) {
+    if (e.target.id === 'storeReplyModal') {
+      closeStoreReplyModal();
+    }
+  }
+
+  function loadInquirySample(sampleText) {
+    const input = document.getElementById('storeInquiryInput');
+    if (input) {
+      input.value = sampleText;
+      generateStoreReply();
+    }
+  }
+
+  function openStoreReplyFromCurrentTicket() {
+    if (!currentModalTicket) return;
+    openStoreReplyModal();
+    const input = document.getElementById('storeInquiryInput');
+    if (input) {
+      input.value = `${currentModalTicket.shop_code}，${currentModalTicket.description || currentModalTicket.category || '系統出現異常，請幫忙看看'}`;
+      generateStoreReply(currentModalTicket.shop_code);
+    }
+  }
+
+  // ==================== ★ 核心 AI 建議分析與精準針對性回覆生成器 ====================
+  let currentReplyStrategy = 'targeted'; // 'targeted', 'quick', 'remote'
+
+  function changeReplyStrategy(strat) {
+    currentReplyStrategy = strat;
+    const btnTargeted = document.getElementById('stratTargetedBtn');
+    const btnQuick = document.getElementById('stratQuickBtn');
+    const btnRemote = document.getElementById('stratRemoteBtn');
+    
+    [btnTargeted, btnQuick, btnRemote].forEach(b => {
+      if (b) {
+        b.className = 'px-2 py-0.5 rounded text-slate-600 hover:text-slate-900';
+      }
+    });
+
+    if (strat === 'targeted' && btnTargeted) {
+      btnTargeted.className = 'px-2 py-0.5 rounded bg-white text-indigo-700 shadow-3xs';
+    } else if (strat === 'quick' && btnQuick) {
+      btnQuick.className = 'px-2 py-0.5 rounded bg-white text-indigo-700 shadow-3xs';
+    } else if (strat === 'remote' && btnRemote) {
+      btnRemote.className = 'px-2 py-0.5 rounded bg-white text-indigo-700 shadow-3xs';
+    }
+
+    generateStoreReply();
+  }
+
+  function generateStoreReply(forceShopCode = null) {
+    const input = document.getElementById('storeInquiryInput').value.trim();
+    const shopCode = forceShopCode || parseStoreFromText(input);
+    
+    // 更新下拉選單選中項
+    const select = document.getElementById('detectedStoreSelect');
+    if (select) select.value = shopCode;
+
+    const q = input.toLowerCase();
+    let catBadge = '門市 IT 支援';
+    let problemName = '相關系統問題';
+    let targetedSteps = '';
+    let quickSteps = '';
+    let remoteSteps = '';
+
+    // ==================== 細緻化 11 大問題維度精準比對 ====================
+    if (q.includes('白紙') || q.includes('冇字') || q.includes('無字') || q.includes('印唔出字') || q.includes('淡')) {
+      catBadge = '印單機出白紙 / 冇字';
+      problemName = '印單機出白紙 / 打印無字';
+      targetedSteps = `1. 最常見原因為熱敏紙卷【裝轉反】：熱敏紙只有一面能受熱顯色，請打開印單機上蓋，將紙卷反向調轉方向放置測試。
+2. 檢查出紙槽上蓋左右兩側是否確實壓到底鎖緊（確認聽到清脆「咔」一聲）。
+3. 檢查機身電源指示燈是否為常亮綠燈（若閃爍紅燈請關機冷卻 2 分鐘後重開）。`;
+      quickSteps = `1. 打開印單機上蓋，將熱敏紙卷調轉方向放入並用力蓋緊。
+2. 重新關閉電源 10 秒後開機，按 Feed 鍵測試是否正常出字。`;
+      remoteSteps = `1. 請先檢查更換另一卷全新熱敏紙測試是否正常。
+2. 請拍下印單機出白紙時機身前方指示燈之亮燈照片傳給我們，以便遠端判斷是否印字頭老化。`;
+
+    } else if (q.includes('卡紙') || q.includes('jam') || q.includes('塞紙') || q.includes('卡死')) {
+      catBadge = '印單機卡紙 (Jam 紙)';
+      problemName = '印單機卡紙';
+      targetedSteps = `1. 請先關閉印單機機身電源開關，按下開蓋鍵打開出紙槽。
+2. 檢查滾輪與切刀周圍是否有碎紙屑殘留，請小心將所有卡住的紙屑完全清除乾淨（切勿用金屬硬物刮滾輪）。
+3. 重新拉出約 10 厘米熱敏紙，理順紙頭後雙手用力壓緊上蓋（聽到「咔」一聲合妥）。
+4. 重新開啟機身電源，按一下機身【Feed】按鈕，測試能否順暢出紙一張。`;
+      quickSteps = `1. 關機、開蓋、清理滾輪周圍所有卡住的紙屑。
+2. 重新裝好紙卷合緊上蓋，開機按【Feed】鍵測試出紙。`;
+      remoteSteps = `1. 若清理碎紙後合蓋仍持續亮紅燈或齒輪卡住發出響聲，請拍照通知我們。
+2. 我們正準備後備印單機，若自行排除無效將即時安排換機。`;
+
+    } else if (q.includes('wi-fi') || q.includes('wifi') || q.includes('無線') || q.includes('ipad') || q.includes('手機')) {
+      catBadge = 'Wi-Fi 連接異常';
+      problemName = 'Wi-Fi 連接問題';
+      targetedSteps = `1. 請先檢查門市 5G Router / Wi-Fi 機電源指示燈是否為常亮狀態（綠燈或藍燈）。
+2. 請拔掉 Router 電源線插頭，靜候 15 秒後重新插回重啟（重啟約需 2-3 分鐘重新搜尋網絡訊號）。
+3. 手機或 iPad 請先進入設定點選【忘記此網絡】，再重新搜尋店舖 Wi-Fi 名稱並重新輸入密碼連線。
+4. 若重啟後仍未能連線，請回覆我們 Router 上燈號狀態（例如是否閃紅燈），以便我們遠端排查。`;
+      quickSteps = `1. 拔掉 5G Router 電源插頭，等 15 秒後插回重啟。
+2. 手機/iPad 重開 Wi-Fi 並重新連線。`;
+      remoteSteps = `1. 請告知我們門市目前有幾多部設備無法連線 Wi-Fi。
+2. 請拍下 5G Router 正面所有指示燈（Signal / 5G / Power）之即時燈號照片回傳，我們即時查核基站連線。`;
+
+    } else if (q.includes('卡機') || q.includes('信用卡') || q.includes('eps') || q.includes('card機') || q.includes('交易')) {
+      catBadge = '信用卡機連線中斷';
+      problemName = '信用卡機連線問題';
+      targetedSteps = `1. 請檢查卡機後方的電源線及網絡線是否有鬆脫，請重新插緊。
+2. 請同時長按卡機【黃色清除鍵】+【句號鍵 .】（或長按紅色電源鍵）約 5 秒強制重啟卡機。
+3. 重新開機後，檢查螢幕右上角通訊圖示是否顯示正常連線（或出現 4G 訊號格數）。
+4. 如重啟後仍顯示連線超時，請拍下螢幕顯示的 Error Code 回傳給我們，我們將聯絡供應商查核線路。`;
+      quickSteps = `1. 同時長按卡機【黃色鍵】+【句號鍵 .】5 秒重啟卡機。
+2. 檢查卡機後方網絡線及電源線是否插緊。`;
+      remoteSteps = `1. 請拍下卡機螢幕顯示之完整錯誤代碼（Error Code）照片回傳。
+2. 我們將聯絡卡機技術支援中心為門市進行後台線路重置。`;
+
+    } else if (q.includes('滑鼠') || q.includes('mouse')) {
+      catBadge = '門市電腦滑鼠故障';
+      problemName = '滑鼠運作問題';
+      targetedSteps = `1. 請翻轉滑鼠檢查底部電源開關是否處於【ON / 綠色】開啟狀態。
+2. 請嘗試更換一顆全新 AA/AAA 電池（店內收銀櫃桶常備備用電池，注意正負極方向）。
+3. 將插在電腦主機背面的 USB 迷你無線接收器拔出，換插至主機正面的另一個 USB 插孔測試。`;
+      quickSteps = `1. 檢查滑鼠底部開關並更換全新電池。
+2. 將 USB 接收器改插至主機其他 USB 插孔。`;
+      remoteSteps = `1. 若更換電池及換 USB 插孔後滑鼠底部紅光/藍光仍不亮，請告知我們。
+2. 我們將經由物流轉倉車即時調配後備滑鼠送往門市。`;
+
+    } else if (q.includes('hang') || q.includes('死機') || q.includes('停咗') || q.includes('郁唔到') || q.includes('好慢') || q.includes('無反應')) {
+      catBadge = '電腦畫面凍結 / Hang 機';
+      problemName = '電腦系統凍結問題';
+      targetedSteps = `1. 請先嘗試按鍵盤【Ctrl + Alt + Delete】開啟工作管理員，將顯示「沒有回應」之視窗結束工作。
+2. 若整部主機完全無反應，請長按主機電源鍵 10 秒將電腦強制關機，靜候 10 秒後再按一下開機。
+3. 開機進入 Windows 桌面後，請確認開啟 TeamViewer 程式，以便我們隨時可遠端連線修復。`;
+      quickSteps = `1. 長按主機電源鍵 10 秒強制關機，等 10 秒後重新開機。
+2. 進入桌面後開啟 TeamViewer 保持連線。`;
+      remoteSteps = `1. 重新開機後請提供 TeamViewer ID 及密碼（或保持自動連線）。
+2. 我們將即時遠端登入為門市清理系統暫存檔案與排查衝突程式。`;
+
+    } else if (q.includes('印單') || q.includes('打印') || q.includes('印表') || q.includes('出單')) {
+      catBadge = '印單機打印問題';
+      problemName = '印單機運作問題';
+      targetedSteps = `1. 檢查印單機後方電源線及連接 POS 主機的 USB/網絡線是否插緊。
+2. 將印單機電源開關關閉，靜候 10 秒後重新開啟，觀察機身綠色電源燈是否常亮。
+3. 打開上蓋確認紙卷充足且安裝平整，用力合緊上蓋聽到「咔」一聲後再試印。`;
+      quickSteps = `1. 關閉印單機電源 10 秒後重開，確認綠燈常亮。
+2. 檢查紙卷是否充足並確實合緊上蓋。`;
+      remoteSteps = `1. 請開啟 TeamViewer，我們將遠端測試 Windows 打印機佇列是否卡住。
+2. 若確認為硬件損壞，將安排備用機到店更換。`;
+
+    } else if (q.includes('網絡') || q.includes('上網') || q.includes('斷網') || q.includes('寬頻') || q.includes('router') || q.includes('modem')) {
+      catBadge = '門市網絡中斷';
+      problemName = '網絡連線中斷問題';
+      targetedSteps = `1. 請檢查門市寬頻 Modem 及 Switch Hub 的電源指示燈是否正常亮起。
+2. 請將 Modem 及 Switch Hub 電源插頭拔除，靜候 30 秒後重新插回重啟。
+3. 觀察 Modem 上的 PON / Internet 指示燈是否恢復綠色常亮；若亮起紅燈請立即回覆我們。`;
+      quickSteps = `1. 拔除寬頻 Modem 及 Switch 電源，等 30 秒後重新插回。
+2. 等候約 3 分鐘觀察網絡是否恢復。`;
+      remoteSteps = `1. 請告知我們寬頻 Modem 目前亮起的燈號顏色。
+2. 若外部光纖線路故障，我們將聯同寬頻網絡商直接開單搶修。`;
+
+    } else if (q.includes('音樂') || q.includes('冇聲') || q.includes('音響') || q.includes('播唔到')) {
+      catBadge = '背景音樂無聲';
+      problemName = '店內背景音樂問題';
+      targetedSteps = `1. 檢查音響擴大機（Amplifier）電源燈是否亮起，確認音量旋鈕沒有被誤轉至最低或靜音。
+2. 檢查連接播放設備（如 iPad 或播放盒）之 3.5mm 音源線兩端是否插緊。
+3. 檢查 iPad 上的音樂播放 App 是否處於播放中，並確認 iPad 本身音量已調高。`;
+      quickSteps = `1. 檢查擴大機電源及音量旋鈕是否開啟。
+2. 重新插拔 3.5mm 音源線並確認 iPad 音樂播放正常。`;
+      remoteSteps = `1. 請檢查店舖 iPad 是否能正常瀏覽網頁（確認非網絡問題）。
+2. 若擴大機無電源反應，請檢查插座開關。`;
+
+    } else if (q.includes('錢箱') || q.includes('收銀櫃')) {
+      catBadge = '收銀錢箱彈出故障';
+      problemName = '收銀錢箱彈出問題';
+      targetedSteps = `1. 請檢查錢箱正面的鎖匙孔是否處於手動鎖死狀態（垂直通常為手動鎖死，請用鎖匙轉至水平自動彈開模式）。
+2. 檢查連接印單機背面與錢箱底部的電話線插頭（RJ11）是否有鬆脫，重新插緊。
+3. 請先測試印單機能否正常列印（因錢箱彈出訊號由印單機指令觸發）。`;
+      quickSteps = `1. 用鎖匙確認錢箱未被反鎖。
+2. 重新插緊印單機與錢箱間之連接線。`;
+      remoteSteps = `1. 請開啟 TeamViewer，我們將遠端下發彈出錢箱之指令測試驅動。
+2. 若滑軌卡死，請檢查是否有硬幣掉落卡在錢箱後方。`;
+
+    } else if (q.includes('掃描') || q.includes('scanner') || q.includes('條碼') || q.includes('嘟唔到')) {
+      catBadge = '條碼掃描槍異常';
+      problemName = '條碼掃描器問題';
+      targetedSteps = `1. 請將掃描槍的 USB 連接線從主機拔出，換插至主機另一個 USB 插孔，確認有響起「嗶」一聲。
+2. 檢查掃描槍前端玻璃鏡面是否有灰塵或指紋，用軟布輕輕擦拭乾淨。
+3. 嘗試在電腦開啟空白記事本（Notepad），測試掃描條碼能否在記事本內輸入數字。`;
+      quickSteps = `1. 換插主機另一個 USB 插位測試。
+2. 清潔掃描槍鏡頭並測試是否發出紅光。`;
+      remoteSteps = `1. 若掃描槍紅光完全不亮，可能線路老化需更換。
+2. 我們將安排物流車寄出備用掃描槍給門市替換。`;
+
+    } else {
+      catBadge = '門市 IT 一般支援';
+      problemName = '門市設備問題';
+      targetedSteps = `1. 請先嘗試將相關設備關閉電源，靜候 15 秒後重新開啟重啟。
+2. 檢查設備所有電源線及連接線兩端是否插緊，沒有鬆動。
+3. 請保持門市電腦開機狀態，並開啟 TeamViewer 程式，以便我們隨時透過遠端連線為你檢查。`;
+      quickSteps = `1. 關閉設備電源 10 秒後重開。
+2. 檢查所有連接線是否插牢。`;
+      remoteSteps = `1. 請告知我們具體故障症狀或錯誤訊息。
+2. 請開啟 TeamViewer 保持連線，我們將盡快安排遠端跟進。`;
+    }
+
+    // 依據當前選擇的排障策略 (targeted / quick / remote) 輸出
+    let selectedSteps = targetedSteps;
+    let strategyNote = '（可先嘗試以下排障步驟，或能即時恢復正常運作）';
+    if (currentReplyStrategy === 'quick') {
+      selectedSteps = quickSteps;
+      strategyNote = '（可先進行以下 30 秒簡易重啟與線路速檢）';
+    } else if (currentReplyStrategy === 'remote') {
+      selectedSteps = remoteSteps;
+      strategyNote = '（請協助我們進行以下遠端前置檢查，方便我們線上排查）';
+    }
+
+    const badgeEl = document.getElementById('detectedCategoryBadge');
+    if (badgeEl) badgeEl.textContent = catBadge;
+
+    // ★ 修正上下款：嚴格依照用戶指示，改為「收到及謝謝你的查詢」
+    const replyText = `${shopCode} 你好, 
+收到及謝謝你的查詢, 我哋會安排未來數天來檢查和嘗試修復, 為你帶來不便懇請見諒。
+ITD-Jason 
+
+ai建議：${strategyNote}
+${selectedSteps}
+
+(Content generated by AI)`;
+
+    const output = document.getElementById('storeReplyOutput');
+    if (output) output.value = replyText;
+  }
+
+  function copyStoreReplyText() {
+    const text = document.getElementById('storeReplyOutput').value;
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyReplyBtnText');
+      if (btn) btn.textContent = '已複製！';
+      showToast('📋 已複製門市 AI 排障回覆', 'fa-regular fa-copy');
+      setTimeout(() => {
+        if (btn) btn.textContent = '複製回覆';
+      }, 2000);
+    }).catch(() => {
+      showToast('請手動選取文字複製', 'fa-solid fa-circle-exclamation');
+    });
+  }
+
+  function openWhatsAppForStoreReply() {
+    const text = document.getElementById('storeReplyOutput').value;
+    if (!text) return;
+    // 不指定電話，由 WhatsApp 選擇店舖群組或同事
+    const waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(text);
+    window.open(waUrl, '_blank');
+    showToast('🟢 已打開 WhatsApp 準備發送門市回覆！');
+  }
+
+  // 監聽 DOMContentLoaded 進行密碼防護與初始化
+  window.addEventListener('DOMContentLoaded', () => {
+    checkJasonAuth();
+  });
+
+  </script>  
+  <!-- Toast 輕量提示 (一鍵通知與複製反饋) -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
+    <div class="bg-slate-900/95 text-white px-4 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 text-xs font-semibold backdrop-blur-md">
+      <div id="toastIcon" class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+        <i class="fa-brands fa-whatsapp"></i>
+      </div>
+      <span id="toastMsg">通知訊息</span>
+    </div>
+  </div>
+  <!-- ==================== ★ AI 門市查詢分析與自主排障回覆助手 Modal ==================== -->
+  <div id="storeReplyModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4" onclick="handleStoreReplyBackdropClick(event)">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] transition-all" onclick="event.stopPropagation()">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-indigo-900 via-slate-900 to-slate-900 text-white px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-extrabold tracking-tight">AI 門市回覆與自主排障助手</h3>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">前線排障 · 減少落舖</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-0.5">輸入門市查詢，AI 自動識別店號並生成專業建議，引導店舖自行解決</p>
+          </div>
+        </div>
+        <button onclick="closeStoreReplyModal()" class="w-8 h-8 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center transition" title="關閉">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 overflow-y-auto space-y-4 text-xs">
+        <!-- 輸入區域 -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <i class="fa-regular fa-comment-dots text-indigo-600"></i>
+              <span>輸入門市查詢文字 (支援店名、別名與口語廣東話)</span>
+            </span>
+            <span class="text-[11px] text-slate-400 font-normal">自動識別門市 Code ID</span>
+          </label>
+          <textarea id="storeInquiryInput" rows="3" 
+            placeholder="例如：又一城 ct, 我哋個wi-fi好有問題可唔可以幫我哋睇睇？" 
+            class="w-full p-3 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:bg-white focus:outline-none transition leading-relaxed resize-none"></textarea>
+          
+          <!-- 快捷範例標籤 -->
+          <div class="mt-2 flex items-center gap-1.5 flex-wrap">
+            <span class="text-[11px] text-slate-400 font-bold">常見查詢範例：</span>
+            <button type="button" onclick="loadInquirySample('又一城 ct, 我哋個wi-fi好有問題可唔可以幫我哋睇睇？')" class="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-lg border border-slate-200 text-[10px] font-medium transition">
+              又一城 CT (Wi-Fi問題)
+            </button>
+            <button type="button" onclick="loadInquirySample('HC TY 印單機卡紙故障，完全印唔到單，好急！')" class="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-lg border border-slate-200 text-[10px] font-medium transition">
+              海港城 TY (印單機卡紙)
+            </button>
+            <button type="button" onclick="loadInquirySample('3620 朗豪坊 MM 印單機印出黎全部白紙冇字')" class="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-lg border border-slate-200 text-[10px] font-medium transition">
+              朗豪坊 MM (出白紙冇字)
+            </button>
+            <button type="button" onclick="loadInquirySample('8888 outlet 部信用卡機無反應，做唔到交易')" class="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-lg border border-slate-200 text-[10px] font-medium transition">
+              東薈城 Outlet (卡機故障)
+            </button>
+            <button type="button" onclick="loadInquirySample('3622 CP 太古城 MM 電腦好慢 hang機')" class="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-lg border border-slate-200 text-[10px] font-medium transition">
+              太古城 MM (電腦Hang機)
+            </button>
+            <button type="button" onclick="loadInquirySample('1172 利園 TY 滑鼠好似壞咗完全郁唔到')" class="px-2 py-0.5 bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 rounded-lg border border-slate-200 text-[10px] font-medium transition">
+              利園 TY (滑鼠壞咗)
+            </button>
+          </div>
+        </div>
+
+        <!-- 生成按鈕 -->
+        <div class="flex items-center justify-between pt-1">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-500 font-bold">目標門市：</span>
+            <select id="detectedStoreSelect" class="bg-slate-100 border border-slate-300 rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <!-- 動態載入門市選項 -->
+            </select>
+          </div>
+          <button type="button" onclick="generateStoreReply()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow transition flex items-center space-x-1.5 text-xs">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>AI 分析並生成回覆</span>
+          </button>
+        </div>
+
+        <!-- AI 生成結果展示區 -->
+        <div id="aiReplyResultCard" class="space-y-2 pt-2 border-t border-slate-200">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-sparkles text-amber-500"></i>
+              <span>AI 精準針對性回覆 (含「收到及謝謝你的查詢」上下款 + 專屬排障指引)</span>
+            </span>
+            <div class="flex items-center gap-1.5">
+              <span id="detectedCategoryBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                Wi-Fi 連接異常
+              </span>
+              <!-- 排障深度微調按鈕 -->
+              <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-[10px] font-bold">
+                <button type="button" id="stratTargetedBtn" onclick="changeReplyStrategy('targeted')" class="px-2 py-0.5 rounded bg-white text-indigo-700 shadow-3xs">精準排障</button>
+                <button type="button" id="stratQuickBtn" onclick="changeReplyStrategy('quick')" class="px-2 py-0.5 rounded text-slate-600 hover:text-slate-900">簡易重啟</button>
+                <button type="button" id="stratRemoteBtn" onclick="changeReplyStrategy('remote')" class="px-2 py-0.5 rounded text-slate-600 hover:text-slate-900">遠端配合</button>
+              </div>
+            </div>
+          </div>
+
+          <textarea id="storeReplyOutput" rows="8" class="w-full p-3 bg-indigo-50/50 border border-indigo-200 rounded-xl text-xs text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed font-medium resize-y"></textarea>
+
+          <div class="flex items-center justify-between gap-2 pt-1 flex-wrap">
+            <span class="text-[11px] text-slate-400">
+              提示：可直接於上方文字框修改內容，再點擊右方按鈕發送或複製
+            </span>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="copyStoreReplyText()" class="px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 font-bold rounded-lg border border-slate-300 transition text-xs inline-flex items-center gap-1.5 shadow-2xs">
+                <i class="fa-regular fa-copy text-slate-500"></i><span id="copyReplyBtnText">複製回覆</span>
+              </button>
+              <button type="button" onclick="openWhatsAppForStoreReply()" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold rounded-lg transition text-xs inline-flex items-center gap-1.5 shadow-xs">
+                <i class="fa-brands fa-whatsapp text-white text-sm"></i><span>以 WhatsApp 發送</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ★ Jason 專屬安全密碼登入 (Modal Overlay) ==================== -->
+  <div id="jasonLoginModal" class="fixed inset-0 z-[999] bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-slate-200 overflow-hidden p-7 space-y-5 text-center transform transition-all">
+      <div class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-lg shadow-blue-500/30">
+        <i class="fa-solid fa-user-shield"></i>
+      </div>
+      <div>
+        <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">IT 營運儀表板 · Jason 專用工作台</h2>
+        <p class="text-xs text-slate-500 mt-1">此工作台包含外勤發送與 AI 支援功能，請輸入專屬密碼</p>
+      </div>
+
+      <form id="jasonLoginForm" onsubmit="handleJasonLogin(event)" class="space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1.5">登入密碼 (Jason Password)</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+              <i class="fa-solid fa-lock"></i>
+            </span>
+            <input type="password" id="jasonPasswordInput" required placeholder="請輸入 8 位數專屬密碼" autocomplete="current-password"
+              class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-500 focus:bg-white focus:outline-none transition">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600">
+              <i id="pwEyeIcon" class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-slate-600">
+          <label class="flex items-center cursor-pointer select-none">
+            <input type="checkbox" id="rememberMeCheckbox" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 mr-2">
+            <span>記住登入狀態（此裝置 30 天免輸入）</span>
+          </label>
+        </div>
+
+        <div id="loginErrorMsg" class="hidden p-2.5 bg-red-50 text-red-600 text-xs rounded-xl border border-red-200 flex items-center gap-1.5 font-bold">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>密碼不正確，請重新輸入。</span>
+        </div>
+
+        <button type="submit"
+          class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl shadow-md transition duration-150 flex items-center justify-center space-x-2 text-sm">
+          <span>解鎖進入工作台</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </form>
+      <div class="text-[11px] text-slate-400">
+        威黃物流服務有限公司 · 創新及科技發展部 (I&TD)
+      </div>
+    </div>
+  </div>
+</body>  
+</html>
