@@ -110,25 +110,29 @@
   
   <!-- 頂部導航 (管理層專用，支援快捷同步、PDF 列印與數據來源導出) -->  
   <header class="sticky-header text-white shadow-md border-b border-slate-800">  
-    <div class="max-w-[1560px] mx-auto px-4 py-3 flex items-center justify-between">  
-      <div class="flex items-center space-x-3">  
-        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow">  
+    <div class="max-w-[1560px] mx-auto px-4 py-2.5 sm:py-3 flex flex-col md:flex-row md:items-center justify-between gap-2.5 md:gap-4">  
+      <div class="flex items-center space-x-3 min-w-0">  
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center font-black text-white text-base shadow shrink-0">  
           FLS  
         </div>  
-        <div>  
-          <h1 class="text-base md:text-lg font-extrabold tracking-tight text-white flex items-center space-x-2">  
-            <span>IT 營運與門市使用狀況儀表板</span>  
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">管理層專閱</span>  
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 flex items-center gap-1">
-              <i class="fa-solid fa-code-commit text-[9px]"></i>v3.8 (2026年9月17日 全功能正式版)
-            </span>
-          </h1>  
-          <p class="text-xs text-slate-400">威黃物流服務有限公司 · IT&D - Jason Chow</p>  
+        <div class="min-w-0 flex-1">  
+          <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">  
+            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white">  
+              IT 營運與門市使用狀況儀表板  
+            </h1>  
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">管理層專閱</span>  
+              <span class="whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 flex items-center gap-1">
+                <i class="fa-solid fa-code-commit text-[9px]"></i>v3.8 (2026年9月17日 全功能正式版)
+              </span>
+            </div>
+          </div>  
+          <p class="text-xs text-slate-400 mt-0.5 truncate">威黃物流服務有限公司 · IT&D - Jason Chow</p>  
         </div>  
       </div>  
   
       <!-- 快捷操作按鈕組 -->  
-      <div class="action-buttons flex items-center space-x-2">
+      <div class="action-buttons flex flex-wrap items-center gap-2 shrink-0">
         <!-- 自動更新開關 (預設關閉，切換開啟後定時 30 秒輪詢最新資料) -->
         <div class="flex items-center space-x-2 bg-slate-800/90 px-3 py-1 rounded-xl border border-slate-700 select-none">
           <label class="switch">
