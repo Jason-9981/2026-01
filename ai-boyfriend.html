@@ -1171,6 +1171,117 @@
       margin-top: 6px;
       border: 1px solid var(--slate-200);
     }
+
+    /* Diary Photos & Lightbox */
+    .diary-photo-thumb {
+      max-width: 100%;
+      max-height: 240px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      margin-top: 10px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      border: 1px solid var(--slate-200);
+      transition: transform 0.2s ease;
+    }
+    .diary-photo-thumb:hover {
+      transform: scale(1.015);
+    }
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .lightbox-modal.active {
+      display: flex;
+    }
+    .lightbox-img {
+      max-width: 95%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Sticker Selector Styles */
+    .sticker-chip {
+      white-space: nowrap;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1.5px solid #cbd5e1;
+      background: white;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .sticker-chip:hover {
+      border-color: #f43f5e;
+      color: #e11d48;
+    }
+    .sticker-chip.active {
+      background: #fff1f2;
+      border-color: #e11d48;
+      color: #be123c;
+      box-shadow: 0 2px 6px rgba(225, 29, 72, 0.2);
+    }
+    .sticker-thumb-mini {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    /* Diary Photos & Lightbox */
+    .diary-photo-thumb {
+      max-width: 100%;
+      max-height: 220px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      margin-top: 10px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      border: 1px solid var(--slate-200);
+      transition: transform 0.2s ease;
+      display: block;
+    }
+    .diary-photo-thumb:hover {
+      transform: scale(1.015);
+    }
+    .lightbox-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .lightbox-modal.active {
+      display: flex;
+    }
+    .lightbox-img {
+      max-width: 95%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
 </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -1434,6 +1545,17 @@
           </div>
         </div>
 
+        <!-- AI Cute Sticker / Card Selection -->
+        <div class="form-group" style="margin-top: 12px; margin-bottom: 12px;">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="lblStickerSelect">🎨 搭配 AI 得意心意卡 (發送時自動附帶卡片連結)</span>
+            <span style="font-size: 0.72rem; color: var(--primary-pink); font-weight: 700;" id="stickerStatusIndicator">目前：純文字（不附圖）</span>
+          </label>
+          <div class="category-scroll-container" id="stickerScrollContainer" style="padding-bottom: 4px; margin-bottom: 4px;">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
         <!-- Action Buttons -->
         <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
           <button class="btn-action" onclick="generateMessage()">
@@ -1460,6 +1582,10 @@
 
         <div class="wa-body">
           <div class="wa-bubble">
+            <div id="waStickerPreviewBox" style="display: none; margin-bottom: 8px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; background: #f8fafc;">
+              <img id="waStickerPreviewImg" src="" style="width: 100%; max-height: 180px; object-fit: cover; display: block;">
+              <div id="waStickerCaption" style="font-size: 0.75rem; color: #475569; padding: 4px 8px; font-weight: 600;"></div>
+            </div>
             <div id="waMessageText">載入中...</div>
             <div class="wa-time-meta">
               <span id="waMessageTime">09:15</span>
@@ -1594,6 +1720,24 @@
           <input type="text" id="diaryQuoteInput" placeholder="例：唔好喊啦，天跌落嚟有老公頂住！" oninput="updateLivePreview()">
         </div>
 
+        <!-- Photo Attachment Input -->
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>📷 甜蜜合照 / 紀念相片 (選填)</span>
+            <span style="font-size: 0.72rem; color: #16a34a; font-weight: 700;">自動輕量化壓縮 · 支援雲端展示</span>
+          </label>
+          <input type="file" id="diaryPhotoInput" accept="image/*" style="display: none;" onchange="handleDiaryPhotoSelect(event)">
+          <div id="diaryPhotoPlaceholder" onclick="document.getElementById('diaryPhotoInput').click()" style="border: 2px dashed #cbd5e1; border-radius: var(--radius-md); padding: 14px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s ease;">
+            <span style="font-size: 1.5rem; display: block; margin-bottom: 4px;">🖼️</span>
+            <span style="font-size: 0.85rem; font-weight: 700; color: #475569;">點擊選擇相片（支援手機即影即上傳）</span>
+            <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 2px;">系統會自動壓縮，極速上傳不佔空間</div>
+          </div>
+          <div id="diaryPhotoPreviewBox" style="display: none; position: relative; margin-top: 8px; border-radius: var(--radius-md); overflow: hidden; border: 1.5px solid #cbd5e1; max-height: 220px; background: #000; text-align: center;">
+            <img id="diaryPhotoPreviewImg" src="" style="max-height: 220px; max-width: 100%; object-fit: contain;">
+            <button type="button" onclick="clearDiaryPhoto()" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 999px; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;">✕</button>
+          </div>
+        </div>
+
         <!-- High Visibility Action Button -->
         <button class="btn-action" style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 14px 20px; font-size: 1.05rem;" onclick="saveDiaryEntry()">
           <span>💾 寫入專屬生活回憶錄 (儲存到右邊時光牆)</span>
@@ -1628,6 +1772,9 @@
             <div id="previewTitle" style="font-size: 1.05rem; font-weight: 800; color: #1e293b; margin-bottom: 6px;">標題預覽</div>
             <div id="previewBody" style="font-size: 0.9rem; color: #475569; line-height: 1.6; background: white; padding: 10px; border-radius: 8px; border-left: 3px solid #f59e0b; margin-bottom: 6px;">內容預覽</div>
             <div id="previewQuote" style="font-size: 0.82rem; color: #9d174d; font-style: italic; background: #fdf2f8; padding: 6px 10px; border-radius: 6px; display: none;">💬 「話術預覽」</div>
+            <div id="previewPhotoBox" style="display: none; margin-top: 8px;">
+              <img id="previewPhotoImg" src="" style="max-width: 100%; max-height: 180px; border-radius: 6px; object-fit: cover;">
+            </div>
           </div>
 
           <div id="diaryEntriesList" style="display: flex; flex-direction: column; gap: 14px; max-height: 520px; overflow-y: auto; padding-right: 4px;">
@@ -3186,6 +3333,102 @@
   let currentCategory = 'stage';
   let geminiConfig = JSON.parse(localStorage.getItem('ai_bf_gemini') || '{"enabled":false,"key":""}');
   let activeFestivalData = null;
+  let selectedStickerId = null;
+  const stickersData = [
+  {
+    "id": "stk_apology_dog",
+    "category": "apology",
+    "name_hk": "🐶 委屈柴犬求原諒",
+    "name_cn": "🐶 委屈柴犬求原谅",
+    "name_en": "🐶 Forgive Me Shiba",
+    "url": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=700&auto=format&fit=crop&q=80",
+    "desc": "眼神無辜的可愛柴犬，瞬間融化怒氣"
+  },
+  {
+    "id": "stk_apology_cat",
+    "category": "apology",
+    "name_hk": "🐱 軟萌貓咪合十道歉",
+    "name_cn": "🐱 软萌猫咪合十道歉",
+    "name_en": "🐱 Apologetic Kitten",
+    "url": "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=700&auto=format&fit=crop&q=80",
+    "desc": "雙手合十的呆萌小貓，誰看都消氣"
+  },
+  {
+    "id": "stk_warm_coffee",
+    "category": "comfort",
+    "name_hk": "☕ 暖心端咖啡給你",
+    "name_cn": "☕ 暖心端热咖啡给你",
+    "name_en": "☕ Warm Coffee for You",
+    "url": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=700&auto=format&fit=crop&q=80",
+    "desc": "拉花熱咖啡，給予疲憊時的溫暖慰藉"
+  },
+  {
+    "id": "stk_comfort_hug",
+    "category": "comfort",
+    "name_hk": "🧸 治癒大熊溫暖抱抱",
+    "name_cn": "🧸 治愈大熊温暖抱抱",
+    "name_en": "🧸 Big Warm Bear Hug",
+    "url": "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=700&auto=format&fit=crop&q=80",
+    "desc": "軟綿綿的大熊擁抱，隨時做你的避風港"
+  },
+  {
+    "id": "stk_mid_autumn_moon",
+    "category": "festival",
+    "name_hk": "🌕 中秋月圓人團圓",
+    "name_cn": "🌕 中秋月圆人团圆",
+    "name_en": "🌕 Full Moon Reunion",
+    "url": "https://images.unsplash.com/photo-1532767153582-b1a0e5145009?w=700&auto=format&fit=crop&q=80",
+    "desc": "皓月當空浪漫星夜，唯你是我心中的圓滿"
+  },
+  {
+    "id": "stk_mid_autumn_bunny",
+    "category": "festival",
+    "name_hk": "🐰 萌兔月下送祝福",
+    "name_cn": "🐰 萌兔月下送祝福",
+    "name_en": "🐰 Moonlit Bunny Blessings",
+    "url": "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=700&auto=format&fit=crop&q=80",
+    "desc": "毛茸茸的可愛月兔，送上中秋甜蜜滋味"
+  },
+  {
+    "id": "stk_romance_rose",
+    "category": "romance",
+    "name_hk": "🌹 捧著浪漫紅玫瑰",
+    "name_cn": "🌹 捧着浪漫红玫瑰",
+    "name_en": "🌹 Passionate Red Roses",
+    "url": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=700&auto=format&fit=crop&q=80",
+    "desc": "熱烈盛開的嬌艷紅玫瑰，滿載心動表白"
+  },
+  {
+    "id": "stk_romance_heart",
+    "category": "romance",
+    "name_hk": "💖 怦然心動甜蜜光影",
+    "name_cn": "💖 怦然心动甜蜜光影",
+    "name_en": "💖 Sweet Romantic Glow",
+    "url": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=700&auto=format&fit=crop&q=80",
+    "desc": "浪漫夢幻的粉紅愛心，每分每秒只在乎你"
+  },
+  {
+    "id": "stk_pamper_crown",
+    "category": "pamper",
+    "name_hk": "👑 專屬女王閃耀皇冠",
+    "name_cn": "👑 专属女王闪耀皇冠",
+    "name_en": "👑 Sparkling Queen Crown",
+    "url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=700&auto=format&fit=crop&q=80",
+    "desc": "你只要做我被寵壞的女王，其餘一切交給我"
+  },
+  {
+    "id": "stk_sweet_dessert",
+    "category": "pamper",
+    "name_hk": "🍰 請你食甜蜜下午茶",
+    "name_cn": "🍰 请你吃甜蜜下午茶",
+    "name_en": "🍰 Sweet Afternoon Treat",
+    "url": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=700&auto=format&fit=crop&q=80",
+    "desc": "精緻草莓甜品，卡路里歸我，甜美幸福歸你"
+  }
+];
+  let currentDiaryPhotoBlob = null;
+  let currentDiaryPhotoBase64 = null;
+
 
 
   // Dynamic Chip Groups based on Language
@@ -3369,6 +3612,7 @@
 
     renderEventChips(lang);
     renderSignoffChips(lang);
+    renderStickerSelector(lang);
     updateUserAuthUI();
     renderProfileUI();
     initSmartFestival();
@@ -3551,6 +3795,178 @@
       selectCategory(activeFestivalData.key);
       showToast(currentLanguage === 'en' ? 'Loaded festive messages!' : '🌕 已為你載入專屬節日高情商話術！');
     }
+  }
+
+  
+  // ==========================================
+  // AI STICKER CARDS & PHOTO ENHANCEMENTS
+  // ==========================================
+
+  function renderStickerSelector(lang) {
+    const container = document.getElementById('stickerScrollContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const currentL = lang || currentLanguage || 'zh-HK';
+    const noneText = currentL === 'en' ? '❌ Text Only' : (currentL === 'zh-CN' ? '❌ 纯文字（不附图）' : '❌ 純文字（不附圖）');
+
+    // 1. None button
+    const btnNone = document.createElement('button');
+    btnNone.type = 'button';
+    btnNone.className = 'sticker-chip' + (selectedStickerId === null ? ' active' : '');
+    btnNone.id = 'stk_chip_none';
+    btnNone.innerText = noneText;
+    btnNone.onclick = () => selectSticker(null);
+    container.appendChild(btnNone);
+
+    // 2. Sticker list
+    stickersData.forEach(stk => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sticker-chip' + (selectedStickerId === stk.id ? ' active' : '');
+      btn.id = 'stk_chip_' + stk.id;
+
+      const img = document.createElement('img');
+      img.src = stk.url;
+      img.className = 'sticker-thumb-mini';
+      img.loading = 'lazy';
+
+      const span = document.createElement('span');
+      span.innerText = currentL === 'en' ? stk.name_en : (currentL === 'zh-CN' ? stk.name_cn : stk.name_hk);
+
+      btn.appendChild(img);
+      btn.appendChild(span);
+      btn.onclick = () => selectSticker(stk.id);
+      container.appendChild(btn);
+    });
+
+    updateStickerPreviewUI();
+  }
+
+  function selectSticker(id) {
+    selectedStickerId = id;
+    document.querySelectorAll('.sticker-chip').forEach(c => c.classList.remove('active'));
+    const target = id === null ? document.getElementById('stk_chip_none') : document.getElementById('stk_chip_' + id);
+    if (target) target.classList.add('active');
+
+    updateStickerPreviewUI();
+  }
+
+  function updateStickerPreviewUI() {
+    const box = document.getElementById('waStickerPreviewBox');
+    const img = document.getElementById('waStickerPreviewImg');
+    const caption = document.getElementById('waStickerCaption');
+    const indicator = document.getElementById('stickerStatusIndicator');
+
+    if (!box) return;
+
+    if (selectedStickerId) {
+      const stk = stickersData.find(s => s.id === selectedStickerId);
+      if (stk) {
+        box.style.display = 'block';
+        img.src = stk.url;
+        const name = currentLanguage === 'en' ? stk.name_en : (currentLanguage === 'zh-CN' ? stk.name_cn : stk.name_hk);
+        caption.innerText = `💌 ${name}`;
+        if (indicator) {
+          indicator.innerText = (currentLanguage === 'en' ? 'Card Attached: ' : '已搭配心意卡：') + name;
+          indicator.style.color = '#e11d48';
+        }
+        return;
+      }
+    }
+
+    box.style.display = 'none';
+    if (indicator) {
+      indicator.innerText = currentLanguage === 'en' ? 'Current: Text Only' : (currentLanguage === 'zh-CN' ? '当前：纯文字（不附图）' : '目前：純文字（不附圖）');
+      indicator.style.color = 'var(--slate-500)';
+    }
+  }
+
+  // Diary Photo Compression & Management
+  async function handleDiaryPhotoSelect(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    showToast(currentLanguage === 'en' ? "Compressing photo..." : "📷 正在優化壓縮相片...");
+    try {
+      const result = await compressImageFile(file, 900, 0.75);
+      currentDiaryPhotoBlob = result.blob;
+      currentDiaryPhotoBase64 = result.base64;
+
+      document.getElementById('diaryPhotoPlaceholder').style.display = 'none';
+      document.getElementById('diaryPhotoPreviewBox').style.display = 'block';
+      document.getElementById('diaryPhotoPreviewImg').src = result.base64;
+
+      updateLivePreview();
+      showToast(currentLanguage === 'en' ? "Photo ready!" : "✅ 相片已準備就緒，可隨時寫入回憶錄！");
+    } catch(err) {
+      console.warn("Photo compression error:", err);
+      showToast("相片處理失敗，請重試。");
+    }
+  }
+
+  function clearDiaryPhoto() {
+    currentDiaryPhotoBlob = null;
+    currentDiaryPhotoBase64 = null;
+    const input = document.getElementById('diaryPhotoInput');
+    if (input) input.value = '';
+
+    const ph = document.getElementById('diaryPhotoPlaceholder');
+    const box = document.getElementById('diaryPhotoPreviewBox');
+    if (ph) ph.style.display = 'block';
+    if (box) box.style.display = 'none';
+
+    updateLivePreview();
+  }
+
+  function compressImageFile(file, maxDimension = 900, quality = 0.75) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDimension || h > maxDimension) {
+            if (w > h) {
+              h = Math.round((h * maxDimension) / w);
+              w = maxDimension;
+            } else {
+              w = Math.round((w * maxDimension) / h);
+              h = maxDimension;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const base64 = canvas.toDataURL('image/jpeg', quality);
+          canvas.toBlob((blob) => {
+            resolve({ base64, blob });
+          }, 'image/jpeg', quality);
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Lightbox Modal
+  function openPhotoLightbox(url) {
+    const modal = document.getElementById('photoLightbox');
+    const img = document.getElementById('lightboxImg');
+    if (modal && img) {
+      img.src = url;
+      modal.classList.add('active');
+    }
+  }
+
+  function closePhotoLightbox() {
+    const modal = document.getElementById('photoLightbox');
+    if (modal) modal.classList.remove('active');
   }
 
   // Switch Main Tabs (Generator vs Diary)
@@ -3780,50 +4196,73 @@
     }
   }
 
-  function saveDiaryEntry() {
+  async function saveDiaryEntry() {
     let title = document.getElementById('diaryTitleInput').value.trim();
     let body = document.getElementById('diaryContentInput').value.trim();
     const quote = document.getElementById('diaryQuoteInput').value.trim();
 
-    // Flexible tolerance: if only body is filled, auto-generate title
     if (!title && body) {
-      title = body.length > 18 ? body.substring(0, 18) + '...' : body;
-    } else if (title && !body) {
-      body = title;
-    } else if (!title && !body) {
-      showToast("⚠️ 請先在左側填寫標題或生活細節！");
+      title = body.substring(0, 18) + '...';
+    } else if (!title && !body && !currentDiaryPhotoBase64) {
+      showToast(currentLanguage === 'en' ? "Please write some memory content first!" : "請先填寫點滴回憶內容！");
       return;
+    } else if (!title) {
+      title = currentLanguage === 'en' ? "Sweet Memory Photo" : "甜蜜紀念相片";
     }
 
     const now = new Date();
-    const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+    let photoUrlToSave = currentDiaryPhotoBase64 || null;
+
+    // Attempt Supabase Storage upload
+    if (supabaseClient && currentDiaryPhotoBlob) {
+      try {
+        const fileExt = 'jpg';
+        const fileName = `diary_${Date.now()}_${Math.random().toString(36).substring(2,7)}.${fileExt}`;
+        const { data, error } = await supabaseClient.storage.from('diary-photos').upload(fileName, currentDiaryPhotoBlob, {
+          contentType: 'image/jpeg',
+          upsert: true
+        });
+        if (!error) {
+          const { data: pubData } = supabaseClient.storage.from('diary-photos').getPublicUrl(fileName);
+          if (pubData && pubData.publicUrl) {
+            photoUrlToSave = pubData.publicUrl;
+            console.log("Uploaded photo to Supabase Storage:", photoUrlToSave);
+          }
+        }
+      } catch (err) {
+        console.warn("Storage upload fallback to base64:", err);
+      }
+    }
 
     const newEntry = {
-      id: "D-" + Date.now(),
+      id: Date.now().toString(),
       date: dateStr,
       title: title,
-      mood: currentDiaryMood || "🥰 甜蜜心動",
+      mood: currentDiaryMood,
       body: body,
-      quote: quote
+      quote: quote,
+      photoUrl: photoUrlToSave
     };
 
     diaryEntries.unshift(newEntry);
     localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));
+
     syncEntryToCloud(newEntry);
+
+    // Reset inputs
+    document.getElementById('diaryTitleInput').value = '';
+    document.getElementById('diaryContentInput').value = '';
+    document.getElementById('diaryQuoteInput').value = '';
+    clearDiaryPhoto();
+
+    updateLivePreview();
     renderDiaryList();
+    showToast(currentLanguage === 'en' ? "Saved to memory book!" : "💖 回憶已珍重寫入時光牆！");
 
-    // Reset inputs & hide live preview
-    document.getElementById('diaryTitleInput').value = "";
-    document.getElementById('diaryContentInput').value = "";
-    document.getElementById('diaryQuoteInput').value = "";
-    const previewCard = document.getElementById('diaryLivePreviewCard');
-    if (previewCard) previewCard.style.display = 'none';
-
-    // Scroll diary timeline to top
-    const container = document.getElementById('diaryEntriesList');
-    if (container) container.scrollTop = 0;
-
-    showToast("🎉 成功寫入！右邊時光牆已即時更新第一條回憶！");
+    const wallContainer = document.getElementById('diaryWallContainer');
+    if (wallContainer) wallContainer.scrollTop = 0;
   }
 
   function syncEventsToDiary() {
@@ -3870,36 +4309,42 @@
   }
 
   function renderDiaryList() {
-    const container = document.getElementById('diaryEntriesList');
-    if (!container) return;
+    const listEl = document.getElementById('diaryEntriesList');
+    const totalCountEl = document.getElementById('diaryTotalCount');
+    const targetDisplay = document.getElementById('diaryTargetNameDisplay');
 
-    if (!diaryEntries || diaryEntries.length === 0) {
-      container.innerHTML = '<div style="font-size:0.88rem; color:#92400e; padding:20px; text-align:center;">暫無日記記錄，快在左側寫下今日溫暖點滴啦！</div>';
+    if (targetDisplay) targetDisplay.innerText = profile.targetName || '伴侶';
+    if (totalCountEl) totalCountEl.innerText = `${diaryEntries.length} 則`;
+
+    if (!listEl) return;
+    listEl.innerHTML = '';
+
+    if (diaryEntries.length === 0) {
+      listEl.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 30px 0; font-size: 0.9rem;">目前未有回憶記錄，快啲喺左邊寫低你同佢嘅第一件甜蜜小事啦！🥰</div>';
       return;
     }
 
-    container.innerHTML = "";
     diaryEntries.forEach((entry) => {
       const card = document.createElement('div');
       card.className = 'diary-entry-card';
+
+      const quoteHtml = entry.quote ? `<div class="diary-quote-bubble">💬 當時你哄佢：「${entry.quote}」</div>` : '';
+      const photoHtml = entry.photoUrl ? `<img src="${entry.photoUrl}" class="diary-photo-thumb" loading="lazy" onclick="openPhotoLightbox('${entry.photoUrl}')">` : '';
+
       card.innerHTML = `
-        <div class="diary-entry-date">
-          <span>📅 ${entry.date}</span>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:999px; font-size:0.75rem;">${entry.mood || '🥰 生活點滴'}</span>
-            <button type="button" onclick="deleteDiaryEntry('${entry.id}')" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:0.75rem;" title="刪除此則記錄">🗑️</button>
+        <div class="diary-entry-header">
+          <span class="diary-entry-date">📅 ${entry.date}</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="diary-mood-tag">${entry.mood || '🥰 甜蜜'}</span>
+            <button class="diary-del-btn" onclick="deleteDiaryEntry('${entry.id}')" title="刪除此回憶">🗑️</button>
           </div>
         </div>
-        <div class="diary-entry-title">
-          <span>💖</span>
-          <span>${entry.title}</span>
-        </div>
-        <div class="diary-entry-body">
-          ${entry.body}
-        </div>
-        ${entry.quote ? `<div class="diary-quote-bubble"><span>💬</span><span>「${entry.quote}」</span></div>` : ''}
+        <div class="diary-entry-title">${entry.title}</div>
+        <div class="diary-entry-body">${entry.body}</div>
+        ${quoteHtml}
+        ${photoHtml}
       `;
-      container.appendChild(card);
+      listEl.appendChild(card);
     });
   }
 
@@ -4274,29 +4719,26 @@ ${shareUrl}
   }
 
   function renderPartnerTimeline(entries) {
-    const container = document.getElementById('readerTimelineList');
-    container.innerHTML = "";
+    const container = document.getElementById('partnerTimelineList');
+    if (!container) return;
+    container.innerHTML = '';
 
-    if (!entries || entries.length === 0) {
-      container.innerHTML = '<div style="background:white; padding:20px; border-radius:12px; text-align:center;">暫無回憶記錄</div>';
-      return;
-    }
-
-    entries.forEach((entry) => {
+    entries.forEach(entry => {
       const card = document.createElement('div');
-      card.style.cssText = "background: white; border-radius: 16px; padding: 22px; box-shadow: var(--shadow); border: 1.5px solid #fed7aa; display: flex; flex-direction: column; gap: 10px;";
+      card.className = 'diary-entry-card';
+
+      const quoteHtml = entry.quote ? `<div class="diary-quote-bubble">💬 當時他溫柔對你說：「${entry.quote}」</div>` : '';
+      const photoHtml = entry.photoUrl ? `<img src="${entry.photoUrl}" class="diary-photo-thumb" loading="lazy" onclick="openPhotoLightbox('${entry.photoUrl}')">` : '';
+
       card.innerHTML = `
-        <div style="font-size: 0.8rem; font-weight: 700; color: #92400e; display: flex; justify-content: space-between;">
-          <span>📅 ${entry.date}</span>
-          <span style="background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 999px;">${entry.mood || '🥰 溫暖點滴'}</span>
+        <div class="diary-entry-header">
+          <span class="diary-entry-date">📅 ${entry.date}</span>
+          <span class="diary-mood-tag">${entry.mood || '🥰 甜蜜'}</span>
         </div>
-        <div style="font-size: 1.15rem; font-weight: 800; color: #1e293b; display: flex; align-items: center; gap: 6px;">
-          <span>💖</span> <span>${entry.title}</span>
-        </div>
-        <div style="font-size: 0.95rem; color: #475569; line-height: 1.7; background: #fffdfa; padding: 12px 14px; border-radius: 10px; border-left: 3px solid #f59e0b;">
-          ${entry.body}
-        </div>
-        ${entry.quote ? `<div style="background: #fdf2f8; border-radius: 8px; padding: 10px 14px; font-size: 0.88rem; color: #be123c; font-style: italic;">💬 「${entry.quote}」</div>` : ''}
+        <div class="diary-entry-title">${entry.title}</div>
+        <div class="diary-entry-body">${entry.body}</div>
+        ${quoteHtml}
+        ${photoHtml}
       `;
       container.appendChild(card);
     });
@@ -5119,7 +5561,16 @@ ${shareUrl}
 
   // Copy to Clipboard
   function copyCurrentMessage() {
-    const text = document.getElementById('waMessageText').innerText;
+    let text = document.getElementById('waMessageText').innerText;
+    if (selectedStickerId) {
+      const stk = stickersData.find(s => s.id === selectedStickerId);
+      if (stk) {
+        let caption = "🖼️ 查看為你特別挑選嘅得意心意卡：";
+        if (currentLanguage === 'zh-CN') caption = "🖼️ 查看为你特别挑选的得意心意卡：";
+        else if (currentLanguage === 'en') caption = "🖼️ View your special cute card: ";
+        text += `\n\n${caption}${stk.url}`;
+      }
+    }
     copySpecificText(text);
   }
 
@@ -5475,5 +5926,10 @@ ${shareUrl}
   </div>
 </div>
 
+
+<!-- Photo Lightbox Modal -->
+<div class="lightbox-modal" id="photoLightbox" onclick="closePhotoLightbox()">
+  <img class="lightbox-img" id="lightboxImg" src="">
+</div>
 </body>
 </html>
