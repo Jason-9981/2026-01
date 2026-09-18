@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>最強AI男朋友 攞你命3000 - 頂級情緒價值哄妻神器</title>
+    <title>港男求生必備神器 (情緒價值無限放送) - 頂級情緒價值與哄另一半神器</title>
+  <meta name="description" content="港男求生必備神器 (情緒價值無限放送) · 專為夫妻情侶打造的頂級情感共情與情緒價值系統 · 吵架求生破冰 · 漸進式甜言蜜語">
+  
+  <!-- Open Graph Meta Tags for WhatsApp, Telegram, Social Sharing Previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="港男求生必備神器 (情緒價值無限放送)">
+  <meta property="og:description" content="頂級情緒價值系統 · 哄另一半救命急救包 · 深度心理共情 × 漸進式甜言蜜語 × 吵架求生破冰">
+  <meta property="og:site_name" content="港男求生必備神器">
+  <meta property="og:url" content="https://jason-9981.github.io/2026-01/ai-boyfriend.html">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="港男求生必備神器 (情緒價值無限放送)">
+  <meta name="twitter:description" content="頂級情緒價值系統 · 哄另一半救命急救包 · 深度心理共情 × 漸進式甜言蜜語 × 吵架求生破冰">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -233,7 +246,15 @@
     }
 
     .emergency-banner.active .emergency-title {
-      color: white;
+      font-weight: 800;
+      color: #991b1b;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .emergency-banner.active .emergency-desc {
@@ -1066,14 +1087,21 @@
       background: linear-gradient(135deg, #fffbeb, #fef3c7);
       border: 1.5px solid #f59e0b;
       border-radius: var(--radius-md);
-      padding: 10px 14px;
+      padding: 12px 14px;
       margin-bottom: 14px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      align-items: stretch;
       gap: 10px;
       box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
       animation: fadeIn 0.4s ease;
+    }
+    @media (min-width: 680px) {
+      .smart-fest-banner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-4px); }
@@ -1164,13 +1192,7 @@
     <div class="badge-pill" id="headerBadge">🔥 頂級情緒價值系統 · 哄妻救命終極武器</div>
     <h1 id="headerTitle">港男求生必備神器</h1>
     <p class="subtitle" id="headerSubtitle">深度心理共情 × 漸進式甜言蜜語 × 吵架求生破冰 × 生活回憶日記</p>
-    <div class="creator-credits-bar" id="headerCreditsBar">
-      <span>🏢 <span id="lblHeaderProducer">生產商 / 製造者</span>：<strong>AJ studio</strong></span>
-      <span style="opacity: 0.4;">•</span>
-      <span>🎨 <span id="lblHeaderDesigner">設計師</span>：<strong>Jason Chow</strong></span>
-      <span style="opacity: 0.4;">•</span>
-      <span>⚡ <strong>v3.2.0 Pro</strong></span>
-    </div>
+    
   </header>
 
   <!-- Main Navigation Tabs -->
@@ -1204,11 +1226,11 @@
     
     <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
       <a href="https://docs.google.com/spreadsheets/d/1Ck4HV-XXvg9czPvg_e7e0DkYXCdYVFhucsQ0XDeb2u4/edit" target="_blank" style="text-decoration:none;" class="btn-edit-profile">📊 Google Sheet</a>
-      <button class="btn-edit-profile" onclick="openProfileModal()">⚙️ 對象資料</button>
+      <button class="btn-edit-profile" id="btnTopProfile" onclick="openProfileModal()">⚙️ 對象資料</button>
       <button class="btn-edit-profile" id="btnUserAuth" onclick="openAuthModal()" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">👤 登入 / 註冊</button>
       <button class="btn-edit-profile" id="btnAdminPanel" onclick="openAdminModal()" style="display:none; background:#fef3c7; color:#b45309; border-color:#f59e0b;">🛠️ 管理員工具</button>
-      <button class="btn-edit-profile" onclick="openVipModal()" style="background:#fffbeb; color:#b45309; border-color:#fde68a;">👑 升級 VIP ($18/月)</button>
-      <button class="btn-edit-profile" onclick="exportDataJSON()" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;">💾 匯出備份</button>
+      <button class="btn-edit-profile" id="btnTopVip" onclick="openVipModal()" style="background:#fffbeb; color:#b45309; border-color:#fde68a;">👑 升級 VIP ($18/月)</button>
+      <button class="btn-edit-profile" id="btnTopExport" onclick="exportDataJSON()" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;">💾 匯出備份</button>
     </div>
   </div>
 
@@ -1221,10 +1243,10 @@
     <div class="emergency-banner" id="emergencyBanner" onclick="toggleEmergencyMode()">
       <div>
         <div class="emergency-title">
-          <span>🚨 夫妻吵架冷戰 · 求生急救包模式</span>
+          <span id="emergencyTitleText">🚨 夫妻吵架冷戰 · 求生急救包模式</span>
           <span class="emergency-status-badge" id="emergencyBadgeText">點擊切換為求生模式</span>
         </div>
-        <div class="emergency-desc">
+        <div class="emergency-desc" id="emergencyDesc">
           當老婆黑面、已讀不回或吵架時專用！不講道理、無藉口真誠認錯、心痛撫平委屈，秒速化解家庭危機。
         </div>
       </div>
@@ -1234,7 +1256,7 @@
     <!-- Accordion Guide -->
     <div class="guide-card">
       <div class="guide-header" onclick="toggleGuide()">
-        <span>💡 【使用說明書 · 運作模式與心法】(點擊展開/收合)</span>
+        <span id="guideHeaderTitle">💡 【使用說明書 · 運作模式與心法】(點擊展開/收合)</span>
         <span id="guideArrow">▼</span>
       </div>
       <div class="guide-body" id="guideBody">
@@ -1355,31 +1377,22 @@
           <div class="event-box">
             <div>
               <div class="event-category-title" id="lblEventCatWork">💼 職場工作類：</div>
-              <div class="chip-group">
-                <button type="button" class="chip-btn" onclick="selectEventChip('今日返工開會畀老細刁難，好委屈好大壓力')">開會畀老細刁難</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('OT做到好夜好攰，成個人散晒')">OT超時好攰</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('同同事做嘢有摩擦，滿肚委屈')">同事摩擦受委屈</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('今日順利搞掂個大項目，超有成就感！')">搞掂大project等讚</button>
+              <div class="chip-group" id="chipGroupWork">
+                <!-- Dynamically rendered -->
               </div>
             </div>
 
             <div>
               <div class="event-category-title" id="lblEventCatHealth">💆 身體狀態與操勞：</div>
-              <div class="chip-group">
-                <button type="button" class="chip-btn" onclick="selectEventChip('最近肩頸同腰酸背痛好嚴重，好辛苦')">肩頸腰酸背痛</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('琴晚瞓得好差，失眠頭痛好攰')">失眠頭痛好攰</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('成日忙住煮飯執屋打理屋企，操勞到腰痛')">執屋操勞顧家</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('天氣轉涼好似有少少作感冒唔舒服')">轉天氣唔舒服</button>
+              <div class="chip-group" id="chipGroupHealth">
+                <!-- Dynamically rendered -->
               </div>
             </div>
 
             <div>
               <div class="event-category-title" id="lblEventCatLife">🛍️ 生活小確幸與心願：</div>
-              <div class="chip-group">
-                <button type="button" class="chip-btn" onclick="selectEventChip('行街睇中咗件靚衫但猶豫唔捨得買')">睇中靚衫唔捨得買</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('琴晚睇劇集結局感動到眼濕濕')">睇劇感動到喊</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('食咗餐好食嘅嘢，心情好靚')">食好西心情靚</button>
-                <button type="button" class="chip-btn" onclick="selectEventChip('兩個人鬧咗兩句小脾氣，想搵台階下破冰')">鬧脾氣求破冰</button>
+              <div class="chip-group" id="chipGroupLife">
+                <!-- Dynamically rendered -->
               </div>
             </div>
 
@@ -1722,7 +1735,7 @@
         <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px;">
           付款完成後，點擊下方按鈕發送過數截圖，管理員會即刻透過 WhatsApp 派發一組專屬激活碼給您：
         </p>
-        <a id="btnWhatsappRequestCode" href="https://wa.me/?text=你好！我已轉數快付款HK$98(年度方案)升級最強AI男朋友VIP，附上過數截圖，麻煩發送專屬激活碼！" target="_blank" class="btn-action" style="background: #25D366; text-decoration: none; padding: 10px 14px; font-size: 0.9rem;">
+        <a id="btnWhatsappRequestCode" href="https://wa.me/?text=你好！我已轉數快付款HK$98(年度方案)升級【港男求生必備神器】VIP，附上過數截圖，麻煩發送專屬激活碼！" target="_blank" class="btn-action" style="background: #25D366; text-decoration: none; padding: 10px 14px; font-size: 0.9rem;">
           <span>📲 WhatsApp 傳送截圖領取激活碼</span>
         </a>
       </div>
@@ -2968,15 +2981,13 @@
     "headerBadge": "🔥 頂級情緒價值系統 · 哄妻救命終極武器",
     "headerTitle": "港男求生必備神器 (情緒價值無限放送)",
     "headerSubtitle": "深度心理共情 × 漸進式甜言蜜語 × 吵架求生破冰 × 生活回憶日記",
-    "lblHeaderProducer": "生產商 / 製造者",
-    "lblHeaderDesigner": "設計師",
     "labelLangSelect": "切換語系",
     "tabBtnGenerator": "💬 智慧話術生成",
     "tabBtnDiary": "📖 生活點滴日記",
-    "emergencyTitle": "🚨 夫妻吵架冷戰 · 求生急救包模式",
+    "emergencyTitleText": "🚨 夫妻吵架冷戰 · 求生急救包模式",
     "emergencyBadgeText": "點擊切換為求生模式",
     "emergencyDesc": "當老婆黑面、已讀不回或吵架時專用！不講道理、無藉口真誠認錯、心痛撫平委屈，秒速化解家庭危機。",
-    "guideHeader": "💡 【使用說明書 · 運作模式與心法】(點擊展開/收合)",
+    "guideHeaderTitle": "💡 【使用說明書 · 運作模式與心法】(點擊展開/收合)",
     "ctrlCardTitle": "🎮 情感調度台",
     "labelCategorySelect": "🎭 話術主題與節日快選 (114+ 句庫)",
     "labelCurrentStage": "進程階段 (當前攻略進度)",
@@ -3012,8 +3023,10 @@
     "lblHistoryTitle": "📜 已發送 / 出過嘅說話記錄 (防重複清單)",
     "lblClearHistory": "🗑️ 清空歷史記錄",
     "waStatusText": "在線上 (已讀你的一切)",
-    "profileBtn": "⚙️ 設定對象資料",
-    "vipBtn": "👑 升級 VIP 方案",
+    "btnTopProfile": "⚙️ 對象資料",
+    "btnTopVip": "👑 升級 VIP ($18/月)",
+    "btnTopExport": "💾 匯出備份",
+    "btnAdminPanel": "🛠️ 管理員工具",
     "guestCountPrefix": "免費試用剩餘次數：",
     "footerAppTitle": "港男求生必備神器 (情緒價值無限放送)",
     "lblProducer": "生產商 / 製造者",
@@ -3036,15 +3049,13 @@
     "headerBadge": "🔥 顶配情绪价值引擎 · 哄女友老婆求生指南",
     "headerTitle": "直男恋爱求生神器 (情绪价值无限放送)",
     "headerSubtitle": "高情商心理共情 × 渐进式嘴甜情话 × 吵架破冰急救 × 恋爱生活日记",
-    "lblHeaderProducer": "生产商 / 制造者",
-    "lblHeaderDesigner": "设计师",
     "labelLangSelect": "切换语系",
     "tabBtnGenerator": "💬 智能话术生成",
     "tabBtnDiary": "📖 恋爱生活日记",
-    "emergencyTitle": "🚨 情侣夫妻吵架 · 求生急救包模式",
+    "emergencyTitleText": "🚨 情侣夫妻吵架 · 求生急救包模式",
     "emergencyBadgeText": "点击切换为求生模式",
     "emergencyDesc": "当女友老婆生气、已读不回或冷战时专用！绝不讲大道理、无借口真诚认错、抚平委屈，秒速化解情感危机。",
-    "guideHeader": "💡 【使用说明书 · 运作模式与心法】(点击展开/收起)",
+    "guideHeaderTitle": "💡 【使用说明书 · 运作模式与心法】(点击展开/收起)",
     "ctrlCardTitle": "🎮 情感调度台",
     "labelCategorySelect": "🎭 话术主题与节日快选 (114+ 句库)",
     "labelCurrentStage": "关系阶段 (当前攻略进度)",
@@ -3068,7 +3079,7 @@
     "lblEventCatHealth": "💆 身体状态与操劳：",
     "lblEventCatLife": "🛍️ 生活小确幸与心愿：",
     "optEventHistoryDefault": "-- 选取过去已记录之历史事件 --",
-    "placeholderEventInput": "可直接点上方标签，或手动微调/输入最近发生的事...",
+    "placeholderEventInput": "可直接点击上方标签，或手动微调/输入最近发生的事...",
     "lblSaveEventBtn": "💾 保存此事件到数据库",
     "lblClearEventBtn": "🧹 清空",
     "lblSignoffEnable": "✍️ 启用 Message 结尾签名（自动署名）",
@@ -3076,12 +3087,14 @@
     "btnGenerateText": "🎲 智能生成贴心语录",
     "btnAlternativeText": "🔄 换一句 (保证不重复)",
     "btnCopyText": "📋 一键复制并发送",
-    "copyTipText": "💡 点击后可直接打开聊天软件粘贴发送，每日几句，感情急速升温！",
+    "copyTipText": "💡 点击后可直接打开微信/聊天软件粘贴发送，每日几句，感情急速升温！",
     "lblHistoryTitle": "📜 已发送 / 历史记录清单 (防重复列表)",
     "lblClearHistory": "🗑️ 清空历史记录",
     "waStatusText": "在线上 (已读你的一切)",
-    "profileBtn": "⚙️ 设定伴侣资料",
-    "vipBtn": "👑 升级 VIP 会员",
+    "btnTopProfile": "⚙️ 伴侣设定",
+    "btnTopVip": "👑 升级 VIP (¥18/月)",
+    "btnTopExport": "💾 导出备份",
+    "btnAdminPanel": "🛠️ 管理员后台",
     "guestCountPrefix": "免费试用剩余次数：",
     "footerAppTitle": "直男恋爱求生神器 (情绪价值无限放送)",
     "lblProducer": "生产商 / 制造者",
@@ -3104,15 +3117,13 @@
     "headerBadge": "🔥 Endless Emotional Value · High-EQ Romance & Apology Wingman",
     "headerTitle": "LoveRescue AI: Relationship Saver",
     "headerSubtitle": "Empathetic Validation × Progressive Romance × Conflict De-escalation × Memory Diary",
-    "lblHeaderProducer": "Producer / Studio",
-    "lblHeaderDesigner": "Designer",
     "labelLangSelect": "Language",
     "tabBtnGenerator": "💬 AI Message Generator",
     "tabBtnDiary": "📖 Love & Memory Diary",
-    "emergencyTitle": "🚨 Relationship Emergency & Apology Kit",
-    "emergencyBadgeText": "Click to Toggle Emergency Mode",
+    "emergencyTitleText": "🚨 Relationship Emergency & Apology Kit",
+    "emergencyBadgeText": "⚡ Toggle Emergency",
     "emergencyDesc": "Designed for silent treatments, heated arguments, or cold wars! Zero excuses, pure emotional accountability, and heartfelt de-escalation.",
-    "guideHeader": "💡 【User Guide · Operating Logic & Strategy】(Click to expand)",
+    "guideHeaderTitle": "💡 【User Guide · Operating Logic & Strategy】(Click to expand)",
     "ctrlCardTitle": "🎮 Emotional Control Panel",
     "labelCategorySelect": "🎭 Tone & Holiday Quick Select (114+ Database)",
     "labelCurrentStage": "Relationship Depth & Stage",
@@ -3148,8 +3159,10 @@
     "lblHistoryTitle": "📜 Message History (Anti-Repetition List)",
     "lblClearHistory": "🗑️ Clear History",
     "waStatusText": "Online (Reading your love)",
-    "profileBtn": "⚙️ Persona Settings",
-    "vipBtn": "👑 VIP Membership",
+    "btnTopProfile": "⚙️ Persona Settings",
+    "btnTopVip": "👑 Upgrade VIP ($2.5/mo)",
+    "btnTopExport": "💾 Export Backup",
+    "btnAdminPanel": "🛠️ Admin Console",
     "guestCountPrefix": "Free Trial Messages Remaining: ",
     "footerAppTitle": "LoveRescue AI: Relationship Saver",
     "lblProducer": "Producer / Studio",
@@ -3169,1452 +3182,6 @@
     "guideHtml": "<p><strong>🎯 Core Objective:</strong> Harness the power of emotional resonance and validation to elevate daily partnership into genuine intimacy, making her feel uniquely safe, adored, and cherished.</p><br><p><strong>⚙️ How It Works:</strong></p><ul style=\"padding-left: 20px;\"><li><strong>Progressive Stages:</strong> Advance from Stage 1 (Low-pressure care) → Stage 2 (Safe emotional harbor) → Stage 3 (Feminine elegance praise) → Stage 4 (Unconditional protective pampering).</li><li><strong>Holiday Detection:</strong> Automatically identifies upcoming holidays (Mid-Autumn, Valentine's, Christmas, New Year) to offer festive, high-EQ messages.</li><li><strong>Emergency De-escalation:</strong> Tap the emergency kit during tension or arguments for ego-free apologies and validation.</li><li><strong>Memory Diary:</strong> Document and cherish memorable milestones with one-click export for VIP members!</li></ul>"
   }
 };
-
-  let currentLanguage = localStorage.getItem('ai_bf_lang') || 'zh-HK';
-  let currentCategory = 'stage';
-  let geminiConfig = JSON.parse(localStorage.getItem('ai_bf_gemini') || '{"enabled":false,"key":""}');
-  let activeFestivalData = null;
-
-  // Switch Main Tabs (Generator vs Diary)
-  
-  // Language Management (i18n)
-  function setAppLanguage(lang) {
-    currentLanguage = lang;
-    localStorage.setItem('ai_bf_lang', lang);
-
-    ['hk', 'cn', 'en'].forEach(l => {
-      const btn = document.getElementById('langBtn_' + l);
-      if (btn) btn.classList.remove('active');
-    });
-    if (lang === 'zh-HK') {
-      const b = document.getElementById('langBtn_hk');
-      if (b) b.classList.add('active');
-    } else if (lang === 'zh-CN') {
-      const b = document.getElementById('langBtn_cn');
-      if (b) b.classList.add('active');
-    } else if (lang === 'en') {
-      const b = document.getElementById('langBtn_en');
-      if (b) b.classList.add('active');
-    }
-
-    const dict = i18nDict[lang] || i18nDict['zh-HK'];
-    for (const [key, val] of Object.entries(dict)) {
-      if (key === 'guideHtml') {
-        const gBody = document.getElementById('guideBodyText');
-        if (gBody) gBody.innerHTML = val;
-        continue;
-      }
-      if (key === 'placeholderEventInput') {
-        const evInput = document.getElementById('eventInput');
-        if (evInput) evInput.placeholder = val;
-        continue;
-      }
-      if (key === 'customSignoffInput') {
-        const csInput = document.getElementById('customSignoffInput');
-        if (csInput) csInput.placeholder = val;
-        continue;
-      }
-      const el = document.getElementById(key);
-      if (el) {
-        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
-          el.placeholder = val;
-        } else {
-          el.innerText = val;
-        }
-      }
-    }
-
-    // Update Category Pills
-    const catKeys = ['stage', 'mid_autumn', 'valentines', 'christmas', 'new_year', 'birthday', 'anniversary', 'spring', 'summer', 'autumn', 'winter'];
-    catKeys.forEach(k => {
-      const p = document.getElementById('cat_' + k);
-      if (p && dict['cat_' + k]) {
-        p.innerText = dict['cat_' + k];
-      }
-    });
-
-    initSmartFestival();
-    updateCategoryIndicator();
-    generateMessage(true);
-  }
-
-  // Category & Festival Selector
-  function selectCategory(cat) {
-    currentCategory = cat;
-    document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
-    const targetPill = document.getElementById('cat_' + cat);
-    if (targetPill) targetPill.classList.add('active');
-
-    const stageContainer = document.getElementById('normalStageContainer');
-    if (cat === 'stage') {
-      if (stageContainer) stageContainer.style.display = 'block';
-    } else {
-      if (stageContainer) stageContainer.style.display = 'none';
-    }
-    updateCategoryIndicator();
-    generateMessage();
-  }
-
-  function updateCategoryIndicator() {
-    const indicator = document.getElementById('currentCategoryIndicator');
-    if (!indicator) return;
-    const catNames = {
-      'zh-HK': {
-        'stage': '當前：漸進階段',
-        'mid_autumn': '當前：🌕 中秋佳節',
-        'valentines': '當前：🌹 情人節',
-        'christmas': '當前：🎄 聖誕節',
-        'new_year': '當前：🧧 新春佳節',
-        'birthday': '當前：🎂 生日專屬',
-        'anniversary': '當前：💍 紀念日',
-        'spring': '當前：🌸 春季',
-        'summer': '當前：☀️ 夏季',
-        'autumn': '當前：🍂 秋季',
-        'winter': '當前：❄️ 冬季'
-      },
-      'zh-CN': {
-        'stage': '当前：渐进阶段',
-        'mid_autumn': '当前：🌕 中秋佳节',
-        'valentines': '当前：🌹 情人节',
-        'christmas': '当前：🎄 圣诞节',
-        'new_year': '当前：🧧 新春佳节',
-        'birthday': '当前：🎂 生日专属',
-        'anniversary': '当前：💍 纪念日',
-        'spring': '当前：🌸 春季',
-        'summer': '当前：☀️ 夏季',
-        'autumn': '当前：🍂 秋季',
-        'winter': '当前：❄️ 冬季'
-      },
-      'en': {
-        'stage': 'Current: Progressive Stages',
-        'mid_autumn': 'Current: 🌕 Mid-Autumn',
-        'valentines': 'Current: 🌹 Valentine\'s',
-        'christmas': 'Current: 🎄 Christmas',
-        'new_year': 'Current: 🧧 New Year',
-        'birthday': 'Current: 🎂 Birthday',
-        'anniversary': 'Current: 💍 Anniversary',
-        'spring': 'Current: 🌸 Spring',
-        'summer': 'Current: ☀️ Summer',
-        'autumn': 'Current: 🍂 Autumn',
-        'winter': 'Current: ❄️ Winter'
-      }
-    };
-    const langMap = catNames[currentLanguage] || catNames['zh-HK'];
-    indicator.innerText = langMap[currentCategory] || currentCategory;
-  }
-
-  // Smart Festival Detection
-  function initSmartFestival() {
-    const banner = document.getElementById('smartFestivalBanner');
-    if (!banner) return;
-    const now = new Date();
-    const month = now.getMonth() + 1; // 1-12
-    const day = now.getDate();
-
-    if (month === 9 || (month === 10 && day <= 15)) {
-      activeFestivalData = {
-        key: 'mid_autumn',
-        icon: '🌕',
-        title: {
-          'zh-HK': '🌕 中秋佳節將近（人月兩圓）',
-          'zh-CN': '🌕 中秋佳节临近（人月两圆）',
-          'en': '🌕 Mid-Autumn Festival Approaching'
-        },
-        desc: {
-          'zh-HK': '系統已為你鎖定中秋專屬高情商暖心話術，快啲同老婆甜蜜團圓！',
-          'zh-CN': '系统已为你锁定中秋专属高情商暖心话术，甜蜜升温！',
-          'en': 'Smart detection: romantic Mid-Autumn reunion messages unlocked!'
-        },
-        btn: {
-          'zh-HK': '🏮 一鍵切換中秋話術',
-          'zh-CN': '🏮 一键切换中秋话术',
-          'en': '🏮 Load Mid-Autumn Messages'
-        }
-      };
-    } else if (month === 2) {
-      activeFestivalData = {
-        key: 'valentines',
-        icon: '🌹',
-        title: {
-          'zh-HK': '🌹 情人節浪漫季',
-          'zh-CN': '🌹 情人节浪漫季',
-          'en': '🌹 Valentine\'s Romance Season'
-        },
-        desc: {
-          'zh-HK': '系統已推薦情人節專屬心動與真摯承諾話術！',
-          'zh-CN': '系统已推荐情人节专属心动与真挚誓言话术！',
-          'en': 'Valentine\'s confessions and romantic affirmations ready!'
-        },
-        btn: {
-          'zh-HK': '💘 一鍵切換情人節話術',
-          'zh-CN': '💘 一键切换情人节话术',
-          'en': '💘 Load Valentine\'s Messages'
-        }
-      };
-    } else if (month === 12) {
-      activeFestivalData = {
-        key: 'christmas',
-        icon: '🎄',
-        title: {
-          'zh-HK': '🎄 聖誕暖冬浪漫季',
-          'zh-CN': '🎄 圣诞暖冬浪漫季',
-          'en': '🎄 Christmas Cozy Season'
-        },
-        desc: {
-          'zh-HK': '為你推薦聖誕冬日壁爐與暖心禮物情話！',
-          'zh-CN': '为你推荐圣诞冬日暖心礼物情话，温暖寒冬！',
-          'en': 'Warm Christmas fireside romance and holiday wishes ready!'
-        },
-        btn: {
-          'zh-HK': '🎁 一鍵切換聖誕話術',
-          'zh-CN': '🎁 一键切换圣诞话术',
-          'en': '🎁 Load Christmas Messages'
-        }
-      };
-    } else if (month === 1) {
-      activeFestivalData = {
-        key: 'new_year',
-        icon: '🧧',
-        title: {
-          'zh-HK': '🧧 新春祈願季',
-          'zh-CN': '🧧 新春祈愿季',
-          'en': '🧧 New Year Season'
-        },
-        desc: {
-          'zh-HK': '新一年繼續加倍寵愛她！解鎖歲歲平安與長情話術。',
-          'zh-CN': '新的一年继续加倍宠爱她！解锁岁岁平安与长情话术。',
-          'en': 'Ring in the New Year with heartfelt vows of devotion.'
-        },
-        btn: {
-          'zh-HK': '✨ 一鍵切換新年話術',
-          'zh-CN': '✨ 一键切换新年话术',
-          'en': '✨ Load New Year Messages'
-        }
-      };
-    }
-
-    if (activeFestivalData) {
-      banner.style.display = 'flex';
-      const iconEl = document.getElementById('smartFestivalIcon');
-      const titleEl = document.getElementById('smartFestivalTitle');
-      const descEl = document.getElementById('smartFestivalDesc');
-      const btnEl = document.getElementById('smartFestivalBtn');
-      if (iconEl) iconEl.innerText = activeFestivalData.icon;
-      if (titleEl) titleEl.innerText = activeFestivalData.title[currentLanguage] || activeFestivalData.title['zh-HK'];
-      if (descEl) descEl.innerText = activeFestivalData.desc[currentLanguage] || activeFestivalData.desc['zh-HK'];
-      if (btnEl) btnEl.innerText = activeFestivalData.btn[currentLanguage] || activeFestivalData.btn['zh-HK'];
-    } else {
-      banner.style.display = 'none';
-    }
-  }
-
-  function activateSmartFestival() {
-    if (activeFestivalData) {
-      selectCategory(activeFestivalData.key);
-      showToast(currentLanguage === 'en' ? 'Loaded festive messages!' : '🌕 已為你載入專屬節日高情商話術！');
-    }
-  }
-
-  function switchMainTab(tab) {
-    const btnGen = document.getElementById('tabBtnGenerator');
-    const btnDiary = document.getElementById('tabBtnDiary');
-    const viewGen = document.getElementById('generatorView');
-    const viewDiary = document.getElementById('diaryView');
-
-    if (tab === 'generator') {
-      btnGen.classList.add('active');
-      btnDiary.classList.remove('active');
-      viewGen.style.display = 'block';
-      viewDiary.classList.remove('active');
-    } else {
-      btnGen.classList.remove('active');
-      btnDiary.classList.add('active');
-      viewGen.style.display = 'none';
-      viewDiary.classList.add('active');
-      renderDiaryList();
-    }
-  }
-
-  // Event Tailored Dynamic Synthesizers
-  function synthesizeWithEvent(baseText, eventDescription, lang) {
-    if (!eventDescription || eventDescription.trim() === "") {
-      return baseText;
-    }
-    const cleanEvent = eventDescription.trim();
-    const currentL = lang || currentLanguage || 'zh-HK';
-
-    if (currentL === 'zh-CN') {
-      if (isEmergencyMode) {
-        return `${profile.targetName}，关于「${cleanEvent}」这件事，我真的深刻反省检讨了，完全是${profile.userName}不够体贴细心。你平时付出那么多，我还让你受委屈，我真的很自责心疼。宝贝大人有大量，别再生闷气了，今晚等我好好补偿你，好吗？❤️`;
-      }
-      if (currentCategory !== 'stage') {
-        return `${profile.targetName}，趁着今天提到「${cleanEvent}」，我特别想对你说：有你在我身边，每个特别的日子都有了最温暖的意义。今晚交给我，让我好好陪你。❤️`;
-      }
-      if (currentStage === 2) {
-        return `${profile.targetName}，知道你最近「${cleanEvent}」，看到你这么疲惫我真的特别心疼。你已经做得很棒了，在我面前不用这么强撑，回到家全部交给我${profile.userName}，让我来好好照顾你。❤️`;
-      } else if (currentStage === 1) {
-        return `早安呀${profile.targetName}！一直挂念着你说过的「${cleanEvent}」，今天感觉好点了吗？记得工作再忙也要按时吃口热饭，我会一直在你身后支持你。`;
-      } else if (currentStage === 3) {
-        return `${profile.targetName}，看着你面对「${cleanEvent}」时那种从容与坚定，我真心觉得你身上的知性与优雅无人能及。能与你携手，是我这辈子最大的幸运。`;
-      } else {
-        return `以后「${cleanEvent}」的所有麻烦统统交给我搞定，不准你再为这些琐事皱一下眉头！有我${profile.userName}在，谁都不能让你受委屈。你安心做我捧在手心的小公主就好！👑`;
-      }
-    } else if (currentL === 'en') {
-      if (isEmergencyMode) {
-        return `${profile.targetName}, regarding "${cleanEvent}", I have truly reflected on my actions. It was entirely my lack of sensitivity and attentiveness. You do so much for us, and the last thing you deserve is frustration. Please forgive me—let me make this right with you tonight.❤️`;
-      }
-      if (currentCategory !== 'stage') {
-        return `${profile.targetName}, thinking of "${cleanEvent}" today makes me realize once again how deeply grateful I am to walk through life with you. Let me take care of you tonight.❤️`;
-      }
-      if (currentStage === 2) {
-        return `${profile.targetName}, I know how exhausting "${cleanEvent}" has been on you. Seeing you so tired breaks my heart. You've been extraordinary, but you don't have to carry it alone. Come home and let me take care of everything for you.❤️`;
-      } else if (currentStage === 1) {
-        return `Good morning, ${profile.targetName}! I've been thinking about "${cleanEvent}" that you mentioned. How are you feeling today? Please remember to eat well today—I'm cheering for you always.`;
-      } else if (currentStage === 3) {
-        return `${profile.targetName}, seeing how gracefully you handled "${cleanEvent}" reminds me once again of the poise and wisdom you embody. Being with you is the greatest privilege of my life.`;
-      } else {
-        return `Leave everything about "${cleanEvent}" to me from now on—I won't let you worry for another second! With me here, your only job is to be cherished like royalty.👑`;
-      }
-    } else {
-      // Default zh-HK
-      if (isEmergencyMode) {
-        return `${profile.targetName}，關於「${cleanEvent}」呢件事，我真係深切反省過，完全係${profile.userName}唔夠細心同體諒。你平時付出咁多，我仲惹你唔高興，我真係好心痛自責。老婆你大人有大量，唔好再生悶氣，今晚等我好好補償返畀你，好嘛？❤️`;
-      }
-      if (currentCategory !== 'stage') {
-        return `${profile.targetName}，講起「${cleanEvent}」，我更加覺得身邊有你在真係一生最圓滿嘅事。今晚一切交畀我，等我好好陪你享受！❤️`;
-      }
-      if (currentStage === 2) {
-        return `${profile.targetName}，知你最近「${cleanEvent}」，睇到你咁攰我真係好心痛。你已經做得好出色，喺我面前唔使咁頂硬上，返到嚟全部交畀${profile.userName}，等我好好照顧你。❤️`;
-      } else if (currentStage === 1) {
-        return `早安呀${profile.targetName}！仲記掛住你講過「${cleanEvent}」，今日感覺好啲未？記得忙起上嚟都要按時食飯，我會一直喺度撐住你。`;
-      } else if (currentStage === 3) {
-        return `${profile.targetName}，見到你面對「${cleanEvent}」嗰份從容同堅持，我真心覺得你身上嗰種優雅氣度無人能及。娶到你咁有智慧嘅女人，真係我一生最大嘅幸運。`;
-      } else {
-        return `聽日開始「${cleanEvent}」嘅事交畀我搞，你唔准再為呢啲嘢皺眉頭！有${profile.userName}喺度，無任何人可以令你唔開心。你只要做我被寵壞嘅公主就夠！👑`;
-      }
-    }
-  }
-
-  // Quick Preset Helper
-  function setQuickVal(elemId, val) {
-    document.getElementById(elemId).value = val;
-  }
-
-  function appendTraitChip(trait) {
-    const input = document.getElementById('inputTargetTrait');
-    if (!input.value) {
-      input.value = trait;
-    } else if (!input.value.includes(trait)) {
-      input.value = input.value + '、' + trait;
-    }
-  }
-
-  function selectEventChip(desc) {
-    document.getElementById('eventInput').value = desc;
-    generateMessage();
-    showToast("已載入生活情境！即時生成貼合話術");
-  }
-
-  // Emergency Mode Handling
-  function toggleEmergencyMode() {
-    isEmergencyMode = !isEmergencyMode;
-    const banner = document.getElementById('emergencyBanner');
-    const badge = document.getElementById('emergencyBadgeText');
-    const normalStage = document.getElementById('normalStageContainer');
-    const toneContainer = document.getElementById('toneContainer');
-    const emergencySub = document.getElementById('emergencySubCategory');
-
-    if (isEmergencyMode) {
-      banner.classList.add('active');
-      badge.innerText = "🚨 求生模式生效中 (點擊切回正常)";
-      normalStage.style.display = "none";
-      toneContainer.style.display = "none";
-      emergencySub.style.display = "flex";
-      document.getElementById('customSignoffInput').value = "—— 知道錯咗嘅大頭蝦老公 🥺";
-      showToast("已切換為：🚨 夫妻吵架冷戰求生急救模式！");
-    } else {
-      banner.classList.remove('active');
-      badge.innerText = "點擊切換為求生模式";
-      normalStage.style.display = "flex";
-      toneContainer.style.display = "flex";
-      emergencySub.style.display = "none";
-      document.getElementById('customSignoffInput').value = `—— 永遠最愛你嘅${profile.userName} ❤️`;
-      showToast("已恢復正常進程模式。");
-    }
-    generateMessage();
-  }
-
-  function selectEmergencyTone(tone) {
-    emergencyTone = tone;
-    generateMessage();
-  }
-
-  // Sign-off handling
-  function setSignoffText(text) {
-    document.getElementById('customSignoffInput').value = text;
-    generateMessage();
-  }
-
-  function updateSignoffState() {
-    const enabled = document.getElementById('signoffEnableCheckbox').checked;
-    document.getElementById('signoffControls').style.opacity = enabled ? "1" : "0.5";
-    generateMessage();
-  }
-
-  function getActiveSignoff() {
-    const enabled = document.getElementById('signoffEnableCheckbox').checked;
-    if (!enabled) return "";
-    let signoff = document.getElementById('customSignoffInput').value.trim();
-    if (!signoff) {
-      signoff = `—— 永遠最愛你嘅${profile.userName} ❤️`;
-    }
-    return `
-
-${signoff}`;
-  }
-
-  // ==========================================
-  // DIARY & COPY-PROTECTION SYSTEM
-  // ==========================================
-  function setDiaryMoodBtn(btn, mood) {
-    currentDiaryMood = mood;
-    const container = document.getElementById('diaryMoodChipsContainer');
-    if (container) {
-      const btns = container.querySelectorAll('.chip-btn');
-      btns.forEach(b => b.classList.remove('active'));
-    }
-    if (btn) btn.classList.add('active');
-    updateLivePreview();
-  }
-
-  function quickFillDiaryPreset(title, mood, body, quote) {
-    document.getElementById('diaryTitleInput').value = title;
-    document.getElementById('diaryContentInput').value = body;
-    document.getElementById('diaryQuoteInput').value = quote;
-    currentDiaryMood = mood;
-
-    // Highlight mood button
-    const container = document.getElementById('diaryMoodChipsContainer');
-    if (container) {
-      const btns = container.querySelectorAll('.chip-btn');
-      btns.forEach(b => {
-        if (b.innerText.includes(mood.replace(/[^\u4e00-\u9fa5]/g, ''))) {
-          b.classList.add('active');
-        } else {
-          b.classList.remove('active');
-        }
-      });
-    }
-
-    updateLivePreview();
-    showToast("已載入生活範本！右邊已顯示即時預覽，點擊寫入即可保存！");
-  }
-
-  function updateLivePreview() {
-    const title = document.getElementById('diaryTitleInput').value.trim();
-    const body = document.getElementById('diaryContentInput').value.trim();
-    const quote = document.getElementById('diaryQuoteInput').value.trim();
-    const previewCard = document.getElementById('diaryLivePreviewCard');
-
-    if (!title && !body && !quote) {
-      if (previewCard) previewCard.style.display = 'none';
-      return;
-    }
-
-    if (previewCard) {
-      previewCard.style.display = 'block';
-      document.getElementById('previewMoodBadge').innerText = currentDiaryMood || '🥰 生活點滴';
-      document.getElementById('previewTitle').innerText = title || "（未命名點滴標題）";
-      document.getElementById('previewBody').innerText = body || "（請輸入具體溫暖故事細節...）";
-      
-      const qElem = document.getElementById('previewQuote');
-      if (quote) {
-        qElem.style.display = 'block';
-        qElem.innerText = `💬 「${quote}」`;
-      } else {
-        qElem.style.display = 'none';
-      }
-    }
-  }
-
-  function saveDiaryEntry() {
-    let title = document.getElementById('diaryTitleInput').value.trim();
-    let body = document.getElementById('diaryContentInput').value.trim();
-    const quote = document.getElementById('diaryQuoteInput').value.trim();
-
-    // Flexible tolerance: if only body is filled, auto-generate title
-    if (!title && body) {
-      title = body.length > 18 ? body.substring(0, 18) + '...' : body;
-    } else if (title && !body) {
-      body = title;
-    } else if (!title && !body) {
-      showToast("⚠️ 請先在左側填寫標題或生活細節！");
-      return;
-    }
-
-    const now = new Date();
-    const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-    const newEntry = {
-      id: "D-" + Date.now(),
-      date: dateStr,
-      title: title,
-      mood: currentDiaryMood || "🥰 甜蜜心動",
-      body: body,
-      quote: quote
-    };
-
-    diaryEntries.unshift(newEntry);
-    localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));
-    syncEntryToCloud(newEntry);
-    renderDiaryList();
-
-    // Reset inputs & hide live preview
-    document.getElementById('diaryTitleInput').value = "";
-    document.getElementById('diaryContentInput').value = "";
-    document.getElementById('diaryQuoteInput').value = "";
-    const previewCard = document.getElementById('diaryLivePreviewCard');
-    if (previewCard) previewCard.style.display = 'none';
-
-    // Scroll diary timeline to top
-    const container = document.getElementById('diaryEntriesList');
-    if (container) container.scrollTop = 0;
-
-    showToast("🎉 成功寫入！右邊時光牆已即時更新第一條回憶！");
-  }
-
-  function syncEventsToDiary() {
-    if (!savedEvents || savedEvents.length === 0) {
-      showToast("首頁暫無已儲存的生活事件。請先在話術台記錄事件！");
-      return;
-    }
-
-    let addedCount = 0;
-    const now = new Date();
-    savedEvents.forEach((evt, idx) => {
-      // Check if already in diary
-      if (!diaryEntries.some(d => d.body === evt || d.title === evt)) {
-        const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-        diaryEntries.unshift({
-          id: "D-SYNC-" + Date.now() + "-" + idx,
-          date: dateStr,
-          title: evt.length > 20 ? evt.substring(0, 20) + "..." : evt,
-          mood: "☕ 暖心陪伴",
-          body: evt,
-          quote: "有我喺度，永遠做你嘅避風港。"
-        });
-        addedCount++;
-      }
-    });
-
-    if (addedCount > 0) {
-      localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));
-      renderDiaryList();
-      showToast(`✅ 成功從首頁同步 ${addedCount} 條生活事件到時光牆！`);
-    } else {
-      showToast("首頁的所有生活事件已全部存在於時光牆中！");
-    }
-  }
-
-  function deleteDiaryEntry(id) {
-    if (confirm("確定要刪除呢則生活點滴回憶嗎？")) {
-      diaryEntries = diaryEntries.filter(d => d.id !== id);
-      localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));
-      deleteEntryFromCloud(id);
-      renderDiaryList();
-      showToast("已刪除該條生活回憶。");
-    }
-  }
-
-  function renderDiaryList() {
-    const container = document.getElementById('diaryEntriesList');
-    if (!container) return;
-
-    if (!diaryEntries || diaryEntries.length === 0) {
-      container.innerHTML = '<div style="font-size:0.88rem; color:#92400e; padding:20px; text-align:center;">暫無日記記錄，快在左側寫下今日溫暖點滴啦！</div>';
-      return;
-    }
-
-    container.innerHTML = "";
-    diaryEntries.forEach((entry) => {
-      const card = document.createElement('div');
-      card.className = 'diary-entry-card';
-      card.innerHTML = `
-        <div class="diary-entry-date">
-          <span>📅 ${entry.date}</span>
-          <div style="display:flex; align-items:center; gap:6px;">
-            <span style="background:#fef3c7; color:#b45309; padding:2px 8px; border-radius:999px; font-size:0.75rem;">${entry.mood || '🥰 生活點滴'}</span>
-            <button type="button" onclick="deleteDiaryEntry('${entry.id}')" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:0.75rem;" title="刪除此則記錄">🗑️</button>
-          </div>
-        </div>
-        <div class="diary-entry-title">
-          <span>💖</span>
-          <span>${entry.title}</span>
-        </div>
-        <div class="diary-entry-body">
-          ${entry.body}
-        </div>
-        ${entry.quote ? `<div class="diary-quote-bubble"><span>💬</span><span>「${entry.quote}」</span></div>` : ''}
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  // Copy protection handlers for Non-VIP
-  function handleDiaryCopyAttempt(e) {
-    if (!isVip) {
-      e.preventDefault();
-      openVipModal();
-      showToast("🔒 此為私人生活回憶錄，解鎖 VIP 後即可自由複製與匯出！");
-      return false;
-    }
-  }
-
-  function handleDiaryContextMenu(e) {
-    if (!isVip) {
-      e.preventDefault();
-      showToast("🔒 私隱防護中：日記不可右鍵複製");
-      return false;
-    }
-  }
-
-  function handleDiarySelectStart(e) {
-    if (!isVip) {
-      // Allow scroll, but restrict text selection
-      return false;
-    }
-  }
-
-  function handleCopyEntireDiary() {
-    if (!isVip) {
-      openVipModal();
-      showToast("🔒 複製全本日記為 VIP 專屬特權，請先解鎖！");
-      return;
-    }
-
-    let fullText = `【${profile.targetName} 與 ${profile.userName} 的專屬生活點滴回憶錄】
-
-`;
-    diaryEntries.forEach((d) => {
-      fullText += `📅 ${d.date} | ${d.mood}
-`;
-      fullText += `💖 ${d.title}
-`;
-      fullText += `${d.body}
-`;
-      if (d.quote) fullText += `💬 「${d.quote}」
-`;
-      fullText += `----------------------------------------
-
-`;
-    });
-
-    copySpecificText(fullText);
-    showToast("✅ 已成功複製整本生活回憶錄到剪貼簿！");
-  }
-
-  // ==========================================
-  // VIP SYSTEM & COUNTDOWN
-  // ==========================================
-  function openVipModal() {
-    document.getElementById('vipModal').classList.add('active');
-  }
-
-  function closeVipModal() {
-    document.getElementById('vipModal').classList.remove('active');
-  }
-
-  function toggleTestVipStatus() {
-    isVip = !isVip;
-    localStorage.setItem('ai_bf_is_vip', isVip ? 'true' : 'false');
-    updateVipUI();
-    showToast(isVip ? "🎉 恭喜！已啟用 VIP 特權，日記複製保護已解除！" : "已切換回免費版。");
-  }
-
-  function updateVipUI() {
-    const badge = document.getElementById('uiVipBadge');
-    const diaryBadge = document.getElementById('diaryCopyStatusBadge');
-    const wall = document.getElementById('diaryWallContainer');
-    const testText = document.getElementById('testVipStatusText');
-
-    if (isVip) {
-      badge.innerText = "👑 尊貴VIP";
-      badge.style.background = "#fef08a";
-      badge.style.color = "#854d0e";
-      if (diaryBadge) {
-        diaryBadge.innerHTML = "<span>👑 VIP 特權已解鎖：支援自由複製</span>";
-        diaryBadge.style.background = "#dcfce7";
-        diaryBadge.style.color = "#15803d";
-        diaryBadge.style.borderColor = "#86efac";
-      }
-      if (wall) wall.classList.add('unlocked');
-      if (testText) testText.innerText = "👑 已是VIP";
-    } else {
-      badge.innerText = "免費版";
-      badge.style.background = "#fef3c7";
-      badge.style.color = "#b45309";
-      if (diaryBadge) {
-        diaryBadge.innerHTML = "<span>🔒 私隱防護中：日記不可複製</span>";
-        diaryBadge.style.background = "rgba(220, 38, 38, 0.1)";
-        diaryBadge.style.color = "#b91c1c";
-        diaryBadge.style.borderColor = "rgba(220, 38, 38, 0.25)";
-      }
-      if (wall) wall.classList.remove('unlocked');
-      if (testText) testText.innerText = "免費版";
-    }
-  }
-
-  // Countdown timer logic (e.g. 23 hours rolling countdown)
-  function initCountdown() {
-    let timeLeft = 24 * 3600 - 1; // 23:59:59
-    setInterval(() => {
-      timeLeft--;
-      if (timeLeft < 0) timeLeft = 24 * 3600;
-      const h = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
-      const m = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
-      const s = String(timeLeft % 60).padStart(2, '0');
-      const timeStr = `${h}:${m}:${s}`;
-      const disp1 = document.getElementById('vipCountdownDisplay');
-      const disp2 = document.getElementById('modalVipTimer');
-      if (disp1) disp1.innerText = timeStr;
-      if (disp2) disp2.innerText = timeStr;
-    }, 1000);
-  }
-
-  
-  // ==========================================
-  // SHARE LINK & EXCLUSIVE PASSWORD LOGIC (VIP)
-  // ==========================================
-  let sharePayload = null;
-
-  let selectedShareEntryIds = [];
-
-  function handleOpenShareModal() {
-    if (!isVip) {
-      openVipModal();
-      showToast("🔒 生成太太專屬加密分享連結為 VIP 特權，請先解鎖！");
-      return;
-    }
-    loadCustomPublicUrl();
-    renderShareChecklist();
-    setSharePreset(1);
-    openShareModal();
-  }
-
-  function openShareModal() {
-    updateSharePreview();
-    document.getElementById('shareModal').classList.add('active');
-  }
-
-  function closeShareModal() {
-    document.getElementById('shareModal').classList.remove('active');
-  }
-
-  function loadCustomPublicUrl() {
-    const saved = localStorage.getItem('ai_bf_public_url');
-    const input = document.getElementById('customPublicUrlInput');
-    if (!input) return;
-    if (saved) {
-      input.value = saved;
-    } else {
-      // Default to current url if not file:///
-      if (!window.location.href.startsWith('file://')) {
-        input.value = window.location.href.split('#')[0];
-      }
-    }
-  }
-
-  function saveCustomPublicUrl() {
-    const input = document.getElementById('customPublicUrlInput');
-    if (!input) return;
-    const val = input.value.trim();
-    localStorage.setItem('ai_bf_public_url', val);
-    updateSharePreview();
-  }
-
-  function setQuickPublicUrl(url) {
-    document.getElementById('customPublicUrlInput').value = url;
-    saveCustomPublicUrl();
-  }
-
-  function useCurrentBrowserUrl() {
-    const cleanUrl = window.location.href.split('#')[0];
-    document.getElementById('customPublicUrlInput').value = cleanUrl;
-    saveCustomPublicUrl();
-  }
-
-  function setSharePassword(pwd) {
-    document.getElementById('sharePasswordInput').value = pwd;
-    updateSharePreview();
-  }
-
-  function renderShareChecklist() {
-    const container = document.getElementById('shareEntriesChecklist');
-    container.innerHTML = "";
-
-    if (!diaryEntries || diaryEntries.length === 0) {
-      container.innerHTML = '<div style="color:var(--slate-600); font-size:0.8rem;">暫無回憶記錄</div>';
-      selectedShareEntryIds = [];
-      return;
-    }
-
-    // By default select all
-    selectedShareEntryIds = diaryEntries.map(d => d.id);
-
-    diaryEntries.forEach((entry) => {
-      const label = document.createElement('label');
-      label.style.cssText = "display: flex; align-items: center; gap: 8px; cursor: pointer;";
-      label.innerHTML = `
-        <input type="checkbox" checked value="${entry.id}" onchange="onToggleShareEntry(this, '${entry.id}')">
-        <span><strong>${entry.title}</strong> <span style="color:var(--slate-600); font-size:0.75rem;">(${entry.date})</span></span>
-      `;
-      container.appendChild(label);
-    });
-  }
-
-  function onToggleShareEntry(checkbox, id) {
-    if (checkbox.checked) {
-      if (!selectedShareEntryIds.includes(id)) selectedShareEntryIds.push(id);
-    } else {
-      selectedShareEntryIds = selectedShareEntryIds.filter(item => item !== id);
-    }
-    updateSharePreview();
-  }
-
-  function setSharePreset(type) {
-    const target = profile.targetName || "老婆";
-    const user = profile.userName || "老公";
-    let msg = "";
-
-    if (type === 1) {
-      msg = `${target}，呢個係我為你悄悄寫低嘅「專屬生活點滴回憶錄」。裡面記錄咗我哋走過嘅每一個溫暖瞬間，只屬於你一個人。點擊專屬連結入去睇下，解鎖密碼係我哋專屬嘅紀念密碼！❤️`;
-    } else if (type === 2) {
-      msg = `送給我最愛嘅${target} 🎁 琴晚瞓唔著，將我哋平時好笑又溫馨嘅生活點滴整理咗出嚟。請查收這份愛的時光回憶錄，解鎖密碼喺下面！`;
-    } else {
-      msg = `${target}，唔好再生我氣啦好嘛？我做錯咗好多嘢，但我將你為屋企付出嘅點滴同我對你嘅愛都記錄低咗。點擊專屬連結睇下，我永遠企喺你呢邊。🥺❤️`;
-    }
-
-    document.getElementById('shareInviteMessageInput').value = msg;
-    updateSharePreview();
-  }
-
-  function generateShareUrl() {
-    const pwd = document.getElementById('sharePasswordInput').value.trim() || "5201314";
-    
-    // Filter only selected entries (removes duplicates!)
-    const filteredEntries = diaryEntries.filter(d => selectedShareEntryIds.includes(d.id));
-
-    const packageData = {
-      target: profile.targetName || "老婆",
-      user: profile.userName || "老公",
-      pwd: pwd,
-      entries: filteredEntries
-    };
-
-    const jsonStr = JSON.stringify(packageData);
-    const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-    
-    // Use custom public URL if set, otherwise fallback to current URL
-    let baseUrl = document.getElementById('customPublicUrlInput') ? document.getElementById('customPublicUrlInput').value.trim() : "";
-    if (!baseUrl) {
-      baseUrl = window.location.href.split('#')[0];
-    }
-
-    return `${baseUrl}#share=${encoded}`;
-  }
-
-  function updateSharePreview() {
-    const pwdElem = document.getElementById('sharePasswordInput');
-    if (!pwdElem) return;
-    const pwd = pwdElem.value.trim() || "5201314";
-    const invite = document.getElementById('shareInviteMessageInput').value.trim();
-    const shareUrl = generateShareUrl();
-
-    const fullMessage = `${invite}
-
-🔗 專屬回憶錄網址：
-${shareUrl}
-
-🔑 專屬解鎖密碼：${pwd}
-
-—— ${profile.userName} 專屬呈獻 💍`;
-    document.getElementById('fullInvitePreview').innerText = fullMessage;
-  }
-
-  function copyFullInviteMessage() {
-    updateSharePreview();
-    const text = document.getElementById('fullInvitePreview').innerText;
-    copySpecificText(text);
-    showToast("✅ 已複製專屬邀請函與加密連結！可直接發給太太");
-  }
-
-  // ==========================================
-  // PARTNER READER MODE (TRIGGERED BY #share=)
-  // ==========================================
-  function checkUrlForShareMode() {
-    const hash = window.location.hash;
-    if (hash && hash.includes('#share=')) {
-      try {
-        const b64 = hash.replace('#share=', '');
-        const jsonStr = decodeURIComponent(escape(atob(b64)));
-        sharePayload = JSON.parse(jsonStr);
-
-        if (sharePayload && sharePayload.target && sharePayload.entries) {
-          launchPartnerReader(sharePayload);
-        }
-      } catch(e) {
-        console.error("Failed to parse share payload:", e);
-      }
-    }
-  }
-
-  function launchPartnerReader(data) {
-    const reader = document.getElementById('partnerReaderView');
-    reader.style.display = 'block';
-
-    document.getElementById('readerLockTitle').innerText = `親愛的 ${data.target}`;
-    document.getElementById('readerLockSender').innerText = data.user || "老公";
-    document.getElementById('readerErrorMsg').style.display = "none";
-
-    // Check if password was remembered on this device
-    const savedPwd = localStorage.getItem('partner_saved_pwd_' + data.target);
-    if (savedPwd && savedPwd.trim() === (data.pwd || "").trim()) {
-      // Auto-unlock!
-      document.getElementById('readerLockCard').style.display = "none";
-      document.getElementById('readerContentCard').style.display = "flex";
-      document.getElementById('readerUnlockedTitle').innerText = `${data.target} 與 ${data.user} 的專屬時光回憶錄`;
-      renderPartnerTimeline(data.entries);
-      showToast("💖 已自動使用已記住的專屬密碼解鎖，歡迎回來！");
-      return;
-    }
-
-    document.getElementById('readerPasswordInput').value = "";
-    document.getElementById('readerLockCard').style.display = "block";
-    document.getElementById('readerContentCard').style.display = "none";
-  }
-
-  function unlockPartnerDiary() {
-    if (!sharePayload) return;
-    const entered = document.getElementById('readerPasswordInput').value.trim();
-    const expected = (sharePayload.pwd || "").trim();
-
-    if (entered === expected) {
-      // If remember checkbox checked, save to localStorage
-      const rememberCheckbox = document.getElementById('readerRememberPwd');
-      if (rememberCheckbox && rememberCheckbox.checked) {
-        localStorage.setItem('partner_saved_pwd_' + sharePayload.target, entered);
-      }
-
-      document.getElementById('readerLockCard').style.display = "none";
-      document.getElementById('readerContentCard').style.display = "flex";
-      document.getElementById('readerUnlockedTitle').innerText = `${sharePayload.target} 與 ${sharePayload.user} 的專屬時光回憶錄`;
-
-      renderPartnerTimeline(sharePayload.entries);
-      showToast("🎉 解鎖成功！歡迎進入專屬時光回憶錄");
-    } else {
-      const err = document.getElementById('readerErrorMsg');
-      err.style.display = "block";
-      const input = document.getElementById('readerPasswordInput');
-      input.style.borderColor = "#dc2626";
-      input.focus();
-    }
-  }
-
-  function forgetSavedPassword() {
-    if (sharePayload && sharePayload.target) {
-      localStorage.removeItem('partner_saved_pwd_' + sharePayload.target);
-    }
-    showToast("🔒 已清除此裝置記住的密碼。下次開啟需重新輸入密碼。");
-    document.getElementById('readerLockCard').style.display = "block";
-    document.getElementById('readerContentCard').style.display = "none";
-    document.getElementById('readerPasswordInput').value = "";
-  }
-
-  function renderPartnerTimeline(entries) {
-    const container = document.getElementById('readerTimelineList');
-    container.innerHTML = "";
-
-    if (!entries || entries.length === 0) {
-      container.innerHTML = '<div style="background:white; padding:20px; border-radius:12px; text-align:center;">暫無回憶記錄</div>';
-      return;
-    }
-
-    entries.forEach((entry) => {
-      const card = document.createElement('div');
-      card.style.cssText = "background: white; border-radius: 16px; padding: 22px; box-shadow: var(--shadow); border: 1.5px solid #fed7aa; display: flex; flex-direction: column; gap: 10px;";
-      card.innerHTML = `
-        <div style="font-size: 0.8rem; font-weight: 700; color: #92400e; display: flex; justify-content: space-between;">
-          <span>📅 ${entry.date}</span>
-          <span style="background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 999px;">${entry.mood || '🥰 溫暖點滴'}</span>
-        </div>
-        <div style="font-size: 1.15rem; font-weight: 800; color: #1e293b; display: flex; align-items: center; gap: 6px;">
-          <span>💖</span> <span>${entry.title}</span>
-        </div>
-        <div style="font-size: 0.95rem; color: #475569; line-height: 1.7; background: #fffdfa; padding: 12px 14px; border-radius: 10px; border-left: 3px solid #f59e0b;">
-          ${entry.body}
-        </div>
-        ${entry.quote ? `<div style="background: #fdf2f8; border-radius: 8px; padding: 10px 14px; font-size: 0.88rem; color: #be123c; font-style: italic;">💬 「${entry.quote}」</div>` : ''}
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  function exitReaderMode() {
-    window.location.hash = "";
-    document.getElementById('partnerReaderView').style.display = 'none';
-  }
-
-  
-  // ==========================================
-  // SUPABASE CLOUD DATABASE CONFIG & SYNC
-  // ==========================================
-  const SUPABASE_URL = "https://dyclbjiqcqesxtphjbtn.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_jI6taTaoa2EUBcYx90D3wQ_el5DbCom";
-  let supabaseClient = null;
-
-  function initSupabase() {
-    if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
-      try {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log("Supabase Client initialized successfully!");
-        updateCloudStatusUI(true);
-        syncFromSupabase();
-      } catch(e) {
-        console.warn("Supabase init error:", e);
-        updateCloudStatusUI(false);
-      }
-    } else {
-      updateCloudStatusUI(false);
-    }
-  }
-
-  function updateCloudStatusUI(connected) {
-    const badge = document.getElementById('uiCloudBadge');
-    if (!badge) return;
-    if (connected) {
-      badge.innerHTML = '<span style="width:6px; height:6px; border-radius:50%; background:#10b981;"></span> 雲端已連線 (Supabase)';
-      badge.style.background = "#ecfdf5";
-      badge.style.color = "#047857";
-    } else {
-      badge.innerHTML = '<span style="width:6px; height:6px; border-radius:50%; background:#f59e0b;"></span> 本機模式 (離線儲存)';
-      badge.style.background = "#fffbeb";
-      badge.style.color = "#b45309";
-    }
-  }
-
-  async function syncFromSupabase() {
-    if (!supabaseClient) return;
-    try {
-      // 1. Fetch Profile
-      const { data: profData } = await supabaseClient.from('profiles').select('*').eq('id', 'default_profile').maybeSingle();
-      if (profData) {
-        profile.userName = profData.user_name || profile.userName;
-        profile.targetName = profData.target_name || profile.targetName;
-        profile.gender = profData.gender || profile.gender;
-        profile.relationship = profData.relationship || profile.relationship;
-        profile.targetTrait = profData.target_trait || profile.targetTrait;
-        localStorage.setItem('ai_bf_profile', JSON.stringify(profile));
-        renderProfileUI();
-      }
-
-      // 2. Fetch Diaries
-      const { data: dbDiaries, error: dErr } = await supabaseClient.from('diary_entries').select('*').order('created_at', { ascending: false });
-      if (!dErr && dbDiaries && dbDiaries.length > 0) {
-        // Merge with local diaries (cloud takes precedence)
-        diaryEntries = dbDiaries.map(item => ({
-          id: item.id,
-          date: item.date,
-          title: item.title,
-          mood: item.mood,
-          body: item.body,
-          quote: item.quote
-        }));
-        localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));
-        renderDiaryList();
-        console.log("Synced diaries from Supabase successfully! Count:", diaryEntries.length);
-      }
-    } catch(err) {
-      console.warn("Supabase fetch failed, fallback to local:", err);
-    }
-  }
-
-  function syncEntryToCloud(newEntry) {
-    if (!supabaseClient) return;
-    supabaseClient.from('diary_entries').upsert([{
-      id: newEntry.id,
-      date: newEntry.date,
-      title: newEntry.title,
-      mood: newEntry.mood,
-      body: newEntry.body,
-      quote: newEntry.quote,
-      target_name: profile.targetName || "老婆",
-      user_name: profile.userName || "老公"
-    }]).then(({ error }) => {
-      if (error) {
-        console.warn("Cloud save error (diary):", error);
-      } else {
-        console.log("Successfully saved diary entry to Supabase cloud!");
-      }
-    });
-  }
-
-  function deleteEntryFromCloud(id) {
-    if (!supabaseClient) return;
-    supabaseClient.from('diary_entries').delete().eq('id', id).then(({ error }) => {
-      if (!error) console.log("Deleted entry from Supabase cloud:", id);
-    });
-  }
-
-  function syncProfileToCloud() {
-    if (!supabaseClient) return;
-    supabaseClient.from('profiles').upsert([{
-      id: 'default_profile',
-      user_name: profile.userName,
-      target_name: profile.targetName,
-      gender: profile.gender,
-      relationship: profile.relationship,
-      target_trait: profile.targetTrait,
-      is_vip: isVip,
-      updated_at: new Date().toISOString()
-    }]).then(({ error }) => {
-      if (!error) console.log("Profile synced to Supabase cloud!");
-    });
-  }
-
-  
-  // ==========================================
-  // AUTH, ADMIN & 3-DAY TRIAL MANAGEMENT
-  // ==========================================
-  let currentUser = null; // null (guest), { role: 'admin', name: 'Jason' }, or { email, role: 'user' }
-  let guestGenCount = 0;
-  let selectedPlan = 'annual'; // 'monthly' ($18) or 'annual' ($98)
-
-  function checkUserSession() {
-    const savedUser = localStorage.getItem('ai_bf_user_session');
-    if (savedUser) {
-      try {
-        currentUser = JSON.parse(savedUser);
-      } catch(e) {}
-    }
-    
-    // Check if guest generation count stored for today
-    const todayStr = new Date().toISOString().split('T')[0];
-    const savedCountDate = localStorage.getItem('ai_bf_guest_date');
-    if (savedCountDate === todayStr) {
-      guestGenCount = parseInt(localStorage.getItem('ai_bf_guest_count') || '0', 10);
-    } else {
-      guestGenCount = 0;
-      localStorage.setItem('ai_bf_guest_date', todayStr);
-      localStorage.setItem('ai_bf_guest_count', '0');
-    }
-
-    updateUserAuthUI();
-  }
-
-  function updateUserAuthUI() {
-    const btnAuth = document.getElementById('btnUserAuth');
-    const btnAdmin = document.getElementById('btnAdminPanel');
-    const badge = document.getElementById('uiVipBadge');
-
-    if (currentUser && currentUser.role === 'admin') {
-      isVip = true;
-      if (btnAuth) btnAuth.innerHTML = '👑 管理員: Jason';
-      if (btnAdmin) btnAdmin.style.display = 'inline-flex';
-      if (badge) {
-        badge.innerText = '👑 超級管理員';
-        badge.style.background = '#fef08a';
-        badge.style.color = '#854d0e';
-      }
-    } else if (currentUser && currentUser.role === 'user') {
-      if (btnAdmin) btnAdmin.style.display = 'none';
-      if (btnAuth) btnAuth.innerHTML = `👤 ${currentUser.email.split('@')[0]} (登出)`;
-      checkTrialOrVipExpiry();
-    } else {
-      // Guest
-      if (btnAdmin) btnAdmin.style.display = 'none';
-      if (btnAuth) btnAuth.innerHTML = '👤 登入 / 註冊';
-      isVip = false;
-      if (badge) {
-        badge.innerText = `訪客 (今日餘 ${Math.max(0, 3 - guestGenCount)} 次)`;
-        badge.style.background = '#fef3c7';
-        badge.style.color = '#b45309';
-      }
-    }
-
-    updateVipUI();
-  }
-
-  function checkTrialOrVipExpiry() {
-    const badge = document.getElementById('uiVipBadge');
-    if (!currentUser || currentUser.role !== 'user') return;
-
-    const expiryTime = currentUser.vip_expires_at ? new Date(currentUser.vip_expires_at).getTime() : 0;
-    const now = Date.now();
-
-    if (expiryTime > now) {
-      isVip = true;
-      const diffDays = Math.ceil((expiryTime - now) / (1000 * 60 * 60 * 24));
-      if (currentUser.is_trial) {
-        badge.innerText = `⏳ 3日VIP體驗 (餘 ${diffDays} 天)`;
-        badge.style.background = '#fef08a';
-        badge.style.color = '#854d0e';
-      } else {
-        badge.innerText = `👑 正式VIP (餘 ${diffDays} 天)`;
-        badge.style.background = '#fef08a';
-        badge.style.color = '#854d0e';
-      }
-    } else {
-      // Expired!
-      isVip = false;
-      badge.innerText = '⚠️ VIP已到期 (點此續費)';
-      badge.style.background = '#fee2e2';
-      badge.style.color = '#b91c1c';
-    }
-  }
-
-  function openAuthModal() {
-    if (currentUser) {
-      if (confirm(`目前已登入：${currentUser.name || currentUser.email}，確定要登出嗎？`)) {
-        currentUser = null;
-        localStorage.removeItem('ai_bf_user_session');
-        updateUserAuthUI();
-        showToast("已成功登出。已切換為訪客模式。");
-      }
-      return;
-    }
-    document.getElementById('authModal').classList.add('active');
-  }
-
-  function closeAuthModal() {
-    document.getElementById('authModal').classList.remove('active');
-  }
-
-  function switchAuthTab(tab) {
-    const tUser = document.getElementById('tabAuthUser');
-    const tAdmin = document.getElementById('tabAuthAdmin');
-    const pUser = document.getElementById('panelAuthUser');
-    const pAdmin = document.getElementById('panelAuthAdmin');
-
-    if (tab === 'user') {
-      tUser.classList.add('active');
-      tAdmin.classList.remove('active');
-      pUser.style.display = 'flex';
-      pAdmin.style.display = 'none';
-    } else {
-      tUser.classList.remove('active');
-      tAdmin.classList.add('active');
-      pUser.style.display = 'none';
-      pAdmin.style.display = 'flex';
-    }
-  }
-
-  // Handle Admin Login (Jason / 97242234#)
-  function handleAdminLogin() {
-    const u = document.getElementById('adminUsernameInput').value.trim();
-    const p = document.getElementById('adminPasswordInput').value.trim();
-
-    if (u === 'Jason' && p === '97242234#') {
-      currentUser = {
-        role: 'admin',
-        name: 'Jason',
-        is_vip: true
-      };
-      localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-      closeAuthModal();
-      updateUserAuthUI();
-      showToast("👑 歡迎回來，超級管理員 Jason！全系統功能已永久解鎖！");
-    } else {
-      alert("管理員帳號或密碼錯誤！");
-    }
-  }
-
-  // Handle User Registration with Mode A (3-day Trial)
-  function handleUserSignUp() {
-    const email = document.getElementById('userEmailInput').value.trim();
-    const pwd = document.getElementById('userPasswordInput').value.trim();
-    const code = document.getElementById('userRegCodeInput').value.trim().toUpperCase();
-
-    if (!email || !pwd || pwd.length < 6) {
-      alert("請輸入有效的電郵及至少 6 位數密碼！");
-      return;
-    }
-
-    // Check if entered activation code
-    let isTrial = true;
-    let days = 3; // default Mode A 3 days free trial
-    if (code.startsWith('VIP-1Y')) {
-      isTrial = false;
-      days = 365;
-    } else if (code.startsWith('VIP-1M')) {
-      isTrial = false;
-      days = 30;
-    }
-
-    const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
-
-    currentUser = {
-      role: 'user',
-      email: email,
-      is_trial: isTrial,
-      vip_expires_at: expiryDate
-    };
-
-    localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-    closeAuthModal();
-    updateUserAuthUI();
-    showToast(isTrial ? "🎉 註冊成功！已為您自動開通 3 天全功能免費 VIP 體驗！" : "🎉 註冊並激活成功！VIP 權限已開通！");
-  }
-
-  function handleUserSignIn() {
-    const email = document.getElementById('userEmailInput').value.trim();
-    const pwd = document.getElementById('userPasswordInput').value.trim();
-
-    if (!email || !pwd) {
-      alert("請輸入電郵與密碼！");
-      return;
-    }
-
-    // Simple signin simulation / recovery
-    const expiryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
-    currentUser = {
-      role: 'user',
-      email: email,
-      is_trial: true,
-      vip_expires_at: expiryDate
-    };
-
-    localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-    closeAuthModal();
-    updateUserAuthUI();
-    showToast("✅ 登入成功！");
-  }
-
-  // Redeem Code in VIP Modal
-  function redeemActivationCode() {
-    const code = document.getElementById('activationCodeInput').value.trim().toUpperCase();
-    if (!code) {
-      alert("請輸入激活碼！");
-      return;
-    }
-
-    let days = 0;
-    if (code.includes('1M') || code.startsWith('M18')) {
-      days = 30;
-    } else if (code.includes('1Y') || code.startsWith('Y98')) {
-      days = 365;
-    } else if (code.includes('ADMIN') || code.includes('FOREVER')) {
-      days = 3650;
-    } else {
-      // Default grant 30 days
-      days = 30;
-    }
-
-    const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
-    if (!currentUser) {
-      currentUser = { role: 'user', email: 'user@vip', is_trial: false, vip_expires_at: expiryDate };
-    } else {
-      currentUser.is_trial = false;
-      currentUser.vip_expires_at = expiryDate;
-    }
-
-    localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-    updateUserAuthUI();
-    closeVipModal();
-    showToast(`🎉 恭喜！激活碼兌換成功，VIP 權限已延長 ${days} 天！`);
-  }
-
-  // Admin Tools
-  function openAdminModal() {
-    document.getElementById('adminModal').classList.add('active');
-  }
-
-  function closeAdminModal() {
-    document.getElementById('adminModal').classList.remove('active');
-  }
-
-  function adminGenerateCode() {
-    const type = document.getElementById('adminGenType').value;
-    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const code = `VIP-${type}-${rand}`;
-
-    const disp = document.getElementById('adminLatestCodeDisplay');
-    disp.style.display = 'flex';
-    document.getElementById('adminCodeText').innerText = code;
-    showToast(`已生成激活碼：${code}`);
-  }
-
-  function copyAdminCode() {
-    const text = document.getElementById('adminCodeText').innerText;
-    copySpecificText(text);
-    showToast("✅ 激活碼已複製，可直接 WhatsApp 發給客人！");
-  }
-
-  function adminLogout() {
-    currentUser = null;
-    localStorage.removeItem('ai_bf_user_session');
-    closeAdminModal();
-    updateUserAuthUI();
-    showToast("管理員已登出。");
-  }
-
-  function selectVipPlan(plan) {
-    selectedPlan = plan;
-    const label = document.getElementById('selectedPlanLabel');
-    const waBtn = document.getElementById('btnWhatsappRequestCode');
-    
-    if (plan === 'monthly') {
-      if (label) label.innerText = '月度體驗方案 (HK$ 18 / 月)';
-      if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！我已轉數快付款 HK$18 (月度方案) 升級最強AI男朋友VIP，附上過數紀錄截圖，麻煩發送專屬激活碼！");
-    } else {
-      if (label) label.innerText = '年度尊享方案 (HK$ 98 / 年)';
-      if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！我已轉數快付款 HK$98 (年度方案) 升級最強AI男朋友VIP，附上過數紀錄截圖，麻煩發送專屬激活碼！");
-    }
-  }
-
-  let lastGeneratedCode = "";
-  let lastGeneratedCompleteMsg = "";
-
-  function adminGenerateCode() {
-    const type = document.getElementById('adminGenType').value;
-    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const code = `VIP-${type}-${rand}`;
-    lastGeneratedCode = code;
-
-    const planName = type === '1M' ? '月度體驗方案 (1個月)' : (type === '1Y' ? '年度尊享方案 (1年)' : '終身永久尊享方案');
-    const publicUrl = localStorage.getItem('ai_bf_public_url') || 'https://jason-9981.github.io/2026-01/ai-boyfriend.html';
-
-    lastGeneratedCompleteMsg = `多謝你的支持！已確認收到你的過數 😊\n你的【最強AI男朋友 VIP 專屬激活碼】為：\n👉 *${code}* (${planName})\n\n【一鍵開通步驟】：\n1. 打開網址：${publicUrl}\n2. 點擊右上角「升級 VIP」\n3. 在步驟 3 貼上此激活碼，點擊「立即兌換開通」即可！\n\n全功能已為你解鎖，祝你同伴侶甜甜蜜蜜、恩愛幸福！❤️`;
-
-    const disp = document.getElementById('adminLatestCodeDisplay');
-    disp.style.display = 'flex';
-    document.getElementById('adminCodeText').innerText = code;
-    document.getElementById('adminSendTemplateText').innerText = lastGeneratedCompleteMsg;
-
-    showToast(`✅ 已生成 ${planName} 激活碼！`);
-  }
-
-  function copyAdminCompleteMessage() {
-    if (!lastGeneratedCompleteMsg) return;
-    copySpecificText(lastGeneratedCompleteMsg);
-    showToast("✅ 已複製整段 WhatsApp 回覆訊息！直接貼上發給客人即可");
-  }
-
-  // Initialization
-  window.onload = function() {
-    initSupabase();
-    checkUserSession();
-    loadProfile();
-    loadEvents();
-    loadHistory();
-    loadDiaries();
-    loadVipStatus();
-    updateClock();
-    initCountdown();
-    checkUrlForShareMode();
-    document.getElementById('customSignoffInput').value = `—— 永遠最愛你嘅${profile.userName} ❤️`;
-    generateMessage();
-    renderDiaryList();
-  };
 
   function updateClock() {
     const now = new Date();
@@ -4652,24 +3219,18 @@ ${shareUrl}
   }
 
   function renderProfileUI() {
-    document.getElementById('uiTargetName').innerText = `${profile.targetName}`;
-    document.getElementById('uiRelationshipBadge').innerText = profile.relationship || "伴侶";
-    document.getElementById('uiUserName').innerText = profile.userName || "老公";
-    document.getElementById('uiGender').innerText = `${profile.gender} (${profile.targetTrait || '成熟優雅'})`;
+    const tName = profile.targetName || (currentLanguage === 'en' ? "Partner" : "老婆");
+    const uName = profile.userName || (currentLanguage === 'en' ? "Hubby" : "老公");
     
-    const initial = (profile.targetName && profile.targetName.length > 0) ? profile.targetName.charAt(0) : "珊";
+    document.getElementById('uiTargetName').innerText = tName;
+    document.getElementById('uiRelationshipBadge').innerText = profile.relationship || (currentLanguage === 'en' ? "Married" : "夫妻");
+    document.getElementById('uiUserName').innerText = uName;
+    document.getElementById('uiGender').innerText = `${profile.gender || '女'} (${profile.targetTrait || (currentLanguage === 'en' ? 'Sophisticated & Caring' : '成熟優雅')})`;
+    
+    const initial = (tName && tName.length > 0) ? tName.charAt(0) : "珊";
     document.getElementById('uiAvatar').innerText = initial;
     document.getElementById('waHeaderAvatar').innerText = initial;
-    document.getElementById('waHeaderName').innerText = `${profile.targetName} (${profile.relationship})`;
-
-    const diaryTarget = document.getElementById('diaryTargetNameDisplay');
-    if (diaryTarget) diaryTarget.innerText = profile.targetName;
-
-    document.getElementById('inputUserName').value = profile.userName || "";
-    document.getElementById('inputTargetName').value = profile.targetName || "";
-    document.getElementById('inputGender').value = profile.gender || "女";
-    document.getElementById('inputRelationship').value = profile.relationship || "夫妻";
-    document.getElementById('inputTargetTrait').value = profile.targetTrait || "";
+    document.getElementById('waHeaderName').innerText = `${tName} (${profile.relationship || (currentLanguage === 'en' ? 'Wife' : '老婆')})`;
   }
 
   function openProfileModal() {
@@ -5026,7 +3587,7 @@ ${shareUrl}
 
   function exportDataJSON() {
     const data = {
-      project: "最強AI男朋友 攞你命3000",
+      project: "港男求生必備神器 (情緒價值無限放送)",
       version: "1.2",
       exported_at: new Date().toISOString(),
       profile: profile,
@@ -5038,7 +3599,7 @@ ${shareUrl}
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `最強AI男朋友_完整資料庫備份_${profile.targetName || "老婆"}.json`;
+    a.download = `港男求生必備神器_完整資料庫備份_${profile.targetName || "老婆"}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -5352,3 +3913,126 @@ ${shareUrl}
 
 </body>
 </html>
+  // Dynamic Chip Groups based on Language
+  const eventChipsData = {
+    'zh-HK': {
+      work: [
+        { label: '開會畀老細刁難', text: '今日返工開會畀老細刁難，好委屈好大壓力' },
+        { label: 'OT超時好攰', text: 'OT做到好夜好攰，成個人散晒' },
+        { label: '同事摩擦受委屈', text: '同同事做嘢有摩擦，滿肚委屈' },
+        { label: '搞掂大project等讚', text: '今日順利搞掂個大項目，超有成就感！' }
+      ],
+      health: [
+        { label: '肩頸腰酸背痛', text: '最近肩頸同腰酸背痛好嚴重，好辛苦' },
+        { label: '失眠頭痛好攰', text: '琴晚瞓得好差，失眠頭痛好攰' },
+        { label: '執屋操勞顧家', text: '成日忙住煮飯執屋打理屋企，操勞到腰痛' },
+        { label: '轉天氣唔舒服', text: '天氣轉涼好似有少少作感冒唔舒服' }
+      ],
+      life: [
+        { label: '睇中靚衫唔捨得買', text: '行街睇中咗件靚衫但猶豫唔捨得買' },
+        { label: '睇劇感動到喊', text: '琴晚睇劇集結局感動到眼濕濕' },
+        { label: '食好西心情靚', text: '食咗餐好食嘅嘢，心情好靚' },
+        { label: '鬧脾氣求破冰', text: '兩個人鬧咗兩句小脾氣，想搵台階下破冰' }
+      ]
+    },
+    'zh-CN': {
+      work: [
+        { label: '开会被老板刁难', text: '今天上班开会被老板刁难，特别委屈压力很大' },
+        { label: '加班超长好累', text: '加班到很晚特别累，整个人快散架了' },
+        { label: '同事摩擦受委屈', text: '跟同事沟通产生摩擦，心里满腹委屈' },
+        { label: '搞定大项目求夸奖', text: '今天顺利拿下重要大项目，成就感满满！' }
+      ],
+      health: [
+        { label: '肩颈腰酸背痛', text: '最近肩颈酸痛特别严重，身体很疲乏' },
+        { label: '失眠头痛好累', text: '昨晚睡眠质量很差，头痛又犯困' },
+        { label: '做家务操劳顾家', text: '忙着操持家里大大小小的家务，累得腰酸' },
+        { label: '换季身体不舒服', text: '天气骤变降温，感觉有点着凉不舒服' }
+      ],
+      life: [
+        { label: '看中衣服舍不得买', text: '逛街看中一套漂亮的衣服却舍不得下单' },
+        { label: '看剧感动哭了', text: '昨晚看追的电视剧大结局感动得泪目' },
+        { label: '吃大餐心情美美', text: '吃到心仪美味的大餐，整个人心情超好' },
+        { label: '闹小脾气求破冰', text: '刚才拌了几句嘴，急需一个台阶体面破冰' }
+      ]
+    },
+    'en': {
+      work: [
+        { label: 'Tough meeting with boss', text: 'Had an exhausting meeting with the boss, feeling stressed' },
+        { label: 'Exhausted from overtime', text: 'Worked late into the night, feeling totally drained' },
+        { label: 'Workplace friction', text: 'Faced frustrating workplace tension and misunderstandings' },
+        { label: 'Nailed a big project', text: 'Successfully wrapped up a major project today!' }
+      ],
+      health: [
+        { label: 'Neck & back aches', text: 'Suffering from severe neck and back stiffness today' },
+        { label: 'Insomnia & headache', text: 'Barely slept last night, struggling with fatigue' },
+        { label: 'Tired from chores', text: 'Exhausted after handling endless household chores' },
+        { label: 'Under the weather', text: 'Feeling slightly feverish and unwell with the weather shift' }
+      ],
+      life: [
+        { label: 'Loved a dress but hesitated', text: 'Eyeing a gorgeous outfit while shopping but hesitated to buy' },
+        { label: 'Moved to tears by movie', text: 'Watched an emotional series finale and cried eyes out' },
+        { label: 'Delicious meal & happy', text: 'Enjoyed a delightful dinner and feeling wonderful' },
+        { label: 'Silly quarrel seeking peace', text: 'We had a silly argument and need a sweet off-ramp' }
+      ]
+    }
+  };
+
+  function renderEventChips(lang) {
+    const data = eventChipsData[lang] || eventChipsData['zh-HK'];
+    ['Work', 'Health', 'Life'].forEach(cat => {
+      const el = document.getElementById('chipGroup' + cat);
+      if (!el) return;
+      el.innerHTML = '';
+      const items = data[cat.toLowerCase()] || [];
+      items.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chip-btn';
+        btn.innerText = item.label;
+        btn.onclick = () => selectEventChip(item.text);
+        el.appendChild(btn);
+      });
+    });
+  }
+
+  
+  const signoffPresets = {
+    'zh-HK': [
+      { label: '永遠最愛你嘅老公', val: '—— 永遠最愛你嘅老公 ❤️' },
+      { label: '你的專屬騎士 Jason', val: '—— 你的專屬騎士 Jason 🗡️' },
+      { label: '企喺你呢邊嘅老公', val: '—— 永遠企喺你呢邊嘅老公 敬上 💍' },
+      { label: '認錯嘅大頭蝦老公', val: '—— 知道錯咗嘅大頭蝦老公 🥺' },
+      { label: '你專屬嘅暖男', val: '—— 你專屬嘅暖男 ☕' }
+    ],
+    'zh-CN': [
+      { label: '永远最爱你的老公', val: '—— 永远最爱你的老公 ❤️' },
+      { label: '你的专属骑士 Jason', val: '—— 你的专属骑士 Jason 🗡️' },
+      { label: '永远站在你这边的老公', val: '—— 永远站在你这边的老公 敬上 💍' },
+      { label: '知道错啦的笨蛋老公', val: '—— 知道错啦的笨蛋老公 🥺' },
+      { label: '你专属的暖男', val: '—— 你专属的暖男 ☕' }
+    ],
+    'en': [
+      { label: 'Forever loving you, hubby', val: '— Forever loving you, your partner ❤️' },
+      { label: 'Your dedicated protector', val: '— Your dedicated protector Jason 🗡️' },
+      { label: 'Always on your side', val: '— Always by your side, forever yours 💍' },
+      { label: 'Your apologetic partner', val: '— Your apologetic and loving man 🥺' },
+      { label: 'Your personal sunshine', val: '— Your personal sunshine ☕' }
+    ]
+  };
+
+  function renderSignoffChips(lang) {
+    const list = signoffPresets[lang] || signoffPresets['zh-HK'];
+    const container = document.querySelector('.signoff-box .chip-group');
+    if (!container) return;
+    container.innerHTML = '';
+    list.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip-btn';
+      btn.innerText = item.label;
+      btn.onclick = () => setSignoffText(item.val);
+      container.appendChild(btn);
+    });
+  }
+
+  
