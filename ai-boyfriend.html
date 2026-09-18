@@ -4609,46 +4609,61 @@
     updateSharePreview();
   }
 
-  function generateShareUrl() {
-    const pwd = document.getElementById('sharePasswordInput').value.trim() || "5201314";
-    
-    // Filter only selected entries (removes duplicates!)
-    const filteredEntries = diaryEntries.filter(d => selectedShareEntryIds.includes(d.id));
+  let shareUrlMode = 'short'; // 'short' or 'offline'
 
+  function setShareUrlMode(mode) {
+    shareUrlMode = mode;
+    const btnShort = document.getElementById('btnShareModeShort');
+    const btnOffline = document.getElementById('btnShareModeOffline');
+    if (btnShort && btnOffline) {
+      if (mode === 'short') {
+        btnShort.classList.add('active');
+        btnOffline.classList.remove('active');
+      } else {
+        btnShort.classList.remove('active');
+        btnOffline.classList.add('active');
+      }
+    }
+    updateSharePreview();
+  }
+
+  function generateShareUrl() {
+    const pwd = document.getElementById('sharePasswordInput').value.trim() || '5201314';
+    localStorage.setItem('partner_share_pwd', pwd);
+
+    let baseUrl = document.getElementById('customPublicUrlInput') ? document.getElementById('customPublicUrlInput').value.trim() : '';
+    if (!baseUrl) {
+      baseUrl = window.location.href;
+    }
+    const cleanBase = baseUrl.split('#')[0].split('?')[0];
+
+    if (shareUrlMode === 'short') {
+      // Clean Ultra-Short Cloud URL (Only 1 neat line!)
+      return `${cleanBase}?view=wife`;
+    }
+
+    // Offline self-contained package
+    const filteredEntries = diaryEntries.filter(d => selectedShareEntryIds.includes(d.id));
     const packageData = {
-      target: profile.targetName || "老婆",
-      user: profile.userName || "老公",
+      target: profile.targetName || '老婆',
+      user: profile.userName || '老公',
       pwd: pwd,
       entries: filteredEntries
     };
-
     const jsonStr = JSON.stringify(packageData);
     const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
-    
-    // Use custom public URL if set, otherwise fallback to current URL
-    let baseUrl = document.getElementById('customPublicUrlInput') ? document.getElementById('customPublicUrlInput').value.trim() : "";
-    if (!baseUrl) {
-      baseUrl = window.location.href.split('#')[0];
-    }
-
-    return `${baseUrl}#share=${encoded}`;
+    return `${cleanBase}#share=${encoded}`;
   }
 
   function updateSharePreview() {
     const pwdElem = document.getElementById('sharePasswordInput');
     if (!pwdElem) return;
-    const pwd = pwdElem.value.trim() || "5201314";
+    const pwd = pwdElem.value.trim() || '5201314';
+    localStorage.setItem('partner_share_pwd', pwd);
     const invite = document.getElementById('shareInviteMessageInput').value.trim();
     const shareUrl = generateShareUrl();
 
-    const fullMessage = `${invite}
-
-🔗 專屬回憶錄網址：
-${shareUrl}
-
-🔑 專屬解鎖密碼：${pwd}
-
-—— ${profile.userName} 專屬呈獻 💍`;
+    const fullMessage = `${invite}\n\n🔗 專屬回憶錄網址：\n${shareUrl}\n\n🔑 專屬解鎖密碼：${pwd}\n\n—— ${profile.userName} 專屬呈獻 💍`;
     document.getElementById('fullInvitePreview').innerText = fullMessage;
   }
 
@@ -4662,8 +4677,42 @@ ${shareUrl}
   // ==========================================
   // PARTNER READER MODE (TRIGGERED BY #share=)
   // ==========================================
-  function checkUrlForShareMode() {
+  async function checkUrlForShareMode() {
     const hash = window.location.hash;
+    const search = window.location.search;
+
+    // A. Ultra-short Cloud Mode (?view=wife or ?view=share or #share=cloud)
+    if (search.includes('view=wife') || search.includes('view=share') || hash === '#share=cloud' || hash === '#wife') {
+      console.log("Partner Reader triggered via Ultra-short Cloud Link!");
+      
+      // Attempt to sync latest from Supabase if connected
+      if (supabaseClient) {
+        try {
+          await syncFromSupabase();
+        } catch(e) {}
+      }
+
+      const pwd = localStorage.getItem('partner_share_pwd') || "5201314";
+      sharePayload = {
+        target: profile.targetName || "麗珊",
+        user: profile.userName || "Jason",
+        pwd: pwd,
+        entries: diaryEntries.length > 0 ? diaryEntries : [
+          {
+            id: 'd_default_welcome',
+            date: '2026/09/19',
+            title: '屬於我們的專屬浪漫回憶錄',
+            mood: '💍 永恆承諾',
+            body: '親愛的，這是我為你親手建立的專屬時光回憶錄。記錄我們每一個幸福瞬間，願歲月溫柔，餘生皆是你。',
+            quote: '「時光清淺，有你便是一生最大的福氣。」'
+          }
+        ]
+      };
+      launchPartnerReader(sharePayload);
+      return;
+    }
+
+    // B. Offline Package Mode (#share=...)
     if (hash && hash.includes('#share=')) {
       try {
         const b64 = hash.replace('#share=', '');
@@ -4742,9 +4791,13 @@ ${shareUrl}
   }
 
   function renderPartnerTimeline(entries) {
-    const container = document.getElementById('partnerTimelineList');
+    const container = document.getElementById('readerTimelineList') || document.getElementById('partnerTimelineList');
     if (!container) return;
     container.innerHTML = '';
+    if (!entries || entries.length === 0) {
+      container.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 30px; font-size: 0.95rem;">目前未有選取的點滴回憶。</div>';
+      return;
+    }
 
     entries.forEach(entry => {
       const card = document.createElement('div');
@@ -4828,18 +4881,41 @@ ${shareUrl}
       // 2. Fetch Diaries
       const { data: dbDiaries, error: dErr } = await supabaseClient.from('diary_entries').select('*').order('created_at', { ascending: false });
       if (!dErr && dbDiaries && dbDiaries.length > 0) {
-        // Merge with local diaries (cloud takes precedence)
+        // PRESERVE local photos so cloud text never wipes them out!
+        const localPhotoMap = new Map();
+        diaryEntries.forEach(e => {
+          if (e.photoUrl) localPhotoMap.set(e.id, e.photoUrl);
+        });
+        try {
+          const stored = JSON.parse(localStorage.getItem('ai_bf_diaries') || '[]');
+          stored.forEach(e => {
+            if (e.photoUrl) localPhotoMap.set(e.id, e.photoUrl);
+          });
+        } catch(e) {}
+
         diaryEntries = dbDiaries.map(item => ({
           id: item.id,
           date: item.date,
           title: item.title,
           mood: item.mood,
           body: item.body,
-          quote: item.quote
+          quote: item.quote,
+          photoUrl: item.photo_url || item.photoUrl || localPhotoMap.get(item.id) || null
         }));
+
+        // Preserve local-only entries that might not be in cloud yet
+        const cloudIds = new Set(dbDiaries.map(d => d.id));
+        try {
+          const localStored = JSON.parse(localStorage.getItem('ai_bf_diaries') || '[]');
+          const localOnly = localStored.filter(d => !cloudIds.has(d.id));
+          if (localOnly.length > 0) {
+            diaryEntries = [...diaryEntries, ...localOnly];
+          }
+        } catch(e) {}
+
         localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));
         renderDiaryList();
-        console.log("Synced diaries from Supabase successfully! Count:", diaryEntries.length);
+        console.log("Synced diaries from Supabase with photos preserved! Count:", diaryEntries.length);
       }
     } catch(err) {
       console.warn("Supabase fetch failed, fallback to local:", err);
@@ -4848,7 +4924,7 @@ ${shareUrl}
 
   function syncEntryToCloud(newEntry) {
     if (!supabaseClient) return;
-    supabaseClient.from('diary_entries').upsert([{
+    const baseRow = {
       id: newEntry.id,
       date: newEntry.date,
       title: newEntry.title,
@@ -4857,9 +4933,19 @@ ${shareUrl}
       quote: newEntry.quote,
       target_name: profile.targetName || "老婆",
       user_name: profile.userName || "老公"
-    }]).then(({ error }) => {
+    };
+
+    const rowToSave = { ...baseRow };
+    if (newEntry.photoUrl && !newEntry.photoUrl.startsWith('data:')) {
+      rowToSave.photo_url = newEntry.photoUrl;
+    }
+
+    supabaseClient.from('diary_entries').upsert([rowToSave]).then(({ error }) => {
       if (error) {
-        console.warn("Cloud save error (diary):", error);
+        // Fallback to baseRow if photo_url column does not exist
+        supabaseClient.from('diary_entries').upsert([baseRow]).then(({ error: bErr }) => {
+          if (!bErr) console.log("Saved diary base entry to cloud!");
+        });
       } else {
         console.log("Successfully saved diary entry to Supabase cloud!");
       }
@@ -5690,6 +5776,24 @@ ${shareUrl}
 
     <div style="display: flex; flex-direction: column; gap: 14px;">
       
+      <!-- Share Link Style Selector -->
+      <div class="form-group" style="background: #fdf2f8; border: 1.5px solid #fbcfe8; padding: 12px; border-radius: var(--radius-md);">
+        <label class="form-label" style="color: #9d174d; font-weight: 700;">
+          <span>🔗 網址長度風格選擇：</span>
+        </label>
+        <div style="display: flex; gap: 8px; margin-top: 6px;">
+          <button type="button" id="btnShareModeShort" class="chip-btn active" style="flex: 1; padding: 8px; font-weight: 700;" onclick="setShareUrlMode('short')">
+            ✨ 雲端超短網址（僅一行！推薦）
+          </button>
+          <button type="button" id="btnShareModeOffline" class="chip-btn" style="flex: 1; padding: 8px; font-weight: 700;" onclick="setShareUrlMode('offline')">
+            📦 離線加密長網址（備用）
+          </button>
+        </div>
+        <div style="font-size: 0.78rem; color: #831843; margin-top: 6px;">
+          💡 <b>推薦選擇「雲端超短網址」</b>：連結極短乾淨，不會再唱到成個畫面！太太點擊後自動自雲端安全載入最新回憶與相片。
+        </div>
+      </div>
+
       <!-- Public URL Configuration to avoid file:/// or intranet issues -->
       <div class="form-group" style="background: #fffbeb; border: 1.5px solid #fed7aa; padding: 12px; border-radius: var(--radius-md);">
         <label class="form-label" style="color: #92400e;">
@@ -5755,7 +5859,7 @@ ${shareUrl}
 </div>
 
 <!-- PARTNER READER VIEW (OVERLAY WHEN ACCESSED VIA SHARE LINK) -->
-<div id="partnerReaderView" style="display: none; position: fixed; inset: 0; background: linear-gradient(135deg, #fff1f2 0%, #fef3c7 50%, #fdf2f8 100%); z-index: 9999; overflow-y: auto; padding: 20px 14px 60px;">
+<div id="partnerReaderView" style="display: none; position: fixed; inset: 0; background: #fffdfa; z-index: 99999; overflow-y: auto; overscroll-behavior: contain; padding: 20px 14px 80px; -webkit-overflow-scrolling: touch;">
   <div style="max-width: 680px; margin: 0 auto;">
     
     <!-- Reader Lock Card -->
