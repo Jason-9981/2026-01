@@ -1172,18 +1172,20 @@
       border: 1px solid var(--slate-200);
     }
 
-    /* Diary Photos & Lightbox */
-    .diary-photo-thumb {
-      max-width: 100%;
-      max-height: 240px;
-      border-radius: var(--radius-md);
-      object-fit: cover;
-      margin-top: 10px;
-      cursor: pointer;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-      border: 1px solid var(--slate-200);
-      transition: transform 0.2s ease;
-    }
+    /* 時光牆相片自適應比例 */
+.diary-photo-thumb {
+  width: auto;
+  max-width: 100%;
+  max-height: 380px;          /* 放寬高度，確保直向相片完整顯示 */
+  object-fit: contain;         /* 關鍵：保持原圖完整比例，絕對不裁切額頭和下巴 */
+  margin: 12px auto 0 auto;    /* 在電腦版寬卡片中自動優雅置中 */
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  border: 1px solid var(--slate-200);
+  transition: transform 0.2s ease;
+  display: block;
+}
     .diary-photo-thumb:hover {
       transform: scale(1.015);
     }
