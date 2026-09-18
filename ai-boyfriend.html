@@ -1583,8 +1583,11 @@
         <div class="wa-body">
           <div class="wa-bubble">
             <div id="waStickerPreviewBox" style="display: none; margin-bottom: 8px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; background: #f8fafc;">
-              <img id="waStickerPreviewImg" src="" style="width: 100%; max-height: 180px; object-fit: cover; display: block;">
-              <div id="waStickerCaption" style="font-size: 0.75rem; color: #475569; padding: 4px 8px; font-weight: 600;"></div>
+              <img id="waStickerPreviewImg" src="" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=700&auto=format&fit=crop&q=80'" style="width: 100%; max-height: 180px; object-fit: cover; display: block;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: #f1f5f9; border-top: 1px solid #e2e8f0;">
+                <div id="waStickerCaption" style="font-size: 0.75rem; color: #475569; font-weight: 600;"></div>
+                <button type="button" onclick="copyStickerImageDirectly()" style="background: #25D366; color: white; border: none; border-radius: 4px; font-size: 0.7rem; padding: 3px 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">🖼️ 複製圖片(Ctrl+V貼出真圖)</button>
+              </div>
             </div>
             <div id="waMessageText">載入中...</div>
             <div class="wa-time-meta">
@@ -3413,7 +3416,7 @@
     "name_hk": "👑 專屬女王閃耀皇冠",
     "name_cn": "👑 专属女王闪耀皇冠",
     "name_en": "👑 Sparkling Queen Crown",
-    "url": "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=700&auto=format&fit=crop&q=80",
+    "url": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=700&auto=format&fit=crop&q=80",
     "desc": "你只要做我被寵壞的女王，其餘一切交給我"
   },
   {
@@ -3830,6 +3833,7 @@
       img.src = stk.url;
       img.className = 'sticker-thumb-mini';
       img.loading = 'lazy';
+      img.onerror = function() { this.src = 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=700&auto=format&fit=crop&q=80'; };
 
       const span = document.createElement('span');
       span.innerText = currentL === 'en' ? stk.name_en : (currentL === 'zh-CN' ? stk.name_cn : stk.name_hk);
@@ -3883,6 +3887,26 @@
   }
 
   // Diary Photo Compression & Management
+  async 
+  async function copyStickerImageDirectly() {
+    if (!selectedStickerId) return;
+    const stk = stickersData.find(s => s.id === selectedStickerId);
+    if (!stk) return;
+    try {
+      showToast(currentLanguage === 'en' ? 'Preparing image...' : '正在為您準備圖片...');
+      const res = await fetch(stk.url);
+      const blob = await res.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({ [blob.type]: blob })
+      ]);
+      showToast(currentLanguage === 'en' ? 'Image copied! Paste (Ctrl+V) in WhatsApp' : '✅ 圖片已複製！切換到 WhatsApp 按 Ctrl+V 即可直接發送真相片！');
+    } catch (err) {
+      console.warn('Clipboard write failed, opening image in new tab:', err);
+      window.open(stk.url, '_blank');
+      showToast(currentLanguage === 'en' ? 'Opened in new tab: right click or long press to copy' : '已在分頁打開圖片，可長按或右鍵「複製圖片」後貼至 WhatsApp！');
+    }
+  }
+
   async function handleDiaryPhotoSelect(event) {
     const file = event.target.files && event.target.files[0];
     if (!file) return;
