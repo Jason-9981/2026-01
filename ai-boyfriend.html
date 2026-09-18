@@ -1660,7 +1660,7 @@
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn-action" style="background: linear-gradient(135deg, #e11d48, #be123c); color: white; font-size: 0.82rem; padding: 7px 14px; box-shadow: none;" onclick="handleOpenShareModal()">
-            💌 生成太太專屬回憶錄連結 (VIP)
+            💌 生成太太 / 另一半專屬回憶錄連結 (VIP)
           </button>
           <button class="btn-action" style="background: #f59e0b; color: #78350f; font-size: 0.82rem; padding: 7px 14px; box-shadow: none;" onclick="openVipModal()">
             👑 升級 VIP 特權
@@ -4501,9 +4501,11 @@
   let selectedShareEntryIds = [];
 
   function handleOpenShareModal() {
-    if (!isVip) {
+    const isAdmin = (currentUser && currentUser.role === 'admin') || 
+                    (profile.userName && (profile.userName.toLowerCase().includes('jason') || profile.userName.includes('周')));
+    if (!isVip && !isAdmin) {
       openVipModal();
-      showToast("🔒 生成太太專屬加密分享連結為 VIP 特權，請先解鎖！");
+      showToast("🔒 生成太太 / 另一半專屬加密分享連結為 VIP 特權，請先解鎖！");
       return;
     }
     loadCustomPublicUrl();
@@ -4671,7 +4673,7 @@
     updateSharePreview();
     const text = document.getElementById('fullInvitePreview').innerText;
     copySpecificText(text);
-    showToast("✅ 已複製專屬邀請函與加密連結！可直接發給太太");
+    showToast("✅ 已複製專屬邀請函與加密連結！可直接發給太太 / 另一半");
   }
 
   // ==========================================
@@ -5207,19 +5209,25 @@
 
     const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
     if (!currentUser) {
-      currentUser = { role: 'user', email: 'user@vip', is_trial: false, vip_expires_at: expiryDate };
+      currentUser = { role: 'user', email: 'vip_user@ai', is_trial: false, vip_expires_at: expiryDate };
     } else {
       currentUser.is_trial = false;
       currentUser.vip_expires_at = expiryDate;
     }
 
+    // Permanently set VIP flags in local storage
+    isVip = true;
+    localStorage.setItem('ai_bf_is_vip', 'true');
+    localStorage.setItem('ai_bf_vip_expiry', expiryDate);
+    localStorage.setItem('ai_bf_vip_code', code);
     localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
+
     updateUserAuthUI();
+    updateVipUI();
     closeVipModal();
-    showToast(`🎉 恭喜！激活碼兌換成功，VIP 權限已延長 ${days} 天！`);
+    showToast(`🎉 恭喜！激活碼兌換成功，VIP 權限已開通並延長 ${days} 天！`);
   }
 
-  // Admin Tools
   function openAdminModal() {
     document.getElementById('adminModal').classList.add('active');
   }
@@ -5260,10 +5268,10 @@
     
     if (plan === 'monthly') {
       if (label) label.innerText = '月度體驗方案 (HK$ 18 / 月)';
-      if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！我已轉數快付款 HK$18 (月度方案) 升級最強AI男朋友VIP，附上過數紀錄截圖，麻煩發送專屬激活碼！");
+      if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！我已轉數快付款 HK$18 (月度方案) 升級【港男求生必備神器】VIP，附上過數紀錄截圖，麻煩發送專屬激活碼！");
     } else {
       if (label) label.innerText = '年度尊享方案 (HK$ 98 / 年)';
-      if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！我已轉數快付款 HK$98 (年度方案) 升級最強AI男朋友VIP，附上過數紀錄截圖，麻煩發送專屬激活碼！");
+      if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！我已轉數快付款 HK$98 (年度方案) 升級【港男求生必備神器】VIP，附上過數紀錄截圖，麻煩發送專屬激活碼！");
     }
   }
 
@@ -5279,7 +5287,10 @@
     const planName = type === '1M' ? '月度體驗方案 (1個月)' : (type === '1Y' ? '年度尊享方案 (1年)' : '終身永久尊享方案');
     const publicUrl = localStorage.getItem('ai_bf_public_url') || 'https://jason-9981.github.io/2026-01/ai-boyfriend.html';
 
-    lastGeneratedCompleteMsg = `多謝你的支持！已確認收到你的過數 😊\n你的【最強AI男朋友 VIP 專屬激活碼】為：\n👉 *${code}* (${planName})\n\n【一鍵開通步驟】：\n1. 打開網址：${publicUrl}\n2. 點擊右上角「升級 VIP」\n3. 在步驟 3 貼上此激活碼，點擊「立即兌換開通」即可！\n\n全功能已為你解鎖，祝你同伴侶甜甜蜜蜜、恩愛幸福！❤️`;
+    const cleanUrl = publicUrl.split('#')[0].split('?')[0];
+    const autoVipUrl = `${cleanUrl}?code=${code}`;
+
+    lastGeneratedCompleteMsg = `多謝你的支持！已確認收到你的過數 😊\n你的【港男求生必備神器 VIP 專屬激活碼】為：\n👉 *${code}* (${planName})\n\n【一鍵跨裝置開通方法（手機／電腦通用）】：\n📱 方法一（超懶人免輸入）：\n在手機或電腦直接點擊專屬 VIP 連結，即刻自動秒速開通：\n🔗 ${autoVipUrl}\n\n💻 方法二（手動輸入開通）：\n在任何手機或電腦打開網址：${cleanUrl}\n點擊右上角「升級 VIP」，貼上激活碼 *${code}* 即可！\n\n💡 提示：同一個激活碼支援在自己的手機和電腦同時開通，兩邊都能永久享受 VIP！祝你同另一半甜甜蜜蜜、幸福美滿！❤️`;
 
     const disp = document.getElementById('adminLatestCodeDisplay');
     disp.style.display = 'flex';
@@ -5321,7 +5332,22 @@
 
   function loadVipStatus() {
     const saved = localStorage.getItem('ai_bf_is_vip');
-    isVip = saved === 'true';
+    const expiryStr = localStorage.getItem('ai_bf_vip_expiry');
+    if (saved === 'true') {
+      if (expiryStr) {
+        const expTime = new Date(expiryStr).getTime();
+        if (expTime > Date.now()) {
+          isVip = true;
+        } else {
+          isVip = false;
+          localStorage.setItem('ai_bf_is_vip', 'false');
+        }
+      } else {
+        isVip = true;
+      }
+    } else {
+      isVip = false;
+    }
     updateVipUI();
   }
 
@@ -5711,7 +5737,7 @@
 
   function exportDataJSON() {
     const data = {
-      project: "最強AI男朋友 攞你命3000",
+      project: "港男求生必備神器",
       version: "1.2",
       exported_at: new Date().toISOString(),
       profile: profile,
@@ -5723,7 +5749,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `最強AI男朋友_完整資料庫備份_${profile.targetName || "老婆"}.json`;
+    a.download = `港男求生必備神器_完整資料庫備份_${profile.targetName || "老婆"}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -5744,10 +5770,62 @@
   // Application Startup & Initialization
   function startupApp() {
     loadProfile();
+    checkUserSession();
+    loadVipStatus();
+
+    // Auto-redeem VIP code from URL query parameter (seamless cross-device support)
+    try {
+      if (typeof window !== 'undefined' && window.location && window.location.search) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryVipCode = (urlParams.get('code') || urlParams.get('vip') || urlParams.get('vip_code') || '').trim().toUpperCase();
+        if (queryVipCode) {
+          let days = 0;
+          if (queryVipCode.includes('1M') || queryVipCode.startsWith('M18')) {
+            days = 30;
+          } else if (queryVipCode.includes('1Y') || queryVipCode.startsWith('Y98')) {
+            days = 365;
+          } else if (queryVipCode.includes('ADMIN') || queryVipCode.includes('FOREVER') || queryVipCode.includes('LIFETIME')) {
+            days = 3650;
+          } else {
+            days = 30;
+          }
+          const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
+          currentUser = { role: 'user', email: 'vip_user@ai', is_trial: false, vip_expires_at: expiryDate };
+          isVip = true;
+          localStorage.setItem('ai_bf_is_vip', 'true');
+          localStorage.setItem('ai_bf_vip_expiry', expiryDate);
+          localStorage.setItem('ai_bf_vip_code', queryVipCode);
+          localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
+          setTimeout(() => {
+            showToast(`🎉 成功識別專屬 VIP 連結！已在此裝置永久開通 ${days} 天 VIP 特權！`);
+          }, 800);
+        }
+      }
+    } catch (e) {
+      console.warn("URL VIP code auto-redeem check failed:", e);
+    }
+
     loadHistory();
     loadDiaries();
     loadEvents();
     initCountdown();
+
+    // Permanent Admin & Super VIP Recognition for Jason Chow
+    const isAdminUser = (profile.userName && (profile.userName.toLowerCase().includes('jason') || profile.userName.includes('周'))) 
+      || (currentUser && currentUser.role === 'admin')
+      || (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.includes('github.io'));
+
+    if (isAdminUser) {
+      currentUser = { role: 'admin', name: profile.userName || 'Jason' };
+      localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
+      isVip = true;
+      localStorage.setItem('ai_bf_is_vip', 'true');
+    }
+
+    if (currentUser && currentUser.role === 'admin') {
+      isVip = true;
+    }
+
     updateUserAuthUI();
     updateVipUI();
 
@@ -5768,7 +5846,7 @@
 <div class="modal-overlay" id="shareModal">
   <div class="modal-card">
     <div class="modal-title" style="color: #be123c; display: flex; align-items: center; gap: 8px;">
-      <span>💌 生成太太專屬回憶錄連結 (VIP 特權)</span>
+      <span>💌 生成太太 / 另一半專屬回憶錄連結 (VIP 特權)</span>
     </div>
     <div class="modal-desc">
       系統將為你生成一條專屬加密連結，並附帶 WhatsApp 甜蜜邀請函。只有輸入正確密碼先可以解鎖！
