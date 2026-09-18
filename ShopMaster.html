@@ -89,6 +89,13 @@
       width: 340px;
       background: #0f172a;
     }
+    .search-box input:-webkit-autofill,
+    .search-box input:-webkit-autofill:hover,
+    .search-box input:-webkit-autofill:focus {
+      -webkit-text-fill-color: #f8fafc !important;
+      -webkit-box-shadow: 0 0 0px 1000px #1e293b inset !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
     .search-clear-btn {
       position: absolute;
       right: 8px;
@@ -506,11 +513,13 @@
       <span class="badge">威黃物流 門市營運中心</span>
     </div>
     <div class="nav-tools">
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input type="search" id="globalSearch" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="搜尋門市ID、品牌、地址、IP、型號..." oninput="onSearchChange()">
-        <button type="button" class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" title="清除搜尋條件">✕</button>
-      </div>
+      <form role="search" onsubmit="event.preventDefault(); return false;" autocomplete="off" style="margin:0;padding:0;">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="search" id="shopSearchInput" name="shop_filter_query_no_autofill" autocomplete="one-time-code" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-form-type="other" data-1p-ignore="true" placeholder="搜尋門市ID、品牌、地址、IP、型號..." oninput="onSearchChange(event)" onkeydown="onSearchKeyDown(event)" onfocus="onSearchFocus(event)">
+          <button type="button" class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" title="清除搜尋條件">✕</button>
+        </div>
+      </form>
       <div class="role-indicator">
         <span class="role-dot" id="roleDot"></span>
         <span id="roleLabel">載入中...</span>
@@ -617,29 +626,33 @@
       <div class="modal-header">
         <div class="modal-title">🔐 登入 FLS-ShopMaster 系統</div>
       </div>
-      <div class="modal-body">
-        <p>請輸入權限密碼以進行身分認證及資料解密：</p>
-        <div class="pw-input-group">
-          <input type="password" id="loginPassword" placeholder="輸入最高 / 管理 / 普通權限密碼" onkeydown="if(event.key==='Enter') doLogin()">
+      <form id="sysLoginForm" onsubmit="event.preventDefault(); doLogin(); return false;" autocomplete="off">
+        <div class="modal-body">
+          <p>請輸入權限密碼以進行身分認證及資料解密：</p>
+          <!-- 專屬隱藏帳號欄位，徹底防止瀏覽器密碼管理員將頂部搜尋欄誤判為登入帳號 -->
+          <input type="text" name="username" value="FLS-Admin" autocomplete="username" style="display:none;" tabindex="-1" aria-hidden="true">
+          <div class="pw-input-group">
+            <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="輸入最高 / 管理 / 普通權限密碼" onkeydown="if(event.key==='Enter') doLogin()">
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">快速測試填入：</div>
+          <div class="role-quick-select">
+            <span class="role-chip" onclick="fillPw('Admin3721#')">最高權限 (Admin)</span>
+            <span class="role-chip" onclick="fillPw('Mg8899@')">管理權限 (Mgmt)</span>
+            <span class="role-chip" onclick="fillPw('User6749+')">普通權限 (User)</span>
+          </div>
+          <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <label style="font-size: 12px; color: var(--text); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
+              <input type="checkbox" id="rememberPassword" checked style="width: 15px; height: 15px; cursor: pointer; accent-color: var(--primary);">
+              <span>💾 <strong>記住密碼</strong>（下次開啟自動登入）</span>
+            </label>
+            <button type="button" onclick="clearSavedPw()" style="background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer; text-decoration: underline;">清除已存密碼</button>
+          </div>
+          <div id="loginError" style="color: var(--danger); font-size: 12px; margin-top: 8px; display: none;"></div>
         </div>
-        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">快速測試填入：</div>
-        <div class="role-quick-select">
-          <span class="role-chip" onclick="fillPw('Admin3721#')">最高權限 (Admin)</span>
-          <span class="role-chip" onclick="fillPw('Mg8899@')">管理權限 (Mgmt)</span>
-          <span class="role-chip" onclick="fillPw('User6749+')">普通權限 (User)</span>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">驗證並登入</button>
         </div>
-        <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-          <label style="font-size: 12px; color: var(--text); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
-            <input type="checkbox" id="rememberPassword" checked style="width: 15px; height: 15px; cursor: pointer; accent-color: var(--primary);">
-            <span>💾 <strong>記住密碼</strong>（下次開啟自動登入）</span>
-          </label>
-          <button type="button" onclick="clearSavedPw()" style="background: none; border: none; color: var(--text-muted); font-size: 11px; cursor: pointer; text-decoration: underline;">清除已存密碼</button>
-        </div>
-        <div id="loginError" style="color: var(--danger); font-size: 12px; margin-top: 8px; display: none;"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" onclick="doLogin()">驗證並登入</button>
-      </div>
+      </form>
     </div>
   </div>
 
@@ -12012,8 +12025,33 @@
       renderDashboard();
     }
 
-    function onSearchChange() {
-      const input = document.getElementById('globalSearch');
+    let userHasTypedInSearch = false;
+
+    function onSearchKeyDown(e) {
+      userHasTypedInSearch = true;
+    }
+
+    function onSearchFocus(e) {
+      const input = document.getElementById('shopSearchInput');
+      if (!userHasTypedInSearch && input && input.value === '1192') {
+        input.value = '';
+        searchQuery = '';
+        const clearBtn = document.getElementById('searchClearBtn');
+        if (clearBtn) clearBtn.style.display = 'none';
+        renderDashboard();
+      }
+    }
+
+    function onSearchChange(e) {
+      const input = document.getElementById('shopSearchInput');
+      if (!userHasTypedInSearch && input.value === '1192') {
+        input.value = '';
+        searchQuery = '';
+        const clearBtn = document.getElementById('searchClearBtn');
+        if (clearBtn) clearBtn.style.display = 'none';
+        renderDashboard();
+        return;
+      }
       searchQuery = input.value.trim().toLowerCase();
       const clearBtn = document.getElementById('searchClearBtn');
       if (clearBtn) {
@@ -12023,13 +12061,26 @@
     }
 
     function clearSearch() {
-      const input = document.getElementById('globalSearch');
+      const input = document.getElementById('shopSearchInput');
       input.value = '';
       searchQuery = '';
+      userHasTypedInSearch = false;
       const clearBtn = document.getElementById('searchClearBtn');
       if (clearBtn) clearBtn.style.display = 'none';
       renderDashboard();
       input.focus();
+    }
+
+    function purgeSearchAutofill() {
+      if (userHasTypedInSearch) return;
+      const input = document.getElementById('shopSearchInput');
+      if (input && (input.value === '1192' || (!userHasTypedInSearch && input.value && input.value.trim() === '1192'))) {
+        input.value = '';
+        searchQuery = '';
+        const clearBtn = document.getElementById('searchClearBtn');
+        if (clearBtn) clearBtn.style.display = 'none';
+        renderDashboard();
+      }
     }
 
     function toggleEstimatedKPI() {
@@ -12724,11 +12775,19 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      const sInput = document.getElementById('globalSearch');
+      userHasTypedInSearch = false;
+      const sInput = document.getElementById('shopSearchInput');
       if (sInput) sInput.value = '';
       searchQuery = '';
       const clearBtn = document.getElementById('searchClearBtn');
       if (clearBtn) clearBtn.style.display = 'none';
+
+      purgeSearchAutofill();
+      setTimeout(purgeSearchAutofill, 50);
+      setTimeout(purgeSearchAutofill, 150);
+      setTimeout(purgeSearchAutofill, 350);
+      setTimeout(purgeSearchAutofill, 700);
+      setTimeout(purgeSearchAutofill, 1200);
 
       renderFilters();
       let savedPw = null;
