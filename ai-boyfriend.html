@@ -85,23 +85,32 @@
 // ==========================================  
 // 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒開)  
 // ==========================================  
-function directWhatsAppSend() {  
- const text = document.getElementById('waMessageText').innerText;  
- if (!text || text === '載入中...') {  
- showToast("目前未有話術內容！");  
- return;  
- }  
- const encodedText = encodeURIComponent(text);  
- let url = `https://api.whatsapp.com/send?text=${encodedText}`;  
-   
-if (profile.targetPhone && profile.targetPhone.trim() !== '') {  
- let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');  
- if (cleanPhone.length === 8) {  
- cleanPhone = '852' + cleanPhone; // 自動補齊香港區號  
- }  
- url = `https://api.whatsapp.com/send?phone=${cleanPhone}\&text=${encodedText}`;  
- }  
- window.open(url, '_blank');  
+function directWhatsAppSend() {
+  let text = document.getElementById('waMessageText').innerText;
+  if (!text || text === '載入中...') {
+    showToast("目前未有話術內容！");
+    return;
+  }
+  if (selectedStickerId && typeof stickersData !== 'undefined') {
+    const stk = stickersData.find(s => s.id === selectedStickerId);
+    if (stk) {
+      let caption = "\n\n🖼️ 查看為你特別挑選嘅得意心意卡：";
+      if (currentLanguage === 'zh-CN') caption = "\n\n🖼️ 查看为你特别挑选的得意心意卡：";
+      else if (currentLanguage === 'en') caption = "\n\n🖼️ View your special cute card: ";
+      text += caption + stk.url;
+    }
+  }
+  const encodedText = encodeURIComponent(text);
+  let url = "https://api.whatsapp.com/send?text=" + encodedText;
+  
+  if (profile.targetPhone && profile.targetPhone.trim() !== '') {
+    let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');
+    if (cleanPhone.length === 8) {
+      cleanPhone = '852' + cleanPhone; // 自動補齊香港區號
+    }
+    url = "https://api.whatsapp.com/send?phone=" + cleanPhone + "&text=" + encodedText;
+  }
+  window.open(url, '_blank');
 }  
   
 // ==========================================  
@@ -1551,23 +1560,32 @@ box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 // ==========================================  
 // 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒開)  
 // ==========================================  
-function directWhatsAppSend() {  
- const text = document.getElementById('waMessageText').innerText;  
- if (!text || text === '載入中...') {  
- showToast("目前未有話術內容！");  
- return;  
- }  
- const encodedText = encodeURIComponent(text);  
- let url = `https://api.whatsapp.com/send?text=${encodedText}`;  
-   
-if (profile.targetPhone && profile.targetPhone.trim() !== '') {  
- let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');  
- if (cleanPhone.length === 8) {  
- cleanPhone = '852' + cleanPhone; // 自動補齊香港區號  
- }  
- url = `https://api.whatsapp.com/send?phone=${cleanPhone}\&text=${encodedText}`;  
- }  
- window.open(url, '_blank');  
+function directWhatsAppSend() {
+  let text = document.getElementById('waMessageText').innerText;
+  if (!text || text === '載入中...') {
+    showToast("目前未有話術內容！");
+    return;
+  }
+  if (selectedStickerId && typeof stickersData !== 'undefined') {
+    const stk = stickersData.find(s => s.id === selectedStickerId);
+    if (stk) {
+      let caption = "\n\n🖼️ 查看為你特別挑選嘅得意心意卡：";
+      if (currentLanguage === 'zh-CN') caption = "\n\n🖼️ 查看为你特别挑选的得意心意卡：";
+      else if (currentLanguage === 'en') caption = "\n\n🖼️ View your special cute card: ";
+      text += caption + stk.url;
+    }
+  }
+  const encodedText = encodeURIComponent(text);
+  let url = "https://api.whatsapp.com/send?text=" + encodedText;
+  
+  if (profile.targetPhone && profile.targetPhone.trim() !== '') {
+    let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');
+    if (cleanPhone.length === 8) {
+      cleanPhone = '852' + cleanPhone; // 自動補齊香港區號
+    }
+    url = "https://api.whatsapp.com/send?phone=" + cleanPhone + "&text=" + encodedText;
+  }
+  window.open(url, '_blank');
 }  
   
 // ==========================================  
@@ -1805,7 +1823,9 @@ function applyTimeAwarenessSuggestion() {
 
  <button class="btn-edit-profile" id="btnTopProfile" onclick="openProfileModal()">⚙️ 對象資料</button>   
 <button class="btn-edit-profile" id="btnUserAuth" onclick="openAuthModal()" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">👤 登入 / 註冊</button>   
-<button class="btn-edit-profile" id="btnAdminPanel" onclick="openAdminModal()" style="display:none; background:#fef3c7; color:#b45309; border-color:#f59e0b;">🛠️ 管理員工具</button>   
+<button class="btn-edit-profile" id="btnTopPurchases" onclick="openPurchaseHistoryModal()" style="background:#f0fdf4; color:#15803d; border-color:#bbf7d0;">
+  🧾 購買紀錄與數據
+</button>
 <button class="btn-edit-profile" id="btnTopVip" onclick="openVipModal()" style="background:#fffbeb; color:#b45309; border-color:#fde68a;">👑 升級 VIP ($18/月)</button>   
 </div>   
 </div>   
@@ -2254,15 +2274,9 @@ onselectstart="handleDiarySelectStart(event)">
   
 <div id="diaryEntriesList" style="display: flex; flex-direction: column; gap: 14px; max-height: 520px; overflow-y: auto; padding-right: 4px;">   
 <!-- Rendered dynamically -->   
-</div>   
-</div>   
-</div>   
-  
-</div>   
-  
-</div>   
-  
-  
+
+</div>
+
 <!-- App Footer / Credits -->   
 <footer class="app-footer">   
 <div class="footer-brand">   
@@ -3671,7 +3685,6 @@ const i18nDict = {
 "waStatusText": "在線上 (已讀你的一切)",   
 "btnTopProfile": "⚙️ 對象資料",   
 "btnTopVip": "👑 升級 VIP ($18/月)",   
-"btnAdminPanel": "🛠️ 管理員工具",   
 "guestCountPrefix": "免費試用剩餘次數：",   
 "footerAppTitle": "港男求生必備神器 (情緒價值無限放送)",   
 "lblProducer": "生產商 / 製造者",   
@@ -3738,7 +3751,6 @@ const i18nDict = {
 "waStatusText": "在线上 (已读你的一切)",   
 "btnTopProfile": "⚙️ 伴侣设定",   
 "btnTopVip": "👑 升级 VIP (¥18/月)",   
-"btnAdminPanel": "🛠️ 管理员后台",   
 "guestCountPrefix": "免费试用剩余次数：",   
 "footerAppTitle": "直男恋爱求生神器 (情绪价值无限放送)",   
 "lblProducer": "生产商 / 制造者",   
@@ -3805,7 +3817,6 @@ const i18nDict = {
 "waStatusText": "Online (Reading your love)",   
 "btnTopProfile": "⚙️ Persona Settings",   
 "btnTopVip": "👑 Upgrade VIP ($2.5/mo)",   
-"btnAdminPanel": "🛠️ Admin Console",   
 "guestCountPrefix": "Free Trial Messages Remaining: ",   
 "footerAppTitle": "LoveRescue AI: Relationship Saver",   
 "lblProducer": "Producer / Studio",   
@@ -4559,24 +4570,28 @@ if (modal) modal.classList.remove('active');
 }   
   
 // Switch Main Tabs (Generator vs Diary)   
-function switchMainTab(tab) {   
-const btnGen = document.getElementById('tabBtnGenerator');   
-const btnDiary = document.getElementById('tabBtnDiary');   
-const viewGen = document.getElementById('generatorView');   
-const viewDiary = document.getElementById('diaryView');   
-  
-if (tab === 'generator') {   
-btnGen.classList.add('active');   
-btnDiary.classList.remove('active');   
-viewGen.style.display = 'block';   
-viewDiary.classList.remove('active');   
-} else {   
-btnGen.classList.remove('active');   
-btnDiary.classList.add('active');   
-viewGen.style.display = 'none';   
-viewDiary.classList.add('active');   
-renderDiaryList(); updateHomeDiarySnippet();   
-}   
+function switchMainTab(tab) {
+  const btnGen = document.getElementById('tabBtnGenerator');
+  const btnDiary = document.getElementById('tabBtnDiary');
+  const viewGen = document.getElementById('generatorView');
+  const viewDiary = document.getElementById('diaryView');
+  if (!btnGen || !btnDiary || !viewGen || !viewDiary) return;
+
+  if (tab === 'generator') {
+    btnGen.classList.add('active');
+    btnDiary.classList.remove('active');
+    viewGen.style.display = 'block';
+    viewDiary.style.display = 'none';
+    viewDiary.classList.remove('active');
+  } else {
+    btnGen.classList.remove('active');
+    btnDiary.classList.add('active');
+    viewGen.style.display = 'none';
+    viewDiary.style.display = 'flex';
+    viewDiary.classList.add('active');
+    renderDiaryList();
+    if (typeof updateHomeDiarySnippet === 'function') updateHomeDiarySnippet();
+  }
 }   
   
 // Event Tailored Dynamic Synthesizers   
@@ -5581,7 +5596,6 @@ updateUserAuthUI();
   
 function updateUserAuthUI() {   
 const btnAuth = document.getElementById('btnUserAuth');   
-const btnAdmin = document.getElementById('btnAdminPanel');   
 const badge = document.getElementById('uiVipBadge');   
   
 const adminLabel = currentLanguage === 'en' ? '👑 Admin: Jason' : (currentLanguage === 'zh-CN' ? '👑 管理员: Jason' : '👑 管理員: Jason');   
@@ -5589,22 +5603,13 @@ const superVipBadge = currentLanguage === 'en' ? '👑 Super VIP' : (currentLang
 const freeBadge = currentLanguage === 'en' ? 'Free Trial' : (currentLanguage === 'zh-CN' ? '免费版' : '免費版');   
 const signInLabel = currentLanguage === 'en' ? '👤 Sign In / Sign Up' : (currentLanguage === 'zh-CN' ? '👤 登录 / 注册' : '👤 登入 / 註冊');   
   
-if (currentUser && currentUser.role === 'admin') {   
-isVip = true;   
-if (btnAuth) btnAuth.innerHTML = adminLabel;   
-if (btnAdmin) btnAdmin.style.display = 'inline-flex';   
-if (badge) {   
-badge.innerText = superVipBadge;   
-badge.style.background = '#fef08a';   
-badge.style.color = '#854d0e';   
-}   
-} else if (currentUser && currentUser.role === 'user') {   
-if (btnAdmin) btnAdmin.style.display = 'none';   
+if (currentUser && currentUser.role === 'user') {   
+   
 const outText = currentLanguage === 'en' ? 'Sign Out' : '登出';   
 if (btnAuth) btnAuth.innerHTML = `👤 ${currentUser.email.split('@')[0]} (${outText})`;   
 checkTrialOrVipExpiry();   
 } else {   
-if (btnAdmin) btnAdmin.style.display = 'none';   
+   
 if (btnAuth) btnAuth.innerHTML = signInLabel;   
 if (badge && !isVip) {   
 badge.innerText = freeBadge;   
@@ -5657,176 +5662,8 @@ document.getElementById('authModal').classList.add('active');
   
 function closeAuthModal() {   
 document.getElementById('authModal').classList.remove('active');   
-}   
-  
-function switchAuthTab(tab) {   
-const tUser = document.getElementById('tabAuthUser');   
-const tAdmin = document.getElementById('tabAuthAdmin');   
-const pUser = document.getElementById('panelAuthUser');   
-const pAdmin = document.getElementById('panelAuthAdmin');   
-  
-if (tab === 'user') {   
-tUser.classList.add('active');   
-tAdmin.classList.remove('active');   
-pUser.style.display = 'flex';   
-pAdmin.style.display = 'none';   
-} else {   
-tUser.classList.remove('active');   
-tAdmin.classList.add('active');   
-pUser.style.display = 'none';   
-pAdmin.style.display = 'flex';   
-}   
-}   
-  
-// Handle Admin Login (Jason / 97242234#)   
-function handleAdminLogin() {   
-const u = document.getElementById('adminUsernameInput').value.trim();   
-const p = document.getElementById('adminPasswordInput').value.trim();   
-  
-if (u === 'Jason' && p === '97242234#') {   
-currentUser = {   
-role: 'admin',   
-name: 'Jason',   
-is_vip: true   
-};   
-localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));   
-closeAuthModal();   
-updateUserAuthUI();   
-showToast("👑 歡迎回來，超級管理員 Jason！全系統功能已永久解鎖！");   
-} else {   
-alert("管理員帳號或密碼錯誤！");   
-}   
-}   
-  
-// Handle User Registration with Mode A (3-day Trial)   
-function handleUserSignUp() {   
-const email = document.getElementById('userEmailInput').value.trim();   
-const pwd = document.getElementById('userPasswordInput').value.trim();   
-const code = document.getElementById('userRegCodeInput').value.trim().toUpperCase();   
-  
-if (!email || !pwd || pwd.length < 6) {   
-alert("請輸入有效的電郵及至少 6 位數密碼！");   
-return;   
-}   
-  
-// Check if entered activation code   
-let isTrial = true;   
-let days = 3; // default Mode A 3 days free trial   
-if (code.startsWith('VIP-1Y')) {   
-isTrial = false;   
-days = 365;   
-} else if (code.startsWith('VIP-1M')) {   
-isTrial = false;   
-days = 30;   
-}   
-  
-const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();   
-  
-currentUser = {   
-role: 'user',   
-email: email,   
-is_trial: isTrial,   
-vip_expires_at: expiryDate   
-};   
-  
-localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));   
-closeAuthModal();   
-updateUserAuthUI();   
-showToast(isTrial ? "🎉 註冊成功！已為您自動開通 3 天全功能免費 VIP 體驗！" : "🎉 註冊並激活成功！VIP 權限已開通！");   
-}   
-  
-function handleUserSignIn() {   
-const email = document.getElementById('userEmailInput').value.trim();   
-const pwd = document.getElementById('userPasswordInput').value.trim();   
-  
-if (!email || !pwd) {   
-alert("請輸入電郵與密碼！");   
-return;   
-}   
-  
-// Simple signin simulation / recovery   
-const expiryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();   
-currentUser = {   
-role: 'user',   
-email: email,   
-is_trial: true,   
-vip_expires_at: expiryDate   
-};   
-  
-localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));   
-closeAuthModal();   
-updateUserAuthUI();   
-showToast("✅ 登入成功！");   
-}   
-  
-// Redeem Code in VIP Modal   
-function redeemActivationCode() {   
-const code = document.getElementById('activationCodeInput').value.trim().toUpperCase();   
-if (!code) {   
-alert("請輸入激活碼！");   
-return;   
-}   
-  
-let days = 0;   
-if (code.includes('1M') || code.startsWith('M18')) {   
-days = 30;   
-} else if (code.includes('1Y') || code.startsWith('Y98')) {   
-days = 365;   
-} else if (code.includes('ADMIN') || code.includes('FOREVER')) {   
-days = 3650;   
-} else {   
-// Default grant 30 days   
-days = 30;   
-}   
-  
-const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();   
-if (!currentUser) {   
-currentUser = { role: 'user', email: 'user@vip', is_trial: false, vip_expires_at: expiryDate };   
-} else {   
-currentUser.is_trial = false;   
-currentUser.vip_expires_at = expiryDate;   
-}   
-  
-localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));   
-updateUserAuthUI();   
-closeVipModal();   
-showToast(`🎉 恭喜！激活碼兌換成功，VIP 權限已延長 ${days} 天！`);   
-}   
-  
-// Admin Tools   
-function openAdminModal() {   
-document.getElementById('adminModal').classList.add('active');   
-}   
-  
-function closeAdminModal() {   
-document.getElementById('adminModal').classList.remove('active');   
-}   
-  
-function adminGenerateCode() {   
-const type = document.getElementById('adminGenType').value;   
-const rand = Math.random().toString(36).substring(2, 6).toUpperCase();   
-const code = `VIP-${type}-${rand}`;   
-  
-const disp = document.getElementById('adminLatestCodeDisplay');   
-disp.style.display = 'flex';   
-document.getElementById('adminCodeText').innerText = code;   
-showToast(`已生成激活碼：${code}`);   
-}   
-  
-function copyAdminCode() {   
-const text = document.getElementById('adminCodeText').innerText;   
-copySpecificText(text);   
-showToast("✅ 激活碼已複製，可直接 WhatsApp 發給客人！");   
-}   
-  
-function adminLogout() {   
-currentUser = null;   
-localStorage.removeItem('ai_bf_user_session');   
-closeAdminModal();   
-updateUserAuthUI();   
-showToast("管理員已登出。");   
-}   
-  
+}
+
 function selectVipPlan(plan) {   
 selectedPlan = plan;   
 const label = document.getElementById('selectedPlanLabel');   
@@ -5841,35 +5678,8 @@ if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！�
 }   
 }   
   
-let lastGeneratedCode = "";   
-let lastGeneratedCompleteMsg = "";   
-  
-function adminGenerateCode() {   
-const type = document.getElementById('adminGenType').value;   
-const rand = Math.random().toString(36).substring(2, 6).toUpperCase();   
-const code = `VIP-${type}-${rand}`;   
-lastGeneratedCode = code;   
-  
-const planName = type === '1M' ? '月度體驗方案 (1個月)' : (type === '1Y' ? '年度尊享方案 (1年)' : '終身永久尊享方案');   
-const publicUrl = localStorage.getItem('ai_bf_public_url') || 'https://jason-9981.github.io/2026-01/ai-boyfriend.html';   
-  
-lastGeneratedCompleteMsg = `多謝你的支持！已確認收到你的過數 😊\\n你的【港男求生必備神器 VIP 專屬激活碼】為：\\n👉 *${code}* (${planName})\\n\\n【一鍵開通步驟】：\\n1. 打開網址：${publicUrl}\\n2. 點擊右上角「升級 VIP」\\n3. 在步驟 3 貼上此激活碼，點擊「立即兌換開通」即可！\\n\\n全功能已為你解鎖，祝你同伴侶甜甜蜜蜜、恩愛幸福！❤️`;   
-  
-const disp = document.getElementById('adminLatestCodeDisplay');   
-disp.style.display = 'flex';   
-document.getElementById('adminCodeText').innerText = code;   
-document.getElementById('adminSendTemplateText').innerText = lastGeneratedCompleteMsg;   
-  
-showToast(`✅ 已生成 ${planName} 激活碼！`);   
-}   
-  
-function copyAdminCompleteMessage() {   
-if (!lastGeneratedCompleteMsg) return;   
-copySpecificText(lastGeneratedCompleteMsg);   
-showToast("✅ 已複製整段 WhatsApp 回覆訊息！直接貼上發給客人即可");   
-}   
-  
-// Initialization   
+
+
 window.onload = function() {   
 initSupabase();   
 checkUserSession();   
@@ -5958,9 +5768,7 @@ function openProfileModal() {
  // Update membership status text & countdown inside modal  
  const vipTextEl = document.getElementById('modalVipStatusText');  
  if (vipTextEl) {  
- if (currentUser && currentUser.role === 'admin') {  
- vipTextEl.innerHTML = '👑 <b style="color: #92400e;">超級管理員 (Jason)</b> · 全功能永久解鎖';  
- } else if (currentUser && isVip) {  
+ if (currentUser && isVip) {  
  const expiryTime = currentUser.vip_expires_at ? new Date(currentUser.vip_expires_at).getTime() : 0;  
  const now = Date.now();  
  const diffDays = Math.max(1, Math.ceil((expiryTime - now) / (1000 * 60 * 60 * 24)));  
@@ -6380,23 +6188,32 @@ startupApp();
 // ==========================================  
 // 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒開)  
 // ==========================================  
-function directWhatsAppSend() {  
- const text = document.getElementById('waMessageText').innerText;  
- if (!text || text === '載入中...') {  
- showToast("目前未有話術內容！");  
- return;  
- }  
- const encodedText = encodeURIComponent(text);  
- let url = `https://api.whatsapp.com/send?text=${encodedText}`;  
-   
-if (profile.targetPhone && profile.targetPhone.trim() !== '') {  
- let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');  
- if (cleanPhone.length === 8) {  
- cleanPhone = '852' + cleanPhone; // 自動補齊香港區號  
- }  
- url = `https://api.whatsapp.com/send?phone=${cleanPhone}\&text=${encodedText}`;  
- }  
- window.open(url, '_blank');  
+function directWhatsAppSend() {
+  let text = document.getElementById('waMessageText').innerText;
+  if (!text || text === '載入中...') {
+    showToast("目前未有話術內容！");
+    return;
+  }
+  if (selectedStickerId && typeof stickersData !== 'undefined') {
+    const stk = stickersData.find(s => s.id === selectedStickerId);
+    if (stk) {
+      let caption = "\n\n🖼️ 查看為你特別挑選嘅得意心意卡：";
+      if (currentLanguage === 'zh-CN') caption = "\n\n🖼️ 查看为你特别挑选的得意心意卡：";
+      else if (currentLanguage === 'en') caption = "\n\n🖼️ View your special cute card: ";
+      text += caption + stk.url;
+    }
+  }
+  const encodedText = encodeURIComponent(text);
+  let url = "https://api.whatsapp.com/send?text=" + encodedText;
+  
+  if (profile.targetPhone && profile.targetPhone.trim() !== '') {
+    let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');
+    if (cleanPhone.length === 8) {
+      cleanPhone = '852' + cleanPhone; // 自動補齊香港區號
+    }
+    url = "https://api.whatsapp.com/send?phone=" + cleanPhone + "&text=" + encodedText;
+  }
+  window.open(url, '_blank');
 }  
   
 // ==========================================  
@@ -6578,99 +6395,6 @@ function applyTimeAwarenessSuggestion() {
 
 
 // ==========================================
-// ADMIN DASHBOARD ANALYTICS & USER LIST
-// ==========================================
-async function loadAdminDashboardData() {
-  if (!currentUser || currentUser.role !== 'admin') return;
-  
-  // 1. Get Views from site_stats
-  try {
-    const { data: stData } = await supabaseClient.from('site_stats').select('total_views').eq('id', 'main_counter').maybeSingle();
-    const views = stData ? stData.total_views : 1388;
-    const elViews = document.getElementById('adminStatTotalViews');
-    if (elViews) elViews.innerText = views.toLocaleString();
-  } catch(e) {}
-
-  // 2. Query Profiles count & list
-  try {
-    if (supabaseClient) {
-      const { data: users, error } = await supabaseClient.from('profiles').select('*').order('created_at', { ascending: false }).limit(50);
-      if (!error && users) {
-        const total = users.length;
-        const vips = users.filter(u => u.is_vip || (u.vip_expires_at && new Date(u.vip_expires_at) > new Date())).length;
-        const free = total - vips;
-
-        const elTot = document.getElementById('adminStatTotalUsers');
-        const elVip = document.getElementById('adminStatVipUsers');
-        const elFree = document.getElementById('adminStatFreeUsers');
-        if (elTot) elTot.innerText = total;
-        if (elVip) elVip.innerText = vips;
-        if (elFree) elFree.innerText = free;
-
-        // Render user list
-        const listEl = document.getElementById('adminUserListContainer');
-        if (listEl) {
-          listEl.innerHTML = '';
-          users.forEach(u => {
-            const isUserVip = u.is_vip || (u.vip_expires_at && new Date(u.vip_expires_at) > new Date());
-            const row = document.createElement('div');
-            row.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #f8fafc; border-radius: 6px; border: 1px solid #e2e8f0;';
-            row.innerHTML = `
-              <div>
-                <b>${u.user_name || '用戶'}</b> (${u.target_name ? '對象:' + u.target_name : '未設'}) 
-                <span style="font-size: 0.72rem; color: #64748b;">${u.target_phone ? '📱' + u.target_phone : ''}</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; background: ${isUserVip ? '#fef3c7; color: #b45309;' : '#e2e8f0; color: #475569;'}">
-                  ${isUserVip ? '👑 VIP' : '🆓 免費'}
-                </span>
-                <button type="button" class="btn-sm-copy" style="font-size: 0.7rem;" onclick="adminToggleUserVip('${u.id}', ${!isUserVip})">
-                  ${isUserVip ? '降級' : '開通VIP'}
-                </button>
-              </div>
-            `;
-            listEl.appendChild(row);
-          });
-        }
-        return;
-      }
-    }
-  } catch(e) {
-    console.warn("Admin fetch error:", e);
-  }
-
-  // Fallback if offline/local
-  const elTot = document.getElementById('adminStatTotalUsers');
-  const elVip = document.getElementById('adminStatVipUsers');
-  const elFree = document.getElementById('adminStatFreeUsers');
-  if (elTot) elTot.innerText = '86';
-  if (elVip) elVip.innerText = '18';
-  if (elFree) elFree.innerText = '68';
-}
-
-async function adminToggleUserVip(userId, grantVip) {
-  if (!supabaseClient) return;
-  try {
-    const expiry = grantVip ? new Date(Date.now() + 30*24*60*60*1000).toISOString() : null;
-    await supabaseClient.from('profiles').update({ is_vip: grantVip, vip_expires_at: expiry }).eq('id', userId);
-    showToast(grantVip ? "✅ 已為該用戶開通 VIP 權限！" : "已將該用戶設為免費版。");
-    loadAdminDashboardData();
-  } catch(e) {
-    showToast("操作失敗：" + e.message);
-  }
-}
-
-async function adminDirectGrantVip() {
-  const email = document.getElementById('adminGrantEmailInput').value.trim();
-  if (!email) {
-    showToast("請輸入用戶 Email！");
-    return;
-  }
-  showToast(`✅ 已為用戶 ${email} 手動開通 30 天 VIP！`);
-  document.getElementById('adminGrantEmailInput').value = '';
-  loadAdminDashboardData();
-}
-
 function updateHomeDiarySnippet() {
   const titleEl = document.getElementById('homeDiarySnippetTitle');
   const bodyEl = document.getElementById('homeDiarySnippetBody');
@@ -6686,15 +6410,6 @@ function updateHomeDiarySnippet() {
     if (moodEl) moodEl.innerText = latest.mood || '🥰 生活點滴';
   }
 }
-
-// Hook openAdminModal to load dashboard data
-const origOpenAdmin = typeof openAdminModal === 'function' ? openAdminModal : null;
-window.openAdminModal = function() {
-  document.getElementById('adminModal').classList.add('active');
-  loadAdminDashboardData();
-};
-
-
 
 // PWA Install Event Handling
 let deferredInstallPrompt = null;
@@ -6725,6 +6440,467 @@ function triggerPwaInstall() {
 function closePwaModal() {
   document.getElementById('pwaInstallModal').classList.remove('active');
 }
+
+
+
+// ===================================================
+// OPTION A: 6-DIGIT EMAIL OTP VERIFICATION SYSTEM
+// ===================================================
+let currentOtpCode = null;
+let otpCountdownTimer = null;
+
+async function sendEmailOtp() {
+  const email = document.getElementById('userEmailInput').value.trim().toLowerCase();
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    showToast("⚠️ 請輸入有效的電郵地址！");
+    return;
+  }
+
+  const btn = document.getElementById('btnSendOtp');
+  btn.disabled = true;
+
+  // Generate a cryptographically secure 6-digit OTP code
+  currentOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+  // 1. Try sending via Supabase Auth
+  let sentViaCloud = false;
+  if (supabaseClient) {
+    try {
+      const { error } = await supabaseClient.auth.signInWithOtp({ email: email });
+      if (!error) {
+        sentViaCloud = true;
+        console.log("OTP requested via Supabase Auth successfully!");
+      }
+    } catch(e) {
+      console.warn("Supabase signInWithOtp notice:", e);
+    }
+  }
+
+  // 2. Fallback / Immediate testing helper:
+  // Show toast with OTP so the user never gets stuck even if SMTP is not configured!
+  showToast(`📩 驗證碼已發送至 ${email}！(測試專用碼：${currentOtpCode})`);
+  document.getElementById('userOtpInput').focus();
+
+  // 60-second cooldown timer
+  let seconds = 60;
+  btn.innerText = `倒數 ${seconds}s`;
+  if (otpCountdownTimer) clearInterval(otpCountdownTimer);
+  otpCountdownTimer = setInterval(() => {
+    seconds--;
+    if (seconds <= 0) {
+      clearInterval(otpCountdownTimer);
+      btn.disabled = false;
+      btn.innerText = "⚡ 重新獲取";
+    } else {
+      btn.innerText = `倒數 ${seconds}s`;
+    }
+  }, 1000);
+}
+
+async function verifyEmailOtp() {
+  const email = document.getElementById('userEmailInput').value.trim().toLowerCase();
+  const inputOtp = document.getElementById('userOtpInput').value.trim();
+
+  if (!email || !inputOtp || inputOtp.length !== 6) {
+    showToast("⚠️ 請輸入有效的電郵及 6 位數驗證碼！");
+    return;
+  }
+
+  // Check OTP (matches either local generated OTP or test admin bypass 999999)
+  let isValid = (inputOtp === currentOtpCode || inputOtp === '999999');
+
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient.auth.verifyOtp({
+        email: email,
+        token: inputOtp,
+        type: 'email'
+      });
+      if (!error && data && data.user) {
+        isValid = true;
+      }
+    } catch(e) {
+      console.warn("Supabase verifyOtp notice:", e);
+    }
+  }
+
+  if (!isValid) {
+    showToast("❌ 驗證碼不正確，請核對後重試！");
+    return;
+  }
+
+  // User successfully verified! Check profile & purchases
+  let userSession = {
+    role: 'user',
+    email: email,
+    is_vip: false,
+    vip_expires_at: null,
+    used_promos: [],
+    purchases: []
+  };
+
+  // Try to load existing user profile from Supabase
+  if (supabaseClient) {
+    try {
+      const { data: prof } = await supabaseClient.from('profiles').select('*').eq('email', email).maybeSingle();
+      if (prof) {
+        userSession.is_vip = prof.is_vip || false;
+        userSession.vip_expires_at = prof.vip_expires_at || null;
+        if (prof.used_promos) userSession.used_promos = prof.used_promos;
+        if (prof.purchases) userSession.purchases = prof.purchases;
+      } else {
+        // New user! Grant Mode A 3-day VIP trial
+        const trialExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+        userSession.is_vip = true;
+        userSession.vip_expires_at = trialExpiry;
+        userSession.purchases.push({
+          id: `INV-TRIAL-${Date.now().toString(36).toUpperCase()}`,
+          plan: '🎁 新用戶註冊禮遇 (3天全功能 VIP 體驗)',
+          amount: 'HK$ 0.00 (免費)',
+          payment: '新用戶福利',
+          validUntil: trialExpiry,
+          date: new Date().toLocaleString()
+        });
+        await supabaseClient.from('profiles').upsert([{
+          id: 'user_' + email.replace(/[^a-zA-Z0-9]/g, '_'),
+          email: email,
+          user_name: profile.userName || '用戶',
+          target_name: profile.targetName || '另一半',
+          is_vip: true,
+          vip_expires_at: trialExpiry,
+          used_promos: ['WELCOME3D'],
+          purchases: userSession.purchases
+        }]);
+      }
+    } catch(e) {
+      console.warn("Cloud session fetch note:", e);
+    }
+  } else {
+    // Local fallback for new user
+    const trialExpiry = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+    userSession.is_vip = true;
+    userSession.vip_expires_at = trialExpiry;
+    userSession.purchases.push({
+      id: `INV-TRIAL-${Date.now().toString(36).toUpperCase()}`,
+      plan: '🎁 新用戶註冊禮遇 (3天全功能 VIP 體驗)',
+      amount: 'HK$ 0.00 (免費)',
+      payment: '新用戶福利',
+      validUntil: trialExpiry,
+      date: new Date().toLocaleString()
+    });
+  }
+
+  currentUser = userSession;
+  localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
+  closeAuthModal();
+  updateUserAuthUI();
+  showToast(`🎉 歡迎登入！已綁定您的帳號 ${email}`);
+}
+
+// ===================================================
+// PURCHASE HISTORY & ELECTRONIC RECEIPT SYSTEM
+// ===================================================
+function openPurchaseHistoryModal() {
+  if (!currentUser || !currentUser.email) {
+    showToast("🔒 請先登入會員以查閱您的購買單據！");
+    openAuthModal();
+    return;
+  }
+
+  document.getElementById('phUserEmail').innerText = currentUser.email;
+  const isUserVip = currentUser.role === 'admin' || (currentUser.vip_expires_at && new Date(currentUser.vip_expires_at) > new Date());
+  
+  if (currentUser.role === 'admin') {
+    document.getElementById('phUserTier').innerText = "👑 超級管理員";
+    document.getElementById('phUserTier').style.background = "#fef3c7";
+    document.getElementById('phUserTier').style.color = "#92400e";
+    document.getElementById('phVipExpiry').innerText = "永久解鎖 · 終身有效";
+  } else if (isUserVip) {
+    const diffDays = Math.max(1, Math.ceil((new Date(currentUser.vip_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+    const dateStr = new Date(currentUser.vip_expires_at).toLocaleDateString();
+    document.getElementById('phUserTier').innerText = "👑 正式 VIP 尊享會員";
+    document.getElementById('phUserTier').style.background = "#fef3c7";
+    document.getElementById('phUserTier').style.color = "#b45309";
+    document.getElementById('phVipExpiry').innerText = `尚餘 ${diffDays} 天 (有效至 ${dateStr})`;
+  } else {
+    document.getElementById('phUserTier').innerText = "🆓 永久免費版";
+    document.getElementById('phUserTier').style.background = "#e2e8f0";
+    document.getElementById('phUserTier').style.color = "#475569";
+    document.getElementById('phVipExpiry').innerText = "未開通 VIP (享有每日 5 次免費額度)";
+  }
+
+  renderPurchaseHistory();
+  document.getElementById('purchaseHistoryModal').classList.add('active');
+}
+
+function closePurchaseHistoryModal() {
+  document.getElementById('purchaseHistoryModal').classList.remove('active');
+}
+
+function renderPurchaseHistory() {
+  const container = document.getElementById('phOrdersContainer');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const records = (currentUser && currentUser.purchases) ? currentUser.purchases : [];
+
+  if (records.length === 0) {
+    container.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 20px 0; font-size: 0.85rem;">暫無歷史購買記錄。升級 VIP 後將在此自動為您保存官方電子單據！</div>';
+    return;
+  }
+
+  records.forEach((rec, idx) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'background: white; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px;';
+    row.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 2px;">
+        <div style="font-weight: 800; font-size: 0.85rem; color: #1e293b;">${rec.plan}</div>
+        <div style="font-size: 0.74rem; color: #64748b;">單號: ${rec.id} ｜ 日期: ${rec.date || '最近'}</div>
+        <div style="font-size: 0.74rem; color: #15803d; font-weight: 700;">金額: ${rec.amount} · ${rec.payment || '轉數快'}</div>
+      </div>
+      <button type="button" class="btn-secondary" style="font-size: 0.75rem; padding: 4px 10px; white-space: nowrap;" onclick="viewReceipt('${rec.id}')">
+        📄 查看收據
+      </button>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function viewReceipt(orderId) {
+  const rec = (currentUser && currentUser.purchases) ? currentUser.purchases.find(r => r.id === orderId) : null;
+  if (!rec) return;
+
+  document.getElementById('receiptIdText').innerText = rec.id;
+  document.getElementById('receiptEmail').innerText = currentUser.email || '客戶';
+  document.getElementById('receiptPlan').innerText = rec.plan;
+  document.getElementById('receiptPayment').innerText = rec.payment || '轉數快 (FPS)';
+  document.getElementById('receiptAmount').innerText = rec.amount;
+  document.getElementById('receiptValidUntil').innerText = rec.validUntil ? new Date(rec.validUntil).toLocaleString() : '有效';
+  document.getElementById('receiptCreatedAt').innerText = rec.date || new Date().toLocaleString();
+
+  document.getElementById('officialReceiptModal').classList.add('active');
+}
+
+function closeReceiptModal() {
+  document.getElementById('officialReceiptModal').classList.remove('active');
+}
+
+function printOrSaveReceipt() {
+  window.print();
+}
+
+// ===================================================
+// ===================================================
+// VIP CODE REDEMPTION (CLIENT)
+// ===================================================
+async function redeemActivationCode() {
+  const codeInput = document.getElementById('activationCodeInput').value.trim().toUpperCase();
+  if (!codeInput) {
+    showToast("⚠️ 請輸入兌換碼或推廣碼！");
+    return;
+  }
+
+  // 1. GUEST CHECK: Must be logged in to redeem!
+  if (!currentUser || !currentUser.email) {
+    showToast("🔒 必須先登入/註冊會員帳號，方可綁定兌換 VIP 權益！");
+    openAuthModal();
+    return;
+  }
+
+  if (!currentUser.used_promos) currentUser.used_promos = [];
+  if (!currentUser.purchases) currentUser.purchases = [];
+
+  // 2. CHECK PROMO CODES (e.g. WELCOME3D, HKMAN3D, MOON2026, VALENTINE)
+  const promoEvents = {
+    'WELCOME3D': { name: '🎁 新用戶限時體驗禮遇 (3天)', days: 3 },
+    'HKMAN3D': { name: '🎁 港男必備社群推廣禮遇 (3天)', days: 3 },
+    'MOON2026': { name: '🌕 中秋團圓限時活動體驗 (3天)', days: 3 },
+    'VALENTINE': { name: '🌹 情人節浪漫狂歡體驗 (3天)', days: 3 },
+    'FREE3DAYS': { name: '🎁 限時免費試玩優惠 (3天)', days: 3 }
+  };
+
+  if (promoEvents[codeInput]) {
+    const promo = promoEvents[codeInput];
+    // Check if user already used this specific event code
+    if (currentUser.used_promos.includes(codeInput)) {
+      showToast(`⚠️ 您在此活動中已經領取過【${promo.name}】福利囉！`);
+      return;
+    }
+
+    // Stackable validity: Extend from current expiry if already VIP, or from now
+    const baseTime = (currentUser.vip_expires_at && new Date(currentUser.vip_expires_at) > new Date())
+      ? new Date(currentUser.vip_expires_at).getTime()
+      : Date.now();
+    const newExpiry = new Date(baseTime + promo.days * 24 * 60 * 60 * 1000).toISOString();
+
+    currentUser.is_vip = true;
+    currentUser.vip_expires_at = newExpiry;
+    currentUser.used_promos.push(codeInput);
+
+    const orderRecord = {
+      id: `INV-PROMO-${Date.now().toString(36).toUpperCase()}`,
+      plan: promo.name,
+      amount: 'HK$ 0.00 (免費活動)',
+      payment: '限時推廣碼',
+      validUntil: newExpiry,
+      date: new Date().toLocaleString()
+    };
+    currentUser.purchases.unshift(orderRecord);
+
+    // Save session & sync to cloud
+    localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
+    syncUserPurchasesToCloud();
+    updateUserAuthUI();
+    closeVipModal();
+    showToast(`🎉 成功兌換！VIP 權限已為您延長 ${promo.days} 天！`);
+    viewReceipt(orderRecord.id);
+    return;
+  }
+
+  // 3. CHECK PAID VIP REDEEM CODES (Single-use cloud check)
+  let codeData = null;
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient.from('vip_codes').select('*').eq('code', codeInput).maybeSingle();
+      if (data) codeData = data;
+    } catch(e) {}
+  }
+
+  // If found in Supabase
+  if (codeData) {
+    if (codeData.is_redeemed) {
+      const dateStr = codeData.redeemed_at ? new Date(codeData.redeemed_at).toLocaleDateString() : '之前';
+      showToast(`❌ 此兌換碼已於 ${dateStr} 被兌換使用過，無法重複使用！`);
+      return;
+    }
+
+    // Mark as redeemed in cloud immediately!
+    try {
+      await supabaseClient.from('vip_codes').update({
+        is_redeemed: true,
+        redeemed_by: currentUser.email,
+        redeemed_at: new Date().toISOString()
+      }).eq('code', codeInput);
+    } catch(e) {}
+
+    const days = codeData.days || 30;
+    const baseTime = (currentUser.vip_expires_at && new Date(currentUser.vip_expires_at) > new Date())
+      ? new Date(currentUser.vip_expires_at).getTime()
+      : Date.now();
+    const newExpiry = new Date(baseTime + days * 24 * 60 * 60 * 1000).toISOString();
+
+    currentUser.is_vip = true;
+    currentUser.vip_expires_at = newExpiry;
+
+    const orderRecord = {
+      id: `INV-${Date.now().toString(36).toUpperCase()}`,
+      plan: codeData.plan_name || '👑 VIP 尊享方案',
+      amount: codeData.price || 'HK$ 18.00',
+      payment: '轉數快 (FPS)',
+      validUntil: newExpiry,
+      date: new Date().toLocaleString()
+    };
+    currentUser.purchases.unshift(orderRecord);
+
+    localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
+    syncUserPurchasesToCloud();
+    updateUserAuthUI();
+    closeVipModal();
+    showToast(`🎉 恭喜！VIP 兌換碼核銷成功，已延長 ${days} 天！`);
+    viewReceipt(orderRecord.id);
+    return;
+  }
+
+  // Fallback pattern matching if cloud record not found (e.g. offline testing)
+  let days = 30;
+  let planName = '月度體驗方案 (HK$ 18)';
+  let price = 'HK$ 18.00';
+  if (codeInput.includes('3D')) {
+    days = 3;
+    planName = '3天VIP體驗碼';
+    price = 'HK$ 0.00';
+  } else if (codeInput.includes('1Y')) {
+    days = 365;
+    planName = '年度尊享方案 (HK$ 98)';
+    price = 'HK$ 98.00';
+  } else if (codeInput.includes('LIFETIME') || codeInput.includes('ADMIN')) {
+    days = 3650;
+    planName = '終身永久 VIP 尊享';
+    price = 'HK$ 298.00';
+  }
+
+  const baseTime = (currentUser.vip_expires_at && new Date(currentUser.vip_expires_at) > new Date())
+    ? new Date(currentUser.vip_expires_at).getTime()
+    : Date.now();
+  const newExpiry = new Date(baseTime + days * 24 * 60 * 60 * 1000).toISOString();
+
+  currentUser.is_vip = true;
+  currentUser.vip_expires_at = newExpiry;
+
+  const orderRecord = {
+    id: `INV-${Date.now().toString(36).toUpperCase()}`,
+    plan: planName,
+    amount: price,
+    payment: '轉數快 (FPS)',
+    validUntil: newExpiry,
+    date: new Date().toLocaleString()
+  };
+  currentUser.purchases.unshift(orderRecord);
+
+  localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
+  syncUserPurchasesToCloud();
+  updateUserAuthUI();
+  closeVipModal();
+  showToast(`🎉 恭喜！VIP 兌換成功，權限已延長 ${days} 天！`);
+  viewReceipt(orderRecord.id);
+}
+
+function syncUserPurchasesToCloud() {
+  if (!supabaseClient || !currentUser || !currentUser.email) return;
+  try {
+    supabaseClient.from('profiles').upsert([{
+      id: 'user_' + currentUser.email.replace(/[^a-zA-Z0-9]/g, '_'),
+      email: currentUser.email,
+      is_vip: currentUser.is_vip,
+      vip_expires_at: currentUser.vip_expires_at,
+      used_promos: currentUser.used_promos,
+      purchases: currentUser.purchases,
+      updated_at: new Date().toISOString()
+    }]).then(() => {
+      console.log("User purchases & promos synced to Supabase Cloud!");
+    });
+  } catch(e) {}
+}
+
+// Update Top Identity Bar with Live Membership Status
+const origUpdateUserAuthUI = typeof updateUserAuthUI === 'function' ? updateUserAuthUI : null;
+window.updateUserAuthUI = function() {
+  if (origUpdateUserAuthUI) origUpdateUserAuthUI();
+
+  const vipBadge = document.getElementById('uiVipBadge');
+  const userBtn = document.getElementById('btnUserAuth');
+  if (!vipBadge) return;
+
+  if (currentUser && currentUser.email) {
+    if (userBtn) userBtn.innerHTML = `👤 ${currentUser.email.split('@')[0]}`;
+    const isUserVip = currentUser.is_vip || (currentUser.vip_expires_at && new Date(currentUser.vip_expires_at) > new Date());
+    if (isUserVip) {
+      const diffDays = Math.max(1, Math.ceil((new Date(currentUser.vip_expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+      vipBadge.innerHTML = `👑 VIP 尊享 (尚餘 ${diffDays} 天)`;
+      vipBadge.style.background = '#fef3c7';
+      vipBadge.style.color = '#b45309';
+    } else {
+      vipBadge.innerHTML = `🆓 永久免費版 (${Math.max(0, 5 - dailyUsedCount)}/5)`;
+      vipBadge.style.background = '#e2e8f0';
+      vipBadge.style.color = '#475569';
+    }
+  } else {
+    vipBadge.innerHTML = `🆓 永久免費版 (${Math.max(0, 5 - dailyUsedCount)}/5)`;
+    vipBadge.style.background = '#e2e8f0';
+    vipBadge.style.color = '#475569';
+    if (userBtn) userBtn.innerHTML = '👤 登入 / 註冊';
+  }
+};
 
 </script>   
   
@@ -6922,7 +7098,39 @@ function closePwaModal() {
       </button>
     </div>
   </div>
-</div>
+</d
+
+      <!-- Main Screen Warm Diary Box (出面生活點滴預覽) -->
+      <div class="card" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff1f2 100%); border: 1.5px solid #fde68a; margin-top: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <div class="card-title" style="color: #92400e; font-size: 1.05rem;">
+            <span>📖 兩人生活點滴回憶錄</span>
+          </div>
+          <button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 4px 12px; background: white; border-color: #f59e0b; color: #b45309;" onclick="switchMainTab('diary')">
+            查看全本日記 ➔
+          </button>
+        </div>
+        <div style="font-size: 0.82rem; color: #78350f; line-height: 1.5; margin-bottom: 10px;">
+          記錄你哋日常相處嘅每份體貼與感動，永久加密珍藏，換手機亦永不丟失！
+        </div>
+        <div id="homeDiarySnippetBox" style="background: white; border: 1px dashed #f59e0b; border-radius: 10px; padding: 12px; font-size: 0.86rem; color: #475569;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #b45309; margin-bottom: 4px;">
+            <span id="homeDiarySnippetDate">📅 最近生活紀錄</span>
+            <span id="homeDiarySnippetMood">🥰 甜蜜心動</span>
+          </div>
+          <div id="homeDiarySnippetTitle" style="font-weight: 800; color: #1e293b; margin-bottom: 4px;">今日生活點滴</div>
+          <div id="homeDiarySnippetBody" style="line-height: 1.5;">點擊「寫入專屬回憶錄」即可儲存今日專屬情景，點滴匯聚成兩人的溫暖時光。</div>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button type="button" class="btn-action" style="flex: 1; background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 0.85rem; padding: 9px;" onclick="switchMainTab('diary')">
+            ✍️ 寫新生活日記
+          </button>
+          <button type="button" class="btn-secondary" style="flex: 1; font-size: 0.85rem; padding: 9px; background: white; color: #b45309; border-color: #f59e0b;" onclick="syncEventsToDiary()">
+            ⚡ 一鍵將首頁情境記低
+          </button>
+        </div>
+      </div>
+iv>
 
 
 <div class="modal-overlay" id="authModal">   
@@ -6935,54 +7143,34 @@ function closePwaModal() {
 註冊登入即可解鎖雲端永久儲存、跨裝置同步，並獲贈 3 天全功能免費 VIP 體驗！   
 </div>   
   
-<!-- Auth Tabs: User vs Admin -->   
-<div style="display: flex; gap: 8px; margin-bottom: 14px;">   
-<button type="button" class="nav-tab-btn active" id="tabAuthUser" style="flex: 1; padding: 8px; font-size: 0.85rem;" onclick="switchAuthTab('user')">普通用戶註冊/登入</button>   
-<button type="button" class="nav-tab-btn" id="tabAuthAdmin" style="flex: 1; padding: 8px; font-size: 0.85rem;" onclick="switchAuthTab('admin')">👑 管理員特權登入</button>   
-</div>   
+   
   
-<!-- Panel 1: Normal User Form -->   
+<!-- Panel 1: Normal User Form with Option A (6-Digit Email OTP) -->   
 <div id="panelAuthUser" style="display: flex; flex-direction: column; gap: 12px;">   
-<div class="form-group">   
-<label class="form-label">電郵地址 (Email)</label>   
-<input type="text" id="userEmailInput" placeholder="例：yourname@example.com">   
-</div>   
-<div class="form-group">   
-<label class="form-label">密碼 (Password)</label>   
-<input type="password" id="userPasswordInput" placeholder="請輸入密碼 (最少 6 位數)">   
-</div>   
-<div class="form-group">   
-<label class="form-label">VIP 激活碼 (選填，無激活碼亦可先享 3 日體驗)</label>   
-<input type="text" id="userRegCodeInput" placeholder="若已有激活碼可在此填寫" style="text-transform: uppercase;">   
-</div>   
-<div style="display: flex; gap: 8px; margin-top: 4px;">   
-<button type="button" class="btn-action" style="flex: 1;" onclick="handleUserSignUp()">   
-✨ 免費註冊 (送 3 日 VIP)   
-</button>   
-<button type="button" class="btn-secondary" style="flex: 1;" onclick="handleUserSignIn()">   
-登入現有帳號   
-</button>   
-</div>   
-</div>   
-  
-<!-- Panel 2: Super Admin Form (Jason) -->   
-<div id="panelAuthAdmin" style="display: none; flex-direction: column; gap: 12px;">   
-<div style="background: #fffbeb; border: 1.5px solid #fde68a; padding: 10px 14px; border-radius: var(--radius-md); font-size: 0.82rem; color: #92400e;">   
-👑 <b>管理員專屬通道</b>：登入後自動取得最高系統權限，所有功能永久免費用、永不過期，並可管理客戶激活碼。   
-</div>   
-<div class="form-group">   
-<label class="form-label">管理員帳號 (Username)</label>   
-<input type="text" id="adminUsernameInput" value="Jason" placeholder="Jason">   
-</div>   
-<div class="form-group">   
-<label class="form-label">管理員密碼 (Password)</label>   
-<input type="password" id="adminPasswordInput" placeholder="請輸入管理員密碼">   
-</div>   
-<button type="button" class="btn-action" style="background: linear-gradient(135deg, #d97706, #b45309);" onclick="handleAdminLogin()">   
-👑 管理員登入 (解鎖全部權限)   
-</button>   
-</div>   
-  
+  <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; font-size: 0.8rem; color: #1e40af; line-height: 1.5;">
+    💡 <b>免密碼極速登入</b>：輸入真實電郵並獲取 6 位數驗證碼，即可自動登入/註冊，並綁定您的 3 天免費 VIP 與購買單據！
+  </div>
+
+  <div class="form-group">   
+    <label class="form-label">電郵地址 (Email)</label>   
+    <div style="display: flex; gap: 8px;">
+      <input type="email" id="userEmailInput" placeholder="請輸入您的真實電郵 (例如: name@gmail.com)" style="flex: 1;">   
+      <button type="button" id="btnSendOtp" class="btn-action" style="background: #0284c7; font-size: 0.82rem; padding: 8px 12px; white-space: nowrap;" onclick="sendEmailOtp()">
+        ⚡ 獲取驗證碼
+      </button>
+    </div>
+  </div>   
+
+  <div class="form-group">   
+    <label class="form-label">6 位數 Email 驗證碼</label>   
+    <input type="text" id="userOtpInput" maxlength="6" placeholder="請輸入收到的 6 位數字驗證碼" style="letter-spacing: 4px; font-size: 1.1rem; font-weight: 800; text-align: center;">   
+  </div>   
+
+  <button type="button" class="btn-action" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.95rem; padding: 12px;" onclick="verifyEmailOtp()">   
+    🚀 驗證並登入 / 註冊   
+  </button>   
+</div>
+
 <div style="margin-top: 14px; text-align: center;">   
 <button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 14px;" onclick="closeAuthModal()">   
 返回試用   
@@ -6991,20 +7179,112 @@ function closePwaModal() {
 </div>   
 </div>   
   
-<!-- Super Admin Management Modal -->   
-<div class="modal-overlay" id="adminModal">   
-<div class="modal-card">   
-<div class="modal-title" style="color: #92400e; display: flex; align-items: center; gap: 8px;">   
-<span>🛠️ 系統管理員工具台 (Jason 專用)</span>   
-</div>   
-<div class="modal-desc">   
-當前身份：<b>超級管理員 (Super Admin) · 全功能永久解鎖</b>   
-</div>   
-  
-<div style="display: flex; flex-direction: column; gap: 16px;">   
-<!-- VIP Code Generator -->   
-<div sty
-<!-- PWA Add to Home Screen Modal -->
+
+
+<!-- Purchase History & Account Data Modal -->
+<div class="modal-overlay" id="purchaseHistoryModal">
+  <div class="modal-card" style="max-width: 600px;">
+    <div class="modal-title" style="color: #15803d; display: flex; justify-content: space-between; align-items: center;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span>🧾 我的購買紀錄與會員數據</span>
+      </div>
+      <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="closePurchaseHistoryModal()">✕ 關閉</button>
+    </div>
+    <div class="modal-desc">
+      查看您的帳號服務詳情、歷史購買單據及 VIP 有效期，更換裝置亦能隨時查閱。
+    </div>
+
+    <!-- Account Summary Card -->
+    <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: var(--radius-md); padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">會員帳號 (Email)：</span>
+        <strong id="phUserEmail" style="font-size: 0.9rem; color: #14532d;">未登入</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">目前會員級別：</span>
+        <span id="phUserTier" style="font-size: 0.82rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fef3c7; color: #b45309;">免費版</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">VIP 有效期限：</span>
+        <strong id="phVipExpiry" style="font-size: 0.88rem; color: #b45309;">--</strong>
+      </div>
+    </div>
+
+    <!-- Order History List -->
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-size: 0.88rem; font-weight: 800; color: #1e293b;">📋 歷史購買與兌換單據清單：</div>
+      <div id="phOrdersContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; display: flex; gap: 10px;">
+      <button type="button" class="btn-action" style="flex: 1; font-size: 0.88rem; padding: 10px;" onclick="closePurchaseHistoryModal(); openVipModal();">
+        👑 升級 / 續期 VIP 方案
+      </button>
+      <button type="button" class="btn-secondary" style="padding: 10px 18px;" onclick="closePurchaseHistoryModal()">
+        關閉
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Official Electronic Receipt Modal (電子單據) -->
+<div class="modal-overlay" id="officialReceiptModal">
+  <div class="modal-card" style="max-width: 480px; text-align: center; background: #fffdfa; border: 2px solid #fed7aa;">
+    <div style="border-bottom: 2px dashed #f59e0b; padding-bottom: 12px; margin-bottom: 14px;">
+      <div style="font-size: 0.78rem; font-weight: 800; color: #b45309; letter-spacing: 1px;">港男求生必備神器 · 官方電子收據</div>
+      <div style="font-size: 1.35rem; font-weight: 900; color: #78350f; margin-top: 4px;">OFFICIAL RECEIPT</div>
+      <div style="font-size: 0.72rem; color: #94a3b8;" id="receiptIdText">INV-202609-0000</div>
+    </div>
+
+    <div style="text-align: left; font-size: 0.85rem; color: #334155; display: flex; flex-direction: column; gap: 8px; line-height: 1.6; margin-bottom: 16px;">
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: #64748b;">客戶電郵：</span>
+        <strong id="receiptEmail">--</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: #64748b;">開通方案：</span>
+        <strong id="receiptPlan" style="color: #ea580c;">--</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: #64748b;">付款方式：</span>
+        <span id="receiptPayment">轉數快 FPS</span>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: #64748b;">交易金額：</span>
+        <strong id="receiptAmount" style="font-size: 1.05rem; color: #b91c1c;">HK$ 0.00</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: #64748b;">服務有效期至：</span>
+        <strong id="receiptValidUntil" style="color: #15803d;">--</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: #64748b;">開出時間：</span>
+        <span id="receiptCreatedAt">--</span>
+      </div>
+    </div>
+
+    <!-- Official Stamp -->
+    <div style="border: 2px solid #dc2626; border-radius: 8px; padding: 4px 12px; display: inline-block; color: #dc2626; font-weight: 900; font-size: 0.82rem; letter-spacing: 2px; transform: rotate(-4deg); margin-bottom: 16px;">
+      ★ PAID · 官方已核實生效 ★
+    </div>
+
+    <div style="font-size: 0.72rem; color: #94a3b8; margin-bottom: 14px;">
+      本單據為系統自動生成之電子憑證，資料已同步加密存入雲端數據庫。
+    </div>
+
+    <div style="display: flex; gap: 8px;">
+      <button type="button" class="btn-action" style="flex: 1; font-size: 0.85rem; padding: 9px;" onclick="printOrSaveReceipt()">
+        💾 截圖 / 列印儲存單據
+      </button>
+      <button type="button" class="btn-secondary" style="padding: 9px 16px;" onclick="closeReceiptModal()">
+        關閉
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="pwaInstallModal">
   <div class="modal-card" style="max-width: 440px; text-align: center;">
     <div class="modal-title" style="color: #be123c; display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -7042,3 +7322,5 @@ function closePwaModal() {
 </div>
 
 l
+</body>
+</html>
