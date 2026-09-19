@@ -1699,9 +1699,9 @@ VIEW 1: GENERATOR VIEW (DEFAULT)
 </button>   
 </div>   
 <div class="history-list" id="historyList"></div>   
-</div>   
-  
-</div>   
+</div> <!-- closes history-card -->
+</div> <!-- closes app-grid -->
+</div> <!-- closes #generatorView -->   
   
 <!-- ========================================================   
 VIEW 2: WARM DIARY & MEMORY TIMELINE (NEW FEATURE)   
@@ -1859,7 +1859,11 @@ onselectstart="handleDiarySelectStart(event)">
 <div id="diaryEntriesList" style="display: flex; flex-direction: column; gap: 14px; max-height: 520px; overflow-y: auto; padding-right: 4px;">   
 <!-- Rendered dynamically -->   
   
-</div>  
+</div>
+</div> <!-- closes diary right card -->
+</div> <!-- closes diary-grid -->
+</div> <!-- closes #diaryView -->
+  
   
 <!-- App Footer / Credits -->   
 <footer class="app-footer">   
@@ -2113,6 +2117,401 @@ onselectstart="handleDiarySelectStart(event)">
 <span id="toastMsg">訊息已複製到剪貼簿！即刻貼去 WhatsApp 啦！</span>   
 </div>   
   
+
+
+   
+  
+  
+<!-- VIP Exclusive Share Modal -->   
+<div class="modal-overlay" id="shareModal">   
+<div class="modal-card">   
+<div class="modal-title" style="color: #be123c; display: flex; align-items: center; gap: 8px;">   
+<span>💌 生成太太專屬回憶錄連結 (VIP 特權)</span>   
+</div>   
+<div class="modal-desc">   
+系統將為你生成一條專屬加密連結，並附帶 WhatsApp 甜蜜邀請函。只有輸入正確密碼先可以解鎖！   
+</div>   
+  
+<div style="display: flex; flex-direction: column; gap: 14px;">   
+  
+<!-- Share Link Style Selector -->   
+<div class="form-group" style="background: #fdf2f8; border: 1.5px solid #fbcfe8; padding: 12px; border-radius: var(--radius-md);">   
+<label class="form-label" style="color: #9d174d; font-weight: 700;">   
+<span>🔗 網址長度風格選擇：</span>   
+</label>   
+<div style="display: flex; gap: 8px; margin-top: 6px;">   
+<button type="button" id="btnShareModeShort" class="chip-btn active" style="flex: 1; padding: 8px; font-weight: 700;" onclick="setShareUrlMode('short')">   
+✨ 雲端超短網址（僅一行！推薦）   
+</button>   
+<button type="button" id="btnShareModeOffline" class="chip-btn" style="flex: 1; padding: 8px; font-weight: 700;" onclick="setShareUrlMode('offline')">   
+📦 離線加密長網址（備用）   
+</button>   
+</div>   
+<div style="font-size: 0.78rem; color: #831843; margin-top: 6px;">   
+💡 <b>推薦選擇「雲端超短網址」</b>：連結極短乾淨，不會再唱到成個畫面！太太點擊後自動自雲端安全載入最新回憶與相片。   
+</div>   
+</div>   
+  
+<!-- Public URL Configuration to avoid file:/// or intranet issues -->   
+<div class="form-group" style="background: #fffbeb; border: 1.5px solid #fed7aa; padding: 12px; border-radius: var(--radius-md);">   
+<label class="form-label" style="color: #92400e;">   
+<span>🌐 固定公開網址（解決內聯網太太睇唔到問題）：</span>   
+</label>   
+<div style="font-size: 0.78rem; color: #78350f; margin-bottom: 6px;">   
+⚠️ 提示：若使用本機開啟 (file:/// 或 localhost)，太太手機在流動網絡無法打開。請填入你的公開發佈網址（如 GitHub Pages）：   
+</div>   
+<input type="text" id="customPublicUrlInput" placeholder="例：https://jasonchow739.github.io/ai-boyfriend/index.html" oninput="saveCustomPublicUrl()">   
+<div class="chip-group" style="margin-top: 4px;">   
+<button type="button" class="chip-btn" onclick="setQuickPublicUrl('https://jasonchow739.github.io/ai-boyfriend/index.html')">套用 GitHub Pages 網址範例</button>   
+<button type="button" class="chip-btn" onclick="useCurrentBrowserUrl()">使用當前瀏覽器網址</button>   
+</div>   
+</div>   
+  
+<div class="form-group">   
+<label class="form-label">🔑 設定專屬愛情密碼（解鎖金鑰）：</label>   
+<input type="text" id="sharePasswordInput" value="5201314" oninput="updateSharePreview()" placeholder="例：5201314、結婚紀念日、老婆生日">   
+<div class="chip-group">   
+<button type="button" class="chip-btn" onclick="setSharePassword('5201314')">5201314</button>   
+<button type="button" class="chip-btn" onclick="setSharePassword('1314')">1314</button>   
+<button type="button" class="chip-btn" onclick="setSharePassword('0918')">0918 (今日)</button>   
+<button type="button" class="chip-btn" onclick="setSharePassword('老婆我愛你')">老婆我愛你</button>   
+</div>   
+</div>   
+  
+<!-- Select which entries to include (remove duplicates) -->   
+<div class="form-group">   
+<label class="form-label" style="justify-content: space-between;">   
+<span>📝 勾選要包含的回憶（剔除重複項目）：</span>   
+<span style="font-size: 0.75rem; color: var(--slate-600);">未勾選者不會出現在專屬連結</span>   
+</label>   
+<div id="shareEntriesChecklist" style="max-height: 140px; overflow-y: auto; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;">   
+<!-- dynamically rendered checkboxes -->   
+</div>   
+</div>   
+  
+<div class="form-group">   
+<label class="form-label">💬 邀請函深情前言（連同連結一併發送）：</label>   
+<textarea id="shareInviteMessageInput" rows="3" oninput="updateSharePreview()"></textarea>   
+<div class="chip-group">   
+<button type="button" class="chip-btn" onclick="setSharePreset(1)">深情走心版</button>   
+<button type="button" class="chip-btn" onclick="setSharePreset(2)">日常驚喜版</button>   
+<button type="button" class="chip-btn" onclick="setSharePreset(3)">吵架和好破冰版</button>   
+</div>   
+</div>   
+  
+<div style="background: #fdf2f8; border: 1.5px dashed #f43f5e; border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; gap: 8px;">   
+<div style="font-size: 0.85rem; font-weight: 700; color: #be123c;">📱 完整 WhatsApp 傳送內容預覽：</div>   
+<div id="fullInvitePreview" style="font-size: 0.86rem; color: #1e293b; background: white; padding: 10px; border-radius: 8px; border: 1px solid #fed7aa; white-space: pre-wrap;"></div>   
+</div>   
+  
+<div style="display: flex; flex-direction: column; gap: 8px;">   
+<button class="btn-copy" style="background: #25D366; font-size: 1rem;" onclick="copyFullInviteMessage()">   
+<span>📋 一鍵複製 WhatsApp 邀請函 (含連結與密碼)</span>   
+</button>   
+<button type="button" class="btn-secondary" onclick="closeShareModal()">   
+關閉視窗   
+</button>   
+</div>   
+</div>   
+</div>   
+</div>   
+  
+<!-- PARTNER READER VIEW (OVERLAY WHEN ACCESSED VIA SHARE LINK) -->   
+<div id="partnerReaderView" style="display: none; position: fixed; inset: 0; background: #fffdfa; z-index: 99999; overflow-y: auto; overscroll-behavior: contain; padding: 20px 14px 80px; -webkit-overflow-scrolling: touch;">   
+<div style="max-width: 680px; margin: 0 auto;">   
+  
+<!-- Reader Lock Card -->   
+<div id="readerLockCard" style="background: white; border-radius: var(--radius-lg); padding: 32px 24px; box-shadow: var(--shadow-lg); text-align: center; border: 2px solid #fda4af; margin-top: 40px;">   
+<div style="font-size: 3rem; margin-bottom: 10px;">💌</div>   
+<h2 style="font-size: 1.5rem; font-weight: 900; color: #be123c; margin-bottom: 6px;" id="readerLockTitle">親愛的麗珊</h2>   
+<p style="font-size: 0.92rem; color: #475569; margin-bottom: 20px;">   
+<span id="readerLockSender">老公</span> 悄悄為你打造了一本專屬生活點滴回憶錄 💍<br>   
+每一篇都記載著屬於我哋走過的溫暖時光。   
+</p>   
+  
+<div style="background: #fff5f6; padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">   
+<label style="display: block; font-size: 0.85rem; font-weight: 800; color: #be123c; margin-bottom: 8px;">   
+🔒 請輸入專屬愛情解鎖密碼：   
+</label>   
+<input type="password" id="readerPasswordInput" placeholder="請輸入解鎖密碼" style="max-width: 280px; text-align: center; font-size: 1.1rem; letter-spacing: 2px; font-weight: bold; margin: 0 auto 8px;">   
+<div id="readerErrorMsg" style="font-size: 0.8rem; color: #dc2626; display: none; margin-bottom: 8px;">密碼不正確呀，再試下好嘛？❤️</div>   
+  
+<!-- Remember password toggle -->   
+<label style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.82rem; color: #be123c; cursor: pointer; user-select: none;">   
+<input type="checkbox" id="readerRememberPwd" checked>   
+<span>在此手機記住密碼（下次打開自動解鎖免重複輸入）</span>   
+</label>   
+</div>   
+  
+<button class="btn-action" style="width: 100%; max-width: 280px; margin: 0 auto; background: linear-gradient(135deg, #e11d48, #be123c);" onclick="unlockPartnerDiary()">   
+<span>💖 打開專屬時光回憶錄</span>   
+</button>   
+  
+<div style="margin-top: 24px; font-size: 0.78rem; color: #94a3b8;">   
+🌸 專屬於兩人的私密浪漫時光   
+</div>   
+</div>   
+  
+<!-- Reader Unlocked Content Card -->   
+<div id="readerContentCard" style="display: none; flex-direction: column; gap: 20px;">   
+<div style="background: white; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); text-align: center; border: 2px solid #fbcfe8;">   
+<div style="font-size: 2.2rem;">💍</div>   
+<h2 style="font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, #be123c, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="readerUnlockedTitle">   
+麗珊與老公的專屬時光回憶錄   
+</h2>   
+<p style="font-size: 0.88rem; color: #78350f; margin-top: 6px;">   
+「時光清淺，有你便是一生最大的福氣。」   
+</p>   
+</div>   
+  
+<!-- Timeline Entries for Partner -->   
+<div id="readerTimelineList" style="display: flex; flex-direction: column; gap: 16px;"></div>   
+  
+<!-- Reply to Husband CTA -->   
+<div style="background: white; border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow); text-align: center; border: 1.5px solid #25D366;">   
+<h3 style="font-size: 1.1rem; font-weight: 800; color: #166534; margin-bottom: 6px;">   
+🥰 睇完係咪好感動？   
+</h3>   
+<p style="font-size: 0.85rem; color: #475569; margin-bottom: 14px;">   
+傳送一個甜蜜的 WhatsApp 回覆畀老公，話佢知你收到了這份愛 ❤️   
+</p>   
+<a id="btnReplyHusband" href="https://wa.me/?text=老公，我睇咗你整嗰本日記啦，好感動好sweet呀！多謝你一直咁鍚我！❤️❤️" target="_blank" class="btn-copy" style="text-decoration: none; width: 100%; max-width: 320px; margin: 0 auto; display: flex;">   
+<span>💬 WhatsApp 甜蜜回覆老公</span>   
+</a>   
+</div>   
+  
+<div style="text-align: center; margin-top: 10px; display: flex; justify-content: center; gap: 10px;">   
+<button class="btn-secondary" style="font-size: 0.78rem; padding: 6px 14px;" onclick="forgetSavedPassword()">   
+🔒 清除此裝置記住的密碼   
+</button>   
+<button class="btn-secondary" style="font-size: 0.78rem; padding: 6px 14px;" onclick="exitReaderMode()">   
+退出專屬瀏覽模式   
+</button>   
+</div>   
+</div>   
+  
+</div>   
+</div>   
+  
+  
+<!-- Login / Register Modal -->   
+  
+<!-- Romantic Polaroid Card Modal (方案 2) -->  
+<div class="modal-overlay" id="romanticCardModal">  
+ <div class="modal-card" style="max-width: 480px; text-align: center;">  
+ <div class="modal-title" style="color: #be123c;">💌 專屬深情拍立得卡片</div>  
+ <div class="modal-desc">已為您將當前情話排版為拍立得手寫風信件，可長按儲存或一鍵下載發給對方！</div>  
+   
+<div style="margin: 14px auto; max-width: 100%; border-radius: 14px; box-shadow: 0 10px 25px rgba(225, 29, 72, 0.15); display: flex; justify-content: center; background: #fff1f2; padding: 8px;">  
+ <canvas id="romanticCanvas" width="720" height="900" style="width: 100%; max-width: 340px; height: auto; border-radius: 10px; display: block;"></canvas>  
+ </div>  
+  
+ <div style="display: flex; gap: 10px; justify-content: center; margin-top: 16px;">  
+ <button type="button" class="btn-action" style="flex: 1; font-size: 0.92rem; padding: 10px;" onclick="downloadRomanticCard()">  
+ 💾 下載卡片 (PNG)  
+ </button>  
+ <button type="button" class="btn-secondary" style="padding: 10px 18px;" onclick="closeRomanticCardModal()">  
+ 關閉  
+ </button>  
+ </div>  
+ </div>  
+</d  
+  
+ <!-- Main Screen Warm Diary Box (出面生活點滴預覽) -->  
+ <div class="card" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff1f2 100%); border: 1.5px solid #fde68a; margin-top: 20px;">  
+ <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">  
+ <div class="card-title" style="color: #92400e; font-size: 1.05rem;">  
+ <span>📖 兩人生活點滴回憶錄</span>  
+ </div>  
+ <button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 4px 12px; background: white; border-color: #f59e0b; color: #b45309;" onclick="switchMainTab('diary')">  
+ 查看全本日記 ➔  
+ </button>  
+ </div>  
+ <div style="font-size: 0.82rem; color: #78350f; line-height: 1.5; margin-bottom: 10px;">  
+ 記錄你哋日常相處嘅每份體貼與感動，永久加密珍藏，換手機亦永不丟失！  
+ </div>  
+ <div id="homeDiarySnippetBox" style="background: white; border: 1px dashed #f59e0b; border-radius: 10px; padding: 12px; font-size: 0.86rem; color: #475569;">  
+ <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #b45309; margin-bottom: 4px;">  
+ <span id="homeDiarySnippetDate">📅 最近生活紀錄</span>  
+ <span id="homeDiarySnippetMood">🥰 甜蜜心動</span>  
+ </div>  
+ <div id="homeDiarySnippetTitle" style="font-weight: 800; color: #1e293b; margin-bottom: 4px;">今日生活點滴</div>  
+ <div id="homeDiarySnippetBody" style="line-height: 1.5;">點擊「寫入專屬回憶錄」即可儲存今日專屬情景，點滴匯聚成兩人的溫暖時光。</div>  
+ </div>  
+ <div style="display: flex; gap: 8px; margin-top: 12px;">  
+ <button type="button" class="btn-action" style="flex: 1; background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 0.85rem; padding: 9px;" onclick="switchMainTab('diary')">  
+ ✍️ 寫新生活日記  
+ </button>  
+ <button type="button" class="btn-secondary" style="flex: 1; font-size: 0.85rem; padding: 9px; background: white; color: #b45309; border-color: #f59e0b;" onclick="syncEventsToDiary()">  
+ ⚡ 一鍵將首頁情境記低  
+ </button>  
+ </div>  
+ </div>  
+</div>  
+  
+<div class="modal-overlay" id="authModal">   
+<div class="modal-card">   
+<div class="modal-title" style="display: flex; justify-content: space-between; align-items: center;">   
+<span>👤 會員登入 / 註冊</span>   
+<span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 999px;">新用戶享 3 日 VIP 免費體驗</span>   
+</div>   
+<div class="modal-desc">   
+註冊登入即可解鎖雲端永久儲存、跨裝置同步，並獲贈 3 天全功能免費 VIP 體驗！   
+</div>   
+  
+  
+  
+<!-- Panel 1: Normal User Form with Option A (6-Digit Email OTP) -->   
+<div id="panelAuthUser" style="display: flex; flex-direction: column; gap: 12px;">   
+<div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; font-size: 0.8rem; color: #1e40af; line-height: 1.5;">  
+ 💡 <b>免密碼極速登入</b>：輸入真實電郵並獲取 6 位數驗證碼，即可自動登入/註冊，並綁定您的 3 天免費 VIP 與購買單據！  
+ </div>  
+  
+ <div class="form-group">   
+<label class="form-label">電郵地址 (Email)</label>   
+<div style="display: flex; gap: 8px;">  
+ <input type="email" id="userEmailInput" placeholder="請輸入您的真實電郵 (例如: name@gmail.com)" style="flex: 1;">   
+<button type="button" id="btnSendOtp" class="btn-action" style="background: #0284c7; font-size: 0.82rem; padding: 8px 12px; white-space: nowrap;" onclick="sendEmailOtp()">  
+ ⚡ 獲取驗證碼  
+ </button>  
+ </div>  
+ </div>   
+  
+<div class="form-group">   
+<label class="form-label">6 位數 Email 驗證碼</label>   
+<input type="text" id="userOtpInput" maxlength="6" placeholder="請輸入收到的 6 位數字驗證碼" style="letter-spacing: 4px; font-size: 1.1rem; font-weight: 800; text-align: center;">   
+</div>   
+  
+<button type="button" class="btn-action" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.95rem; padding: 12px;" onclick="verifyEmailOtp()">   
+🚀 驗證並登入 / 註冊   
+</button>   
+</div>  
+  
+<div style="margin-top: 14px; text-align: center;">   
+<button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 14px;" onclick="closeAuthModal()">   
+返回試用   
+</button>   
+</div>   
+</div>   
+</div>   
+  
+  
+  
+<!-- Purchase History & Account Data Modal -->  
+<div class="modal-overlay" id="purchaseHistoryModal">  
+ <div class="modal-card" style="max-width: 600px;">  
+ <div class="modal-title" style="color: #15803d; display: flex; justify-content: space-between; align-items: center;">  
+ <div style="display: flex; align-items: center; gap: 8px;">  
+ <span>🧾 我的購買紀錄與會員數據</span>  
+ </div>  
+ <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="closePurchaseHistoryModal()">✕ 關閉</button>  
+ </div>  
+ <div class="modal-desc">  
+ 查看您的帳號服務詳情、歷史購買單據及 VIP 有效期，更換裝置亦能隨時查閱。  
+ </div>  
+  
+ <!-- Account Summary Card -->  
+ <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: var(--radius-md); padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px;">  
+ <div style="display: flex; justify-content: space-between; align-items: center;">  
+ <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">會員帳號 (Email)：</span>  
+ <strong id="phUserEmail" style="font-size: 0.9rem; color: #14532d;">未登入</strong>  
+ </div>  
+ <div style="display: flex; justify-content: space-between; align-items: center;">  
+ <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">目前會員級別：</span>  
+ <span id="phUserTier" style="font-size: 0.82rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fef3c7; color: #b45309;">免費版</span>  
+ </div>  
+ <div style="display: flex; justify-content: space-between; align-items: center;">  
+ <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">VIP 有效期限：</span>  
+ <strong id="phVipExpiry" style="font-size: 0.88rem; color: #b45309;">--</strong>  
+ </div>  
+ </div>  
+  
+ <!-- Order History List -->  
+ <div style="display: flex; flex-direction: column; gap: 10px;">  
+ <div style="font-size: 0.88rem; font-weight: 800; color: #1e293b;">📋 歷史購買與兌換單據清單：</div>  
+ <div id="phOrdersContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">  
+ <!-- Populated dynamically -->  
+ </div>  
+ </div>  
+  
+ <div style="margin-top: 16px; display: flex; gap: 10px;">  
+ <button type="button" class="btn-action" style="flex: 1; font-size: 0.88rem; padding: 10px;" onclick="closePurchaseHistoryModal(); openVipModal();">  
+ 👑 升級 / 續期 VIP 方案  
+ </button>  
+ <button type="button" class="btn-secondary" style="padding: 10px 18px;" onclick="closePurchaseHistoryModal()">  
+ 關閉  
+ </button>  
+ </div>  
+ </div>  
+</div>  
+  
+<!-- Official Electronic Receipt Modal (電子單據) -->  
+<div class="modal-overlay" id="officialReceiptModal">  
+ <div class="modal-card" style="max-width: 480px; text-align: center; background: #fffdfa; border: 2px solid #fed7aa;">  
+ <div style="border-bottom: 2px dashed #f59e0b; padding-bottom: 12px; margin-bottom: 14px;">  
+ <div style="font-size: 0.78rem; font-weight: 800; color: #b45309; letter-spacing: 1px;">港男求生必備神器 · 官方電子收據</div>  
+ <div style="font-size: 1.35rem; font-weight: 900; color: #78350f; margin-top: 4px;">OFFICIAL RECEIPT</div>  
+ <div style="font-size: 0.72rem; color: #94a3b8;" id="receiptIdText">INV-202609-0000</div>  
+ </div>  
+  
+ <div style="text-align: left; font-size: 0.85rem; color: #334155; display: flex; flex-direction: column; gap: 8px; line-height: 1.6; margin-bottom: 16px;">  
+ <div style="display: flex; justify-content: space-between;">  
+ <span style="color: #64748b;">客戶電郵：</span>  
+ <strong id="receiptEmail">--</strong>  
+ </div>  
+ <div style="display: flex; justify-content: space-between;">  
+ <span style="color: #64748b;">開通方案：</span>  
+ <strong id="receiptPlan" style="color: #ea580c;">--</strong>  
+ </div>  
+ <div style="display: flex; justify-content: space-between;">  
+ <span style="color: #64748b;">付款方式：</span>  
+ <span id="receiptPayment">轉數快 FPS</span>  
+ </div>  
+ <div style="display: flex; justify-content: space-between;">  
+ <span style="color: #64748b;">交易金額：</span>  
+ <strong id="receiptAmount" style="font-size: 1.05rem; color: #b91c1c;">HK$ 0.00</strong>  
+ </div>  
+ <div style="display: flex; justify-content: space-between;">  
+ <span style="color: #64748b;">服務有效期至：</span>  
+ <strong id="receiptValidUntil" style="color: #15803d;">--</strong>  
+ </div>  
+ <div style="display: flex; justify-content: space-between;">  
+ <span style="color: #64748b;">開出時間：</span>  
+ <span id="receiptCreatedAt">--</span>  
+ </div>  
+ </div>  
+  
+ <!-- Official Stamp -->  
+ <div style="border: 2px solid #dc2626; border-radius: 8px; padding: 4px 12px; display: inline-block; color: #dc2626; font-weight: 900; font-size: 0.82rem; letter-spacing: 2px; transform: rotate(-4deg); margin-bottom: 16px;">  
+ ★ PAID · 官方已核實生效 ★  
+ </div>  
+  
+ <div style="font-size: 0.72rem; color: #94a3b8; margin-bottom: 14px;">  
+ 本單據為系統自動生成之電子憑證，資料已同步加密存入雲端數據庫。  
+ </div>  
+  
+ <div style="display: flex; gap: 8px;">  
+ <button type="button" class="btn-action" style="flex: 1; font-size: 0.85rem; padding: 9px;" onclick="printOrSaveReceipt()">  
+ 💾 截圖 / 列印儲存單據  
+ </button>  
+ <button type="button" class="btn-secondary" style="padding: 9px 16px;" onclick="closeReceiptModal()">  
+ 關閉  
+ </button>  
+ </div>  
+ </div>  
+</div>  
+  
+<div class="modal-overlay" id="pwaInstallModal">  
+ <div class="modal-card" style="max-width: 440px; text-align: center;">  
+ <div class="modal-title" style="color: #be123c; display: flex; align-items: center; justify-content: center; gap: 8px;">  
+ <span>📲 一鍵加到手機主畫面</span>  
+ </div>  
+ <div class="modal-desc" style="margin-bottom: 14px;">  
+ 像原生 App 一樣放在手機桌面，即開即用、隱藏網址列，全螢幕體驗！  
+ </div>  
+  
+ <div style="background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 12px; padding: 16px; text-align: left; display: flex; flex-direction: column; gap: 12px;
+
 <script>
 // ==========================================
 // Global Constants & Daily Quotas & User State
@@ -4326,7 +4725,7 @@ signoff = `— Forever loving you, ${profile.userName || 'hubby'} ❤️`;
 signoff = `—— 永遠最愛你嘅${profile.userName || '老公'} ❤️`;   
 }   
 }   
-return "\\n\\n" + signoff;   
+return "\n\n" + signoff;   
 }   
   
 // ==========================================   
@@ -4837,7 +5236,7 @@ localStorage.setItem('partner_share_pwd', pwd);
 const invite = document.getElementById('shareInviteMessageInput').value.trim();   
 const shareUrl = generateShareUrl();   
   
-const fullMessage = `${invite}\\\\n\\\\n🔗 專屬回憶錄網址：\\\\n${shareUrl}\\\\n\\\\n🔑 專屬解鎖密碼：${pwd}\\\\n\\\\n—— ${profile.userName} 專屬呈獻 💍`;   
+const fullMessage = `${invite}\n\n🔗 專屬回憶錄網址：\n${shareUrl}\n\n🔑 專屬解鎖密碼：${pwd}\n\n—— ${profile.userName} 專屬呈獻 💍`;   
 document.getElementById('fullInvitePreview').innerText = fullMessage;   
 }   
   
@@ -5805,9 +6204,9 @@ function directWhatsAppSend() {
  if (selectedStickerId && typeof stickersData !== 'undefined') {  
  const stk = stickersData.find(s => s.id === selectedStickerId);  
  if (stk) {  
- let caption = "\\n\\n🖼️ 查看為你特別挑選嘅得意心意卡：";  
- if (currentLanguage === 'zh-CN') caption = "\\n\\n🖼️ 查看为你特别挑选的得意心意卡：";  
- else if (currentLanguage === 'en') caption = "\\n\\n🖼️ View your special cute card: ";  
+ let caption = "\n\n🖼️ 查看為你特別挑選嘅得意心意卡：";  
+ if (currentLanguage === 'zh-CN') caption = "\n\n🖼️ 查看为你特别挑选的得意心意卡：";  
+ else if (currentLanguage === 'en') caption = "\n\n🖼️ View your special cute card: ";  
  text += caption + stk.url;  
  }  
  }  
@@ -6510,395 +6909,7 @@ window.updateUserAuthUI = function() {
  }  
 };  
   
-</script>   
-  
-  
-<!-- VIP Exclusive Share Modal -->   
-<div class="modal-overlay" id="shareModal">   
-<div class="modal-card">   
-<div class="modal-title" style="color: #be123c; display: flex; align-items: center; gap: 8px;">   
-<span>💌 生成太太專屬回憶錄連結 (VIP 特權)</span>   
-</div>   
-<div class="modal-desc">   
-系統將為你生成一條專屬加密連結，並附帶 WhatsApp 甜蜜邀請函。只有輸入正確密碼先可以解鎖！   
-</div>   
-  
-<div style="display: flex; flex-direction: column; gap: 14px;">   
-  
-<!-- Share Link Style Selector -->   
-<div class="form-group" style="background: #fdf2f8; border: 1.5px solid #fbcfe8; padding: 12px; border-radius: var(--radius-md);">   
-<label class="form-label" style="color: #9d174d; font-weight: 700;">   
-<span>🔗 網址長度風格選擇：</span>   
-</label>   
-<div style="display: flex; gap: 8px; margin-top: 6px;">   
-<button type="button" id="btnShareModeShort" class="chip-btn active" style="flex: 1; padding: 8px; font-weight: 700;" onclick="setShareUrlMode('short')">   
-✨ 雲端超短網址（僅一行！推薦）   
-</button>   
-<button type="button" id="btnShareModeOffline" class="chip-btn" style="flex: 1; padding: 8px; font-weight: 700;" onclick="setShareUrlMode('offline')">   
-📦 離線加密長網址（備用）   
-</button>   
-</div>   
-<div style="font-size: 0.78rem; color: #831843; margin-top: 6px;">   
-💡 <b>推薦選擇「雲端超短網址」</b>：連結極短乾淨，不會再唱到成個畫面！太太點擊後自動自雲端安全載入最新回憶與相片。   
-</div>   
-</div>   
-  
-<!-- Public URL Configuration to avoid file:/// or intranet issues -->   
-<div class="form-group" style="background: #fffbeb; border: 1.5px solid #fed7aa; padding: 12px; border-radius: var(--radius-md);">   
-<label class="form-label" style="color: #92400e;">   
-<span>🌐 固定公開網址（解決內聯網太太睇唔到問題）：</span>   
-</label>   
-<div style="font-size: 0.78rem; color: #78350f; margin-bottom: 6px;">   
-⚠️ 提示：若使用本機開啟 (file:/// 或 localhost)，太太手機在流動網絡無法打開。請填入你的公開發佈網址（如 GitHub Pages）：   
-</div>   
-<input type="text" id="customPublicUrlInput" placeholder="例：https://jasonchow739.github.io/ai-boyfriend/index.html" oninput="saveCustomPublicUrl()">   
-<div class="chip-group" style="margin-top: 4px;">   
-<button type="button" class="chip-btn" onclick="setQuickPublicUrl('https://jasonchow739.github.io/ai-boyfriend/index.html')">套用 GitHub Pages 網址範例</button>   
-<button type="button" class="chip-btn" onclick="useCurrentBrowserUrl()">使用當前瀏覽器網址</button>   
-</div>   
-</div>   
-  
-<div class="form-group">   
-<label class="form-label">🔑 設定專屬愛情密碼（解鎖金鑰）：</label>   
-<input type="text" id="sharePasswordInput" value="5201314" oninput="updateSharePreview()" placeholder="例：5201314、結婚紀念日、老婆生日">   
-<div class="chip-group">   
-<button type="button" class="chip-btn" onclick="setSharePassword('5201314')">5201314</button>   
-<button type="button" class="chip-btn" onclick="setSharePassword('1314')">1314</button>   
-<button type="button" class="chip-btn" onclick="setSharePassword('0918')">0918 (今日)</button>   
-<button type="button" class="chip-btn" onclick="setSharePassword('老婆我愛你')">老婆我愛你</button>   
-</div>   
-</div>   
-  
-<!-- Select which entries to include (remove duplicates) -->   
-<div class="form-group">   
-<label class="form-label" style="justify-content: space-between;">   
-<span>📝 勾選要包含的回憶（剔除重複項目）：</span>   
-<span style="font-size: 0.75rem; color: var(--slate-600);">未勾選者不會出現在專屬連結</span>   
-</label>   
-<div id="shareEntriesChecklist" style="max-height: 140px; overflow-y: auto; background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: var(--radius-md); padding: 8px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;">   
-<!-- dynamically rendered checkboxes -->   
-</div>   
-</div>   
-  
-<div class="form-group">   
-<label class="form-label">💬 邀請函深情前言（連同連結一併發送）：</label>   
-<textarea id="shareInviteMessageInput" rows="3" oninput="updateSharePreview()"></textarea>   
-<div class="chip-group">   
-<button type="button" class="chip-btn" onclick="setSharePreset(1)">深情走心版</button>   
-<button type="button" class="chip-btn" onclick="setSharePreset(2)">日常驚喜版</button>   
-<button type="button" class="chip-btn" onclick="setSharePreset(3)">吵架和好破冰版</button>   
-</div>   
-</div>   
-  
-<div style="background: #fdf2f8; border: 1.5px dashed #f43f5e; border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; gap: 8px;">   
-<div style="font-size: 0.85rem; font-weight: 700; color: #be123c;">📱 完整 WhatsApp 傳送內容預覽：</div>   
-<div id="fullInvitePreview" style="font-size: 0.86rem; color: #1e293b; background: white; padding: 10px; border-radius: 8px; border: 1px solid #fed7aa; white-space: pre-wrap;"></div>   
-</div>   
-  
-<div style="display: flex; flex-direction: column; gap: 8px;">   
-<button class="btn-copy" style="background: #25D366; font-size: 1rem;" onclick="copyFullInviteMessage()">   
-<span>📋 一鍵複製 WhatsApp 邀請函 (含連結與密碼)</span>   
-</button>   
-<button type="button" class="btn-secondary" onclick="closeShareModal()">   
-關閉視窗   
-</button>   
-</div>   
-</div>   
-</div>   
-</div>   
-  
-<!-- PARTNER READER VIEW (OVERLAY WHEN ACCESSED VIA SHARE LINK) -->   
-<div id="partnerReaderView" style="display: none; position: fixed; inset: 0; background: #fffdfa; z-index: 99999; overflow-y: auto; overscroll-behavior: contain; padding: 20px 14px 80px; -webkit-overflow-scrolling: touch;">   
-<div style="max-width: 680px; margin: 0 auto;">   
-  
-<!-- Reader Lock Card -->   
-<div id="readerLockCard" style="background: white; border-radius: var(--radius-lg); padding: 32px 24px; box-shadow: var(--shadow-lg); text-align: center; border: 2px solid #fda4af; margin-top: 40px;">   
-<div style="font-size: 3rem; margin-bottom: 10px;">💌</div>   
-<h2 style="font-size: 1.5rem; font-weight: 900; color: #be123c; margin-bottom: 6px;" id="readerLockTitle">親愛的麗珊</h2>   
-<p style="font-size: 0.92rem; color: #475569; margin-bottom: 20px;">   
-<span id="readerLockSender">老公</span> 悄悄為你打造了一本專屬生活點滴回憶錄 💍<br>   
-每一篇都記載著屬於我哋走過的溫暖時光。   
-</p>   
-  
-<div style="background: #fff5f6; padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px;">   
-<label style="display: block; font-size: 0.85rem; font-weight: 800; color: #be123c; margin-bottom: 8px;">   
-🔒 請輸入專屬愛情解鎖密碼：   
-</label>   
-<input type="password" id="readerPasswordInput" placeholder="請輸入解鎖密碼" style="max-width: 280px; text-align: center; font-size: 1.1rem; letter-spacing: 2px; font-weight: bold; margin: 0 auto 8px;">   
-<div id="readerErrorMsg" style="font-size: 0.8rem; color: #dc2626; display: none; margin-bottom: 8px;">密碼不正確呀，再試下好嘛？❤️</div>   
-  
-<!-- Remember password toggle -->   
-<label style="display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.82rem; color: #be123c; cursor: pointer; user-select: none;">   
-<input type="checkbox" id="readerRememberPwd" checked>   
-<span>在此手機記住密碼（下次打開自動解鎖免重複輸入）</span>   
-</label>   
-</div>   
-  
-<button class="btn-action" style="width: 100%; max-width: 280px; margin: 0 auto; background: linear-gradient(135deg, #e11d48, #be123c);" onclick="unlockPartnerDiary()">   
-<span>💖 打開專屬時光回憶錄</span>   
-</button>   
-  
-<div style="margin-top: 24px; font-size: 0.78rem; color: #94a3b8;">   
-🌸 專屬於兩人的私密浪漫時光   
-</div>   
-</div>   
-  
-<!-- Reader Unlocked Content Card -->   
-<div id="readerContentCard" style="display: none; flex-direction: column; gap: 20px;">   
-<div style="background: white; border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-lg); text-align: center; border: 2px solid #fbcfe8;">   
-<div style="font-size: 2.2rem;">💍</div>   
-<h2 style="font-size: 1.6rem; font-weight: 900; background: linear-gradient(135deg, #be123c, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="readerUnlockedTitle">   
-麗珊與老公的專屬時光回憶錄   
-</h2>   
-<p style="font-size: 0.88rem; color: #78350f; margin-top: 6px;">   
-「時光清淺，有你便是一生最大的福氣。」   
-</p>   
-</div>   
-  
-<!-- Timeline Entries for Partner -->   
-<div id="readerTimelineList" style="display: flex; flex-direction: column; gap: 16px;"></div>   
-  
-<!-- Reply to Husband CTA -->   
-<div style="background: white; border-radius: var(--radius-lg); padding: 22px; box-shadow: var(--shadow); text-align: center; border: 1.5px solid #25D366;">   
-<h3 style="font-size: 1.1rem; font-weight: 800; color: #166534; margin-bottom: 6px;">   
-🥰 睇完係咪好感動？   
-</h3>   
-<p style="font-size: 0.85rem; color: #475569; margin-bottom: 14px;">   
-傳送一個甜蜜的 WhatsApp 回覆畀老公，話佢知你收到了這份愛 ❤️   
-</p>   
-<a id="btnReplyHusband" href="https://wa.me/?text=老公，我睇咗你整嗰本日記啦，好感動好sweet呀！多謝你一直咁鍚我！❤️❤️" target="_blank" class="btn-copy" style="text-decoration: none; width: 100%; max-width: 320px; margin: 0 auto; display: flex;">   
-<span>💬 WhatsApp 甜蜜回覆老公</span>   
-</a>   
-</div>   
-  
-<div style="text-align: center; margin-top: 10px; display: flex; justify-content: center; gap: 10px;">   
-<button class="btn-secondary" style="font-size: 0.78rem; padding: 6px 14px;" onclick="forgetSavedPassword()">   
-🔒 清除此裝置記住的密碼   
-</button>   
-<button class="btn-secondary" style="font-size: 0.78rem; padding: 6px 14px;" onclick="exitReaderMode()">   
-退出專屬瀏覽模式   
-</button>   
-</div>   
-</div>   
-  
-</div>   
-</div>   
-  
-  
-<!-- Login / Register Modal -->   
-  
-<!-- Romantic Polaroid Card Modal (方案 2) -->  
-<div class="modal-overlay" id="romanticCardModal">  
- <div class="modal-card" style="max-width: 480px; text-align: center;">  
- <div class="modal-title" style="color: #be123c;">💌 專屬深情拍立得卡片</div>  
- <div class="modal-desc">已為您將當前情話排版為拍立得手寫風信件，可長按儲存或一鍵下載發給對方！</div>  
-   
-<div style="margin: 14px auto; max-width: 100%; border-radius: 14px; box-shadow: 0 10px 25px rgba(225, 29, 72, 0.15); display: flex; justify-content: center; background: #fff1f2; padding: 8px;">  
- <canvas id="romanticCanvas" width="720" height="900" style="width: 100%; max-width: 340px; height: auto; border-radius: 10px; display: block;"></canvas>  
- </div>  
-  
- <div style="display: flex; gap: 10px; justify-content: center; margin-top: 16px;">  
- <button type="button" class="btn-action" style="flex: 1; font-size: 0.92rem; padding: 10px;" onclick="downloadRomanticCard()">  
- 💾 下載卡片 (PNG)  
- </button>  
- <button type="button" class="btn-secondary" style="padding: 10px 18px;" onclick="closeRomanticCardModal()">  
- 關閉  
- </button>  
- </div>  
- </div>  
-</d  
-  
- <!-- Main Screen Warm Diary Box (出面生活點滴預覽) -->  
- <div class="card" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff1f2 100%); border: 1.5px solid #fde68a; margin-top: 20px;">  
- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">  
- <div class="card-title" style="color: #92400e; font-size: 1.05rem;">  
- <span>📖 兩人生活點滴回憶錄</span>  
- </div>  
- <button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 4px 12px; background: white; border-color: #f59e0b; color: #b45309;" onclick="switchMainTab('diary')">  
- 查看全本日記 ➔  
- </button>  
- </div>  
- <div style="font-size: 0.82rem; color: #78350f; line-height: 1.5; margin-bottom: 10px;">  
- 記錄你哋日常相處嘅每份體貼與感動，永久加密珍藏，換手機亦永不丟失！  
- </div>  
- <div id="homeDiarySnippetBox" style="background: white; border: 1px dashed #f59e0b; border-radius: 10px; padding: 12px; font-size: 0.86rem; color: #475569;">  
- <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #b45309; margin-bottom: 4px;">  
- <span id="homeDiarySnippetDate">📅 最近生活紀錄</span>  
- <span id="homeDiarySnippetMood">🥰 甜蜜心動</span>  
- </div>  
- <div id="homeDiarySnippetTitle" style="font-weight: 800; color: #1e293b; margin-bottom: 4px;">今日生活點滴</div>  
- <div id="homeDiarySnippetBody" style="line-height: 1.5;">點擊「寫入專屬回憶錄」即可儲存今日專屬情景，點滴匯聚成兩人的溫暖時光。</div>  
- </div>  
- <div style="display: flex; gap: 8px; margin-top: 12px;">  
- <button type="button" class="btn-action" style="flex: 1; background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 0.85rem; padding: 9px;" onclick="switchMainTab('diary')">  
- ✍️ 寫新生活日記  
- </button>  
- <button type="button" class="btn-secondary" style="flex: 1; font-size: 0.85rem; padding: 9px; background: white; color: #b45309; border-color: #f59e0b;" onclick="syncEventsToDiary()">  
- ⚡ 一鍵將首頁情境記低  
- </button>  
- </div>  
- </div>  
-</div>  
-  
-<div class="modal-overlay" id="authModal">   
-<div class="modal-card">   
-<div class="modal-title" style="display: flex; justify-content: space-between; align-items: center;">   
-<span>👤 會員登入 / 註冊</span>   
-<span style="font-size: 0.75rem; background: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 999px;">新用戶享 3 日 VIP 免費體驗</span>   
-</div>   
-<div class="modal-desc">   
-註冊登入即可解鎖雲端永久儲存、跨裝置同步，並獲贈 3 天全功能免費 VIP 體驗！   
-</div>   
-  
-  
-  
-<!-- Panel 1: Normal User Form with Option A (6-Digit Email OTP) -->   
-<div id="panelAuthUser" style="display: flex; flex-direction: column; gap: 12px;">   
-<div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 10px; padding: 10px 12px; font-size: 0.8rem; color: #1e40af; line-height: 1.5;">  
- 💡 <b>免密碼極速登入</b>：輸入真實電郵並獲取 6 位數驗證碼，即可自動登入/註冊，並綁定您的 3 天免費 VIP 與購買單據！  
- </div>  
-  
- <div class="form-group">   
-<label class="form-label">電郵地址 (Email)</label>   
-<div style="display: flex; gap: 8px;">  
- <input type="email" id="userEmailInput" placeholder="請輸入您的真實電郵 (例如: name@gmail.com)" style="flex: 1;">   
-<button type="button" id="btnSendOtp" class="btn-action" style="background: #0284c7; font-size: 0.82rem; padding: 8px 12px; white-space: nowrap;" onclick="sendEmailOtp()">  
- ⚡ 獲取驗證碼  
- </button>  
- </div>  
- </div>   
-  
-<div class="form-group">   
-<label class="form-label">6 位數 Email 驗證碼</label>   
-<input type="text" id="userOtpInput" maxlength="6" placeholder="請輸入收到的 6 位數字驗證碼" style="letter-spacing: 4px; font-size: 1.1rem; font-weight: 800; text-align: center;">   
-</div>   
-  
-<button type="button" class="btn-action" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.95rem; padding: 12px;" onclick="verifyEmailOtp()">   
-🚀 驗證並登入 / 註冊   
-</button>   
-</div>  
-  
-<div style="margin-top: 14px; text-align: center;">   
-<button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 14px;" onclick="closeAuthModal()">   
-返回試用   
-</button>   
-</div>   
-</div>   
-</div>   
-  
-  
-  
-<!-- Purchase History & Account Data Modal -->  
-<div class="modal-overlay" id="purchaseHistoryModal">  
- <div class="modal-card" style="max-width: 600px;">  
- <div class="modal-title" style="color: #15803d; display: flex; justify-content: space-between; align-items: center;">  
- <div style="display: flex; align-items: center; gap: 8px;">  
- <span>🧾 我的購買紀錄與會員數據</span>  
- </div>  
- <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="closePurchaseHistoryModal()">✕ 關閉</button>  
- </div>  
- <div class="modal-desc">  
- 查看您的帳號服務詳情、歷史購買單據及 VIP 有效期，更換裝置亦能隨時查閱。  
- </div>  
-  
- <!-- Account Summary Card -->  
- <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: var(--radius-md); padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px;">  
- <div style="display: flex; justify-content: space-between; align-items: center;">  
- <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">會員帳號 (Email)：</span>  
- <strong id="phUserEmail" style="font-size: 0.9rem; color: #14532d;">未登入</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between; align-items: center;">  
- <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">目前會員級別：</span>  
- <span id="phUserTier" style="font-size: 0.82rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fef3c7; color: #b45309;">免費版</span>  
- </div>  
- <div style="display: flex; justify-content: space-between; align-items: center;">  
- <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">VIP 有效期限：</span>  
- <strong id="phVipExpiry" style="font-size: 0.88rem; color: #b45309;">--</strong>  
- </div>  
- </div>  
-  
- <!-- Order History List -->  
- <div style="display: flex; flex-direction: column; gap: 10px;">  
- <div style="font-size: 0.88rem; font-weight: 800; color: #1e293b;">📋 歷史購買與兌換單據清單：</div>  
- <div id="phOrdersContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">  
- <!-- Populated dynamically -->  
- </div>  
- </div>  
-  
- <div style="margin-top: 16px; display: flex; gap: 10px;">  
- <button type="button" class="btn-action" style="flex: 1; font-size: 0.88rem; padding: 10px;" onclick="closePurchaseHistoryModal(); openVipModal();">  
- 👑 升級 / 續期 VIP 方案  
- </button>  
- <button type="button" class="btn-secondary" style="padding: 10px 18px;" onclick="closePurchaseHistoryModal()">  
- 關閉  
- </button>  
- </div>  
- </div>  
-</div>  
-  
-<!-- Official Electronic Receipt Modal (電子單據) -->  
-<div class="modal-overlay" id="officialReceiptModal">  
- <div class="modal-card" style="max-width: 480px; text-align: center; background: #fffdfa; border: 2px solid #fed7aa;">  
- <div style="border-bottom: 2px dashed #f59e0b; padding-bottom: 12px; margin-bottom: 14px;">  
- <div style="font-size: 0.78rem; font-weight: 800; color: #b45309; letter-spacing: 1px;">港男求生必備神器 · 官方電子收據</div>  
- <div style="font-size: 1.35rem; font-weight: 900; color: #78350f; margin-top: 4px;">OFFICIAL RECEIPT</div>  
- <div style="font-size: 0.72rem; color: #94a3b8;" id="receiptIdText">INV-202609-0000</div>  
- </div>  
-  
- <div style="text-align: left; font-size: 0.85rem; color: #334155; display: flex; flex-direction: column; gap: 8px; line-height: 1.6; margin-bottom: 16px;">  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">客戶電郵：</span>  
- <strong id="receiptEmail">--</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">開通方案：</span>  
- <strong id="receiptPlan" style="color: #ea580c;">--</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">付款方式：</span>  
- <span id="receiptPayment">轉數快 FPS</span>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">交易金額：</span>  
- <strong id="receiptAmount" style="font-size: 1.05rem; color: #b91c1c;">HK$ 0.00</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">服務有效期至：</span>  
- <strong id="receiptValidUntil" style="color: #15803d;">--</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">開出時間：</span>  
- <span id="receiptCreatedAt">--</span>  
- </div>  
- </div>  
-  
- <!-- Official Stamp -->  
- <div style="border: 2px solid #dc2626; border-radius: 8px; padding: 4px 12px; display: inline-block; color: #dc2626; font-weight: 900; font-size: 0.82rem; letter-spacing: 2px; transform: rotate(-4deg); margin-bottom: 16px;">  
- ★ PAID · 官方已核實生效 ★  
- </div>  
-  
- <div style="font-size: 0.72rem; color: #94a3b8; margin-bottom: 14px;">  
- 本單據為系統自動生成之電子憑證，資料已同步加密存入雲端數據庫。  
- </div>  
-  
- <div style="display: flex; gap: 8px;">  
- <button type="button" class="btn-action" style="flex: 1; font-size: 0.85rem; padding: 9px;" onclick="printOrSaveReceipt()">  
- 💾 截圖 / 列印儲存單據  
- </button>  
- <button type="button" class="btn-secondary" style="padding: 9px 16px;" onclick="closeReceiptModal()">  
- 關閉  
- </button>  
- </div>  
- </div>  
-</div>  
-  
-<div class="modal-overlay" id="pwaInstallModal">  
- <div class="modal-card" style="max-width: 440px; text-align: center;">  
- <div class="modal-title" style="color: #be123c; display: flex; align-items: center; justify-content: center; gap: 8px;">  
- <span>📲 一鍵加到手機主畫面</span>  
- </div>  
- <div class="modal-desc" style="margin-bottom: 14px;">  
- 像原生 App 一樣放在手機桌面，即開即用、隱藏網址列，全螢幕體驗！  
- </div>  
-  
- <div style="background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 12px; padding: 16px; text-align: left; display: flex; flex-direction: column; gap: 12px;
+</script>
+
+</body>
+</html>
