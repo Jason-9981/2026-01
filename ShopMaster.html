@@ -477,17 +477,7 @@
       border-color: var(--primary);
       outline: none;
     }
-    .role-quick-select { display: flex; gap: 8px; margin-top: 10px; }
-    .role-chip {
-      padding: 4px 10px;
-      background: #f1f5f9;
-      border-radius: 4px;
-      font-size: 11px;
-      cursor: pointer;
-      color: #475569;
-      border: 1px solid var(--border);
-    }
-    .role-chip:hover { background: #e2e8f0; color: var(--primary); }
+    
     .perm-list {
       margin-top: 12px;
       background: #f8fafc;
@@ -634,11 +624,9 @@
           <div class="pw-input-group">
             <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="輸入最高 / 管理 / 普通權限密碼" onkeydown="if(event.key==='Enter') doLogin()">
           </div>
-          <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">快速測試填入：</div>
-          <div class="role-quick-select">
-            <span class="role-chip" onclick="fillPw('Admin3721#')">最高權限 (Admin)</span>
-            <span class="role-chip" onclick="fillPw('Mg8899@')">管理權限 (Mgmt)</span>
-            <span class="role-chip" onclick="fillPw('User6749+')">普通權限 (User)</span>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; display: flex; align-items: center; gap: 4px;">
+            <span>🛡️</span>
+            <span>系統採用三級角色權限分級管理 (最高管理員 / 管理層 / 普通員工)</span>
           </div>
           <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
             <label style="font-size: 12px; color: var(--text); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;">
@@ -12005,11 +11993,6 @@
       }
     }
 
-    function fillPw(pw) {
-      document.getElementById('loginPassword').value = pw;
-      doLogin(pw);
-    }
-
     function clearSavedPw() {
       try {
         localStorage.removeItem('fls_shopmaster_saved_pw');
@@ -12042,25 +12025,35 @@
       let successRole = null;
       let successTitle = '';
 
-      if (pw === 'Admin3721#') {
-        decryptedFinancial = await decryptPayload(MASTER_DATA.encrypted_vaults.financial_vault_admin, pw);
-        decryptedCredentials = await decryptPayload(MASTER_DATA.encrypted_vaults.credential_vault_admin, pw);
-        if (decryptedFinancial && decryptedCredentials) {
-          successRole = 'ADMIN';
-          successTitle = '最高管理員 (Super Admin)';
-        }
-      } else if (pw === 'Mg8899@') {
-        decryptedFinancial = await decryptPayload(MASTER_DATA.encrypted_vaults.financial_vault_mgmt, pw);
-        decryptedCredentials = null;
-        if (decryptedFinancial) {
+      // 1. Zero-Knowledge Cryptographic Authentication for ADMIN
+      // Attempts to decrypt admin vaults using AES-256-GCM. If decryption succeeds, role is ADMIN.
+      // No plaintext password is ever stored or hardcoded in the frontend.
+      let adminFin = await decryptPayload(MASTER_DATA.encrypted_vaults.financial_vault_admin, pw);
+      let adminCred = await decryptPayload(MASTER_DATA.encrypted_vaults.credential_vault_admin, pw);
+      if (adminFin && adminCred) {
+        decryptedFinancial = adminFin;
+        decryptedCredentials = adminCred;
+        successRole = 'ADMIN';
+        successTitle = '最高管理員 (Super Admin)';
+      } else {
+        // 2. Zero-Knowledge Cryptographic Authentication for MGMT
+        let mgmtFin = await decryptPayload(MASTER_DATA.encrypted_vaults.financial_vault_mgmt, pw);
+        if (mgmtFin) {
+          decryptedFinancial = mgmtFin;
+          decryptedCredentials = null;
           successRole = 'MGMT';
           successTitle = '管理層權限 (Management)';
+        } else {
+          // 3. Irreversible SHA-256 Hash Verification for USER (Matching Oracle APEX Database record)
+          const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw));
+          const hashHex = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+          if (hashHex === 'ecc7b9ec3d15f4609de203b64365a08858158887c1f2a9e44368cd28f5caaa87') {
+            decryptedFinancial = null;
+            decryptedCredentials = null;
+            successRole = 'USER';
+            successTitle = '普通員工權限 (Staff)';
+          }
         }
-      } else if (pw === 'User6749+') {
-        decryptedFinancial = null;
-        decryptedCredentials = null;
-        successRole = 'USER';
-        successTitle = '普通員工權限 (Staff)';
       }
 
       if (successRole) {
