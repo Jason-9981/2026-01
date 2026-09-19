@@ -8,7 +8,8 @@
   <title>港男求生必備神器 (情緒價值無限放送) - 頂級情緒價值與哄另一半神器</title>
   <meta name="description" content="港男求生必備神器 (情緒價值無限放送) · 專為夫妻情侶打造的頂級情感共情與情緒價值系統 · 吵架求生破冰 · 漸進式甜言蜜語 · 專屬加密時光回憶錄（每日免費使用）">
   <meta name="keywords" content="港男求生, 哄女朋友話術, 哄老婆神器, 情緒價值, 女朋友嬲點算, 吵架求生急救包, 拍拖和好, 港男求生神器, 紀念日驚喜, 直男求生">
-    <!-- PWA & Mobile WebApp Support -->
+  
+  <!-- PWA & Mobile WebApp Support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="港男求生神器">
@@ -81,11 +82,11 @@
   }
   
 // ==========================================
-// 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒發)
+// 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒開)
 // ==========================================
 function directWhatsAppSend() {
   const text = document.getElementById('waMessageText').innerText;
-  if (!text) {
+  if (!text || text === '載入中...') {
     showToast("目前未有話術內容！");
     return;
   }
@@ -95,7 +96,7 @@ function directWhatsAppSend() {
   if (profile.targetPhone && profile.targetPhone.trim() !== '') {
     let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');
     if (cleanPhone.length === 8) {
-      cleanPhone = '852' + cleanPhone; // 自動補香港區號
+      cleanPhone = '852' + cleanPhone; // 自動補齊香港區號
     }
     url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`;
   }
@@ -112,12 +113,11 @@ function generateRomanticCard() {
 
   const ctx = canvas.getContext('2d');
   const text = document.getElementById('waMessageText').innerText;
-  if (!text) {
+  if (!text || text === '載入中...') {
     showToast("請先生成話術！");
     return;
   }
 
-  // 1. Background soft romantic gradient
   const grad = ctx.createLinearGradient(0, 0, 0, 900);
   grad.addColorStop(0, '#fff1f2');
   grad.addColorStop(0.5, '#fdf2f8');
@@ -125,7 +125,6 @@ function generateRomanticCard() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 720, 900);
 
-  // 2. Polaroid White Photo Frame
   ctx.save();
   ctx.shadowColor = 'rgba(225, 29, 72, 0.15)';
   ctx.shadowBlur = 30;
@@ -136,7 +135,6 @@ function generateRomanticCard() {
   ctx.fill();
   ctx.restore();
 
-  // 3. Header Stamp / Date
   const now = new Date();
   const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
   
@@ -150,7 +148,6 @@ function generateRomanticCard() {
   ctx.textAlign = 'right';
   ctx.fillText(`💍 執子之手 · 與子偕老`, 650, 95);
 
-  // Decorative subtle divider
   ctx.strokeStyle = '#fecdd3';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
@@ -158,13 +155,12 @@ function generateRomanticCard() {
   ctx.lineTo(650, 115);
   ctx.stroke();
 
-  // 4. Message Content Typography Wrapping
   ctx.fillStyle = '#1e293b';
-  ctx.font = '500 25px "Noto Sans TC", sans-serif';
+  ctx.font = '500 24px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'left';
   
   const maxWidth = 580;
-  const lineHeight = 44;
+  const lineHeight = 42;
   let startY = 175;
 
   const lines = text.split('\n');
@@ -184,11 +180,10 @@ function generateRomanticCard() {
     }
     if (currentLine) {
       ctx.fillText(currentLine, 70, startY);
-      startY += lineHeight + 8;
+      startY += lineHeight + 6;
     }
   });
 
-  // 5. Bottom Watermark & Brand
   ctx.fillStyle = '#94a3b8';
   ctx.font = '16px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'center';
@@ -220,8 +215,6 @@ async function initCloudPageViews() {
   try {
     const { data, error } = await supabaseClient.from('site_stats').select('total_views').eq('id', 'main_counter').maybeSingle();
     let currentCount = (data && data.total_views) ? data.total_views : 1388;
-    
-    // 每次造訪累加 1 次
     currentCount++;
     await supabaseClient.from('site_stats').upsert([{
       id: 'main_counter',
@@ -1555,11 +1548,11 @@ function applyTimeAwarenessSuggestion() {
 </style>  
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 // ==========================================
-// 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒發)
+// 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒開)
 // ==========================================
 function directWhatsAppSend() {
   const text = document.getElementById('waMessageText').innerText;
-  if (!text) {
+  if (!text || text === '載入中...') {
     showToast("目前未有話術內容！");
     return;
   }
@@ -1569,7 +1562,7 @@ function directWhatsAppSend() {
   if (profile.targetPhone && profile.targetPhone.trim() !== '') {
     let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');
     if (cleanPhone.length === 8) {
-      cleanPhone = '852' + cleanPhone; // 自動補香港區號
+      cleanPhone = '852' + cleanPhone; // 自動補齊香港區號
     }
     url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`;
   }
@@ -1586,12 +1579,11 @@ function generateRomanticCard() {
 
   const ctx = canvas.getContext('2d');
   const text = document.getElementById('waMessageText').innerText;
-  if (!text) {
+  if (!text || text === '載入中...') {
     showToast("請先生成話術！");
     return;
   }
 
-  // 1. Background soft romantic gradient
   const grad = ctx.createLinearGradient(0, 0, 0, 900);
   grad.addColorStop(0, '#fff1f2');
   grad.addColorStop(0.5, '#fdf2f8');
@@ -1599,7 +1591,6 @@ function generateRomanticCard() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 720, 900);
 
-  // 2. Polaroid White Photo Frame
   ctx.save();
   ctx.shadowColor = 'rgba(225, 29, 72, 0.15)';
   ctx.shadowBlur = 30;
@@ -1610,7 +1601,6 @@ function generateRomanticCard() {
   ctx.fill();
   ctx.restore();
 
-  // 3. Header Stamp / Date
   const now = new Date();
   const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
   
@@ -1624,7 +1614,6 @@ function generateRomanticCard() {
   ctx.textAlign = 'right';
   ctx.fillText(`💍 執子之手 · 與子偕老`, 650, 95);
 
-  // Decorative subtle divider
   ctx.strokeStyle = '#fecdd3';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
@@ -1632,13 +1621,12 @@ function generateRomanticCard() {
   ctx.lineTo(650, 115);
   ctx.stroke();
 
-  // 4. Message Content Typography Wrapping
   ctx.fillStyle = '#1e293b';
-  ctx.font = '500 25px "Noto Sans TC", sans-serif';
+  ctx.font = '500 24px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'left';
   
   const maxWidth = 580;
-  const lineHeight = 44;
+  const lineHeight = 42;
   let startY = 175;
 
   const lines = text.split('\n');
@@ -1658,11 +1646,10 @@ function generateRomanticCard() {
     }
     if (currentLine) {
       ctx.fillText(currentLine, 70, startY);
-      startY += lineHeight + 8;
+      startY += lineHeight + 6;
     }
   });
 
-  // 5. Bottom Watermark & Brand
   ctx.fillStyle = '#94a3b8';
   ctx.font = '16px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'center';
@@ -1694,8 +1681,6 @@ async function initCloudPageViews() {
   try {
     const { data, error } = await supabaseClient.from('site_stats').select('total_views').eq('id', 'main_counter').maybeSingle();
     let currentCount = (data && data.total_views) ? data.total_views : 1388;
-    
-    // 每次造訪累加 1 次
     currentCount++;
     await supabaseClient.from('site_stats').upsert([{
       id: 'main_counter',
@@ -1813,12 +1798,10 @@ function applyTimeAwarenessSuggestion() {
  </div>  
    
 <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">  
- <a href="https://docs.google.com/spreadsheets/d/1Ck4HV-XXvg9czPvg_e7e0DkYXCdYVFhucsQ0XDeb2u4/edit" target="_blank" style="text-decoration:none;" class="btn-edit-profile">📊 Google Sheet</a>  
  <button class="btn-edit-profile" id="btnTopProfile" onclick="openProfileModal()">⚙️ 對象資料</button>  
  <button class="btn-edit-profile" id="btnUserAuth" onclick="openAuthModal()" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">👤 登入 / 註冊</button>  
  <button class="btn-edit-profile" id="btnAdminPanel" onclick="openAdminModal()" style="display:none; background:#fef3c7; color:#b45309; border-color:#f59e0b;">🛠️ 管理員工具</button>  
  <button class="btn-edit-profile" id="btnTopVip" onclick="openVipModal()" style="background:#fffbeb; color:#b45309; border-color:#fde68a;">👑 升級 VIP ($18/月)</button>  
- <button class="btn-edit-profile" id="btnTopExport" onclick="exportDataJSON()" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;">💾 匯出備份</button>  
  </div>  
  </div>  
   
@@ -1852,7 +1835,7 @@ function applyTimeAwarenessSuggestion() {
  <p><strong>🎯 核心目的：</strong>利用高段位「情感共鳴」與「情緒價值」心法，擺脫老夫老妻的生硬日常，讓太太感受被珍視、被體恤、被寵成小女孩的幸福感。</p>  
  <br>  
  <p><strong>⚙️ 運作模式：</strong></p>  
- <ul style="padding-left: 20px;">  
+ <ul style='padding-left: 20px;'>  
  <li><strong>階段推進：</strong>由階段 1「日常習慣養成」→ 階段 2「深度避風港」→ 階段 3「女性氣質讚美」→ 階段 4「霸道專屬寵溺」。</li>  
  <li><strong>吵架求生模式：</strong>點擊上方紅色「求生急救包」，一鍵切換至高情商認錯道歉話術庫。</li>  
  <li><strong>下款簽名功能：</strong>每句說話底部自動附上專屬深情下款（如：—— 永遠最愛你嘅老公 ❤️）。</li>  
@@ -1896,7 +1879,7 @@ function applyTimeAwarenessSuggestion() {
  <button type="button" class="category-pill" id="cat_mid_autumn" onclick="selectCategory('mid_autumn')">🌕 中秋佳節</button>  
  <button type="button" class="category-pill" id="cat_valentines" onclick="selectCategory('valentines')">🌹 情人節</button>  
  <button type="button" class="category-pill" id="cat_christmas" onclick="selectCategory('christmas')">🎄 聖誕節</button>  
- <button type="button" class="category-pill" id="cat_new_year" onclick="selectCategory('new_year')">🧨 新春佳節</button>  
+ <button type="button" class="category-pill" id="cat_new_year" onclick="selectCategory('new_year')">🧧 新春佳節</button>  
  <button type="button" class="category-pill" id="cat_birthday" onclick="selectCategory('birthday')">🎂 生日專屬</button>  
  <button type="button" class="category-pill" id="cat_anniversary" onclick="selectCategory('anniversary')">💍 紀念日</button>  
  <button type="button" class="category-pill" id="cat_spring" onclick="selectCategory('spring')">🌸 春季</button>  
@@ -1964,27 +1947,36 @@ function applyTimeAwarenessSuggestion() {
  </label>  
  <div class="event-box">  
  <div>  
- <div class="event-category-title" id="lblEventCatWork">💼 職場工作類：</div>  
- <div class="chip-group" id="chipGroupWork">  
- <!-- Dynamically rendered -->  
- </div>  
- </div>  
-  
- <div>  
- <div class="event-category-title" id="lblEventCatHealth">💆 身體狀態與操勞：</div>  
- <div class="chip-group" id="chipGroupHealth">  
- <!-- Dynamically rendered -->  
- </div>  
- </div>  
-  
- <div>  
- <div class="event-category-title" id="lblEventCatLife">🛍️ 生活小確幸與心願：</div>  
- <div class="chip-group" id="chipGroupLife">  
- <!-- Dynamically rendered -->  
- </div>  
- </div>  
-  
- <div style="border-top: 1px dashed #cbd5e1; margin: 4px 0;"></div>  
+ <div class="event-category-title" id="lblEventCatWork">💼 職場工作類：</div>
+          <div class="chip-group" id="chipGroupWork"></div>
+        </div>
+
+        <div>
+          <div class="event-category-title" id="lblEventCatHealth">💆 身體狀態與操勞：</div>
+          <div class="chip-group" id="chipGroupHealth"></div>
+        </div>
+
+        <div>
+          <div class="event-category-title" id="lblEventCatLife">🛍️ 生活小確幸與心願：</div>
+          <div class="chip-group" id="chipGroupLife"></div>
+        </div>
+
+        <div>
+          <div class="event-category-title" id="lblEventCatChores">🛒 買餸煮飯與家務日常：</div>
+          <div class="chip-group" id="chipGroupChores"></div>
+        </div>
+
+        <div>
+          <div class="event-category-title" id="lblEventCatTravel">🚗 拍拖出遊與週末放鬆：</div>
+          <div class="chip-group" id="chipGroupTravel"></div>
+        </div>
+
+        <div>
+          <div class="event-category-title" id="lblEventCatWeather">🌧️ 天氣突發與交通燥底：</div>
+          <div class="chip-group" id="chipGroupWeather"></div>
+        </div>
+
+        <div style="border-top: 1px dashed #cbd5e1; margin: 4px 0;"></div>  
   
  <select id="eventHistorySelect" style="font-size: 0.82rem;" onchange="onSelectSavedEvent()">  
  <option value="" id="optEventHistoryDefault">-- 選取過去已記錄之歷史事件 --</option>  
@@ -2017,16 +2009,7 @@ function applyTimeAwarenessSuggestion() {
  <button type="button" class="chip-btn" onclick="setSignoffText('—— 你的專屬騎士 Jason 🗡️')">你的專屬騎士 Jason</button>  
  <button type="button" class="chip-btn" onclick="setSignoffText('—— 永遠企喺你呢邊嘅老公 敬上 💍')">企喺你呢邊嘅老公</button>  
  <button type="button" class="chip-btn" onclick="setSignoffText('—— 知道錯咗嘅大頭蝦老公 🥺')">認錯嘅大頭蝦老公</button>  
- <button type="button" class="chip-btn" onclick="setSignoffText('—— 你專屬嘅暖男 ☕')">你專屬嘅暖男</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 隨時候命兼洗碗專員 敬上 🧼')">隨時候命洗碗專員</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 求生慾極強嘅小太監 叩頭 🙇‍♂️')">求生慾極強小太監</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 今晚任打唔還手嘅沙包老公 🥊')">任打唔還手沙包</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 你的終身私人司機兼外賣仔 🛵')">私人司機兼外賣仔</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 人肉提款機兼專屬按摩技師 💳💆')">人肉提款機按摩師</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 已經自動跪緊玻璃嘅老公 🧊')">自動跪緊玻璃老公</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 屋企地位最低但最錫你嗰個 📉❤️')">地位最低但最錫你</button>
-      <button type="button" class="chip-btn" onclick="setSignoffText('—— 全世界最聽話嘅廢青老公 🐕')">最聽話廢青老公</button>
-  
+ <button type="button" class="chip-btn" onclick="setSignoffText('—— 你專屬嘅暖男 ☕')">你專屬嘅暖男</button>  
  </div>  
  </div>  
  </div>  
@@ -2068,13 +2051,6 @@ function applyTimeAwarenessSuggestion() {
   
  <div class="wa-body">  
  <div class="wa-bubble">  
- <div id="waStickerPreviewBox" style="display: none; margin-bottom: 8px; border-radius: 8px; overflow: hidden; border: 1px solid #cbd5e1; background: #f8fafc;">  
- <img id="waStickerPreviewImg" src="" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=700&auto=format&fit=crop&q=80'" style="width: 100%; max-height: 180px; object-fit: cover; display: block;">  
- <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: #f1f5f9; border-top: 1px solid #e2e8f0;">  
- <div id="waStickerCaption" style="font-size: 0.75rem; color: #475569; font-weight: 600;"></div>  
- <button type="button" onclick="copyStickerImageDirectly()" style="background: #25D366; color: white; border: none; border-radius: 4px; font-size: 0.7rem; padding: 3px 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">🖼️ 複製圖片(Ctrl+V貼出真圖)</button>  
- </div>  
- </div>  
  <div id="waMessageText">載入中...</div>  
  <div class="wa-time-meta">  
  <span id="waMessageTime">09:15</span>  
@@ -2083,20 +2059,25 @@ function applyTimeAwarenessSuggestion() {
  </div>  
  </div>  
   
- <div class="wa-footer-actions">  
- <div class="analysis-box">  
- <span>🧠</span>  
- <div id="psychologyTip">話術心理拆解：利用「無條件情緒共鳴」，先肯定對方的辛勞與委屈，不講大道理，瞬間化解心防。</div>  
- </div>  
-  
- <button class="btn-copy" onclick="copyCurrentMessage()">  
- <span id="btnCopyText">📋 一鍵複製到 WhatsApp</span>  
- </button>  
- <div class="copy-tip" id="copyTipText">💡 點擊後直接開 WhatsApp 貼上傳畀佢，每日幾句，感情急速升溫！</div>  
- </div>  
- </div>  
-  
- </div>  
+ <div class="wa-footer-actions">
+          <div class="analysis-box">
+            <span>🧠</span>
+            <div id="psychologyTip">話術心理拆解：利用「無條件情緒共鳴」，先肯定對方的辛勞與委屈，不講大道理，瞬間化解心防。</div>
+          </div>
+
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;">
+            <button class="btn-copy" id="btnCopy" style="flex: 1; min-width: 140px;" onclick="copyCurrentMessage()">
+              <span id="btnCopyText">📋 一鍵複製 WhatsApp 訊息</span>
+            </button>
+            <button type="button" class="btn-action" style="flex: 1; min-width: 140px; background: #25D366; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 6px;" onclick="directWhatsAppSend()">
+              <span>💬 直跳 WhatsApp 發送</span>
+            </button>
+            <button type="button" class="btn-action" style="flex: 1; min-width: 160px; background: linear-gradient(135deg, #f43f5e, #be123c); color: white; display: inline-flex; align-items: center; justify-content: center; gap: 6px;" onclick="generateRomanticCard()">
+              <span>💌 一鍵生成拍立得卡片</span>
+            </button>
+          </div>
+          <div class="copy-tip" id="copyTipText">💡 點擊「直跳 WhatsApp」直接喚醒手機 App 直達專屬聊天室；點擊「拍立得卡片」可生成高清圖文卡片！</div>
+        </div></div>  
   
  <!-- Bottom: Anti-Repetition History -->  
  <div class="history-card">  
@@ -2408,96 +2389,121 @@ function applyTimeAwarenessSuggestion() {
 </div>  
   
 <!-- Onboarding / Profile Modal -->  
-<div class="modal-overlay" id="profileModal">  
- <div class="modal-card">  
- <div class="modal-title">⚙️ 使用者身分與對象資料設定</div>  
- <div class="modal-desc">點擊下方快捷標籤即可快速填入，無需每次辛苦手動輸入！</div>  
-  
- <form id="profileForm" onsubmit="saveProfile(event)" style="display: flex; flex-direction: column; gap: 14px;">  
-   
-<div class="form-group">  
- <label class="form-label">你的自稱（你喺對話入面叫自己做乜）：</label>  
- <input type="text" id="inputUserName" required placeholder="例：老公 / Jason">  
- <div class="chip-group">  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '老公')">老公</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', 'Jason')">Jason</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '男朋友')">男朋友</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '你的專屬騎士')">你的專屬騎士</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '暖男')">暖男</button>  
- </div>  
- </div>  
-  
- <div class="form-group">  
- <label class="form-label">你想稱呼對象做乜嘢（對象暱稱）：</label>  
- <input type="text" id="inputTargetName" required placeholder="例：老婆 / 麗珊 / BB">  
- <div class="chip-group">  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '老婆')">老婆</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '麗珊')">麗珊</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', 'BB')">BB</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '女王大人')">女王大人</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '女神')">女神</button>  
- <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '心肝寶貝')">心肝寶貝</button>  
- </div>  
- </div>  
-  
- <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">  
- <div class="form-group">  
- <label class="form-label">對象性別</label>  
- <select id="inputGender">  
- <option value="女">女性 (Female)</option>  
- <option value="男">男性 (Male)</option>  
- </select>  
- </div>  
- <div class="form-group">  
- <label class="form-label">彼此關係</label>  
- <select id="inputRelationship">  
- <option value="夫妻">夫妻 (結婚多年)</option>  
- <option value="男女朋友">男女朋友 (熱戀)</option>  
- <option value="曖昧對象">曖昧對象</option>  
- <option value="追求對象">追求中</option>  
- <option value="冷戰破冰">冷戰破冰中</option>  
- </select>  
- </div>  
- </div>  
-  
- <div class="form-group">  
- <label class="form-label">對象性格或年齡特質（點擊標籤疊加）：</label>  
- <input type="text" id="inputTargetTrait" placeholder="例：四十幾歲成熟優雅、事業兼顧家庭">  
- <div class="chip-group">  
- <button type="button" class="chip-btn" onclick="appendTraitChip('四十幾歲成熟知性')">40+歲成熟知性</button>  
- <button type="button" class="chip-btn" onclick="appendTraitChip('外剛內柔需要人錫')">外剛內柔需要人錫</button>  
- <button type="button" class="chip-btn" onclick="appendTraitChip('辛勞操心顧家')">辛勞操心顧家</button>  
- <button type="button" class="chip-btn" onclick="appendTraitChip('職場女強人')">職場女強人</button>  
- <button type="button" class="chip-btn" onclick="appendTraitChip('童心未泯小女孩')">童心未泯小女孩</button>  
- <button type="button" class="chip-btn" onclick="appendTraitChip('注重生活品味')">注重生活品味</button>  
- </div>  
- </div>  
-  
- <div style="display: flex; gap: 10px; margin-top: 10px;">  
- <!-- Google Gemini AI Box -->  
- <div style="margin-top: 10px; padding: 12px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: var(--radius-md);">  
- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">  
- <span style="font-weight: 800; font-size: 0.88rem; color: #166534;" id="labelGeminiTitle">🤖 Google Gemini AI 實時大腦 (選填)</span>  
- <label style="display: flex; align-items: center; gap: 4px; font-size: 0.78rem; font-weight: 700; color: #166534; cursor: pointer;">  
- <input type="checkbox" id="geminiAiEnabled"> <span id="labelGeminiToggle">啟用實時 AI 創作</span>  
- </label>  
- </div>  
- <div style="font-size: 0.75rem; color: #15803d; line-height: 1.5; margin-bottom: 8px;" id="descGeminiHelp">  
- Google 官方提供永久 Free Tier（免綁信用卡，每日 1,500 次免費生成）。填入 API Key 後每次點擊均由 AI 現場創作 100% 獨一無二情話；未填時自動調用 114+ 條精選離線庫。  
- </div>  
- <input type="password" id="geminiApiKeyInput" placeholder="請貼上 Gemini API Key (AIzaSy...)" style="padding: 8px 10px; font-size: 0.85rem; font-family: monospace;">  
- </div>  
-<button type="submit" class="btn-action" style="flex: 1;">  
- 💾 儲存並套用  
- </button>  
- <button type="button" class="btn-secondary" onclick="closeProfileModal()">  
- 取消  
- </button>  
- </div>  
- </form>  
- </div>  
-</div>  
-  
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-card">
+      <div class="modal-title">⚙️ 使用者身分與對象資料設定</div>
+      <div class="modal-desc">設定完成後將自動同步至雲端，換新電腦或手機亦能自動漫遊，無需重複輸入！</div>
+
+      <!-- Membership Status & Expiry Countdown Banner -->
+      <div id="modalVipStatusBanner" style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: var(--radius-md); padding: 12px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 0.76rem; color: #78350f; font-weight: 700;">👤 當前帳號與會員狀態：</div>
+          <div id="modalVipStatusText" style="font-size: 0.92rem; font-weight: 900; color: #b45309; margin-top: 2px;">
+            🆓 永久免費版 (今日餘 5/5 次)
+          </div>
+        </div>
+        <button type="button" class="btn-action" style="font-size: 0.78rem; padding: 6px 12px; background: #ea580c;" onclick="closeProfileModal(); openVipModal();">
+          👑 升級 / 續期 VIP
+        </button>
+      </div>
+
+      <form id="profileForm" onsubmit="saveProfile(event)" style="display: flex; flex-direction: column; gap: 14px;">
+        
+        <div class="form-group">
+          <label class="form-label">你的自稱（你喺對話入面叫自己做乜）：</label>
+          <input type="text" id="inputUserName" required placeholder="例：老公 / Jason">
+          <div class="chip-group">
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '老公')">老公</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', 'Jason')">Jason</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '男朋友')">男朋友</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '你的專屬騎士')">你的專屬騎士</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '暖男')">暖男</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">你想稱呼對象做乜嘢（對象暱稱）：</label>
+          <input type="text" id="inputTargetName" required placeholder="例：老婆 / 麗珊 / BB">
+          <div class="chip-group">
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '老婆')">老婆</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '麗珊')">麗珊</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', 'BB')">BB</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '女王大人')">女王大人</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '女神')">女神</button>
+            <button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '心肝寶貝')">心肝寶貝</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>📱 另一半 WhatsApp 手提電話號碼（選填）：</span>
+            <span style="font-size: 0.72rem; color: #16a34a; font-weight: normal;">已連通「直跳 WhatsApp」</span>
+          </label>
+          <input type="tel" id="inputTargetPhone" placeholder="例如：91234567 或 85291234567" style="font-size: 0.95rem; letter-spacing: 1px;">
+          <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">
+            💡 儲存此號碼後，首頁的「💬 直跳 WhatsApp」按鈕會直接打開與對方的專屬聊天室，無需每次挑選聯絡人！
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="form-group">
+            <label class="form-label">對象性別</label>
+            <select id="inputGender">
+              <option value="女">女性 (Female)</option>
+              <option value="男">男性 (Male)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">彼此關係</label>
+            <select id="inputRelationship">
+              <option value="夫妻">夫妻 (結婚多年)</option>
+              <option value="男女朋友">男女朋友 (熱戀)</option>
+              <option value="曖昧對象">曖昧對象</option>
+              <option value="追求對象">追求中</option>
+              <option value="冷戰破冰">冷戰破冰中</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">對象性格或年齡特質（點擊標籤疊加）：</label>
+          <input type="text" id="inputTargetTrait" placeholder="例：四十幾歲成熟優雅、事業兼顧家庭">
+          <div class="chip-group">
+            <button type="button" class="chip-btn" onclick="appendTraitChip('四十幾歲成熟知性')">40+歲成熟知性</button>
+            <button type="button" class="chip-btn" onclick="appendTraitChip('外剛內柔需要人錫')">外剛內柔需要人錫</button>
+            <button type="button" class="chip-btn" onclick="appendTraitChip('辛勞操心顧家')">辛勞操心顧家</button>
+            <button type="button" class="chip-btn" onclick="appendTraitChip('職場女強人')">職場女強人</button>
+            <button type="button" class="chip-btn" onclick="appendTraitChip('童心未泯小女孩')">童心未泯小女孩</button>
+            <button type="button" class="chip-btn" onclick="appendTraitChip('注重生活品味')">注重生活品味</button>
+          </div>
+        </div>
+
+        <!-- Google Gemini AI Box -->
+        <div style="margin-top: 4px; padding: 12px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: var(--radius-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-weight: 800; font-size: 0.88rem; color: #166534;" id="labelGeminiTitle">🤖 Google Gemini AI 實時大腦 (選填)</span>
+            <label style="display: flex; align-items: center; gap: 4px; font-size: 0.78rem; font-weight: 700; color: #166534; cursor: pointer;">
+              <input type="checkbox" id="geminiAiEnabled"> <span id="labelGeminiToggle">啟用實時 AI 創作</span>
+            </label>
+          </div>
+          <div style="font-size: 0.75rem; color: #15803d; line-height: 1.5; margin-bottom: 8px;" id="descGeminiHelp">
+            填入 Google AI Studio 免費 API Key 後，每次點擊均由 AI 現場根據性格與情境創作專屬情話；未填時自動調用 114+ 條精選離線庫。
+          </div>
+          <input type="password" id="geminiApiKeyInput" placeholder="請貼上 Gemini API Key (AIzaSy...)" style="padding: 8px 10px; font-size: 0.85rem; font-family: monospace;">
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button type="submit" class="btn-action" style="flex: 1;">
+            💾 儲存並同步至雲端
+          </button>
+          <button type="button" class="btn-secondary" onclick="closeProfileModal()">
+            取消
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 <!-- Toast -->  
 <div class="toast" id="toast">  
  <span>✅</span>  
@@ -3444,9 +3450,9 @@ function applyTimeAwarenessSuggestion() {
  "new_year": [  
  {  
  "id": "ny_1",  
- "zh_HK": "新年快樂！回首過去一年，因為有你，所有辛苦都變成值得；展望新一年，我嘅目標依然好明確：就係要繼續加倍寵愛你！🧨",  
- "zh_CN": "新年快乐！回望走过的这一年，因为有你的陪伴与包容，所有风雨辛苦都化作了值得；新的一年，我的愿景依旧无比坚定：加倍疼你、宠你到底！🧨",  
- "en": "Happy New Year, my love! Looking back, every challenge was worth enduring because of you. My resolution for this new year is crystal clear: to cherish you even more.🧨",  
+ "zh_HK": "新年快樂！回首過去一年，因為有你，所有辛苦都變成值得；展望新一年，我嘅目標依然好明確：就係要繼續加倍寵愛你！🧧",  
+ "zh_CN": "新年快乐！回望走过的这一年，因为有你的陪伴与包容，所有风雨辛苦都化作了值得；新的一年，我的愿景依旧无比坚定：加倍疼你、宠你到底！🧧",  
+ "en": "Happy New Year, my love! Looking back, every challenge was worth enduring because of you. My resolution for this new year is crystal clear: to cherish you even more.🧧",  
  "tip_hk": "新年總結與宣誓，將伴侶視為過去一切奮鬥的意義所在。",  
  "tip_cn": "新年复盘与情感立志，将陪伴定义为奋斗的最大价值源泉。",  
  "tip_en": "New Year reflection validating her role as the true anchor of your achievements."  
@@ -3660,7 +3666,6 @@ function applyTimeAwarenessSuggestion() {
  "waStatusText": "在線上 (已讀你的一切)",  
  "btnTopProfile": "⚙️ 對象資料",  
  "btnTopVip": "👑 升級 VIP ($18/月)",  
- "btnTopExport": "💾 匯出備份",  
  "btnAdminPanel": "🛠️ 管理員工具",  
  "guestCountPrefix": "免費試用剩餘次數：",  
  "footerAppTitle": "港男求生必備神器 (情緒價值無限放送)",  
@@ -3671,7 +3676,7 @@ function applyTimeAwarenessSuggestion() {
  "cat_mid_autumn": "🌕 中秋佳節",  
  "cat_valentines": "🌹 情人節",  
  "cat_christmas": "🎄 聖誕節",  
- "cat_new_year": "🧨 新春佳節",  
+ "cat_new_year": "🧧 新春佳節",  
  "cat_birthday": "🎂 生日專屬",  
  "cat_anniversary": "💍 紀念日",  
  "cat_spring": "🌸 春季",  
@@ -3728,7 +3733,6 @@ function applyTimeAwarenessSuggestion() {
  "waStatusText": "在线上 (已读你的一切)",  
  "btnTopProfile": "⚙️ 伴侣设定",  
  "btnTopVip": "👑 升级 VIP (¥18/月)",  
- "btnTopExport": "💾 导出备份",  
  "btnAdminPanel": "🛠️ 管理员后台",  
  "guestCountPrefix": "免费试用剩余次数：",  
  "footerAppTitle": "直男恋爱求生神器 (情绪价值无限放送)",  
@@ -3739,7 +3743,7 @@ function applyTimeAwarenessSuggestion() {
  "cat_mid_autumn": "🌕 中秋佳节",  
  "cat_valentines": "🌹 情人节",  
  "cat_christmas": "🎄 圣诞节",  
- "cat_new_year": "🧨 新春佳节",  
+ "cat_new_year": "🧧 新春佳节",  
  "cat_birthday": "🎂 生日专属",  
  "cat_anniversary": "💍 纪念日",  
  "cat_spring": "🌸 春季",  
@@ -3796,7 +3800,6 @@ function applyTimeAwarenessSuggestion() {
  "waStatusText": "Online (Reading your love)",  
  "btnTopProfile": "⚙️ Persona Settings",  
  "btnTopVip": "👑 Upgrade VIP ($2.5/mo)",  
- "btnTopExport": "💾 Export Backup",  
  "btnAdminPanel": "🛠️ Admin Console",  
  "guestCountPrefix": "Free Trial Messages Remaining: ",  
  "footerAppTitle": "LoveRescue AI: Relationship Saver",  
@@ -3807,7 +3810,7 @@ function applyTimeAwarenessSuggestion() {
  "cat_mid_autumn": "🌕 Mid-Autumn",  
  "cat_valentines": "🌹 Valentine's",  
  "cat_christmas": "🎄 Christmas",  
- "cat_new_year": "🧨 New Year",  
+ "cat_new_year": "🧧 New Year",  
  "cat_birthday": "🎂 Birthday",  
  "cat_anniversary": "💍 Anniversary",  
  "cat_spring": "🌸 Spring",  
@@ -3921,129 +3924,201 @@ function applyTimeAwarenessSuggestion() {
   
   
  // Dynamic Chip Groups based on Language  
- const eventChipsData = {  
- 'zh-HK': {  
- work: [  
- { label: '開會畀老細刁難', text: '今日返工開會畀老細刁難，好委屈好大壓力' },  
- { label: 'OT超時好攰', text: 'OT做到好夜好攰，成個人散晒' },  
- { label: '同事摩擦受委屈', text: '同同事做嘢有摩擦，滿肚委屈' },  
- { label: '搞掂大project等讚', text: '今日順利搞掂個大項目，超有成就感！' }  
- ],  
- health: [  
- { label: '肩頸腰酸背痛', text: '最近肩頸同腰酸背痛好嚴重，好辛苦' },  
- { label: '失眠頭痛好攰', text: '琴晚瞓得好差，失眠頭痛好攰' },  
- { label: '執屋操勞顧家', text: '成日忙住煮飯執屋打理屋企，操勞到腰痛' },  
- { label: '轉天氣唔舒服', text: '天氣轉涼好似有少少作感冒唔舒服' }  
- ],  
- life: [  
- { label: '睇中靚衫唔捨得買', text: '行街睇中咗件靚衫但猶豫唔捨得買' },  
- { label: '睇劇感動到喊', text: '琴晚睇劇集結局感動到眼濕濕' },  
- { label: '食好西心情靚', text: '食咗餐好食嘅嘢，心情好靚' },  
- { label: '鬧脾氣求破冰', text: '兩個人鬧咗兩句小脾氣，想搵台階下破冰' }  
- ]  
- },  
- 'zh-CN': {  
- work: [  
- { label: '开会被老板刁难', text: '今天上班开会被老板刁难，特别委屈压力很大' },  
- { label: '加班超长好累', text: '加班到很晚特别累，整个人快散架了' },  
- { label: '同事摩擦受委屈', text: '跟同事沟通产生摩擦，心里满腹委屈' },  
- { label: '搞定大项目求夸奖', text: '今天顺利拿下重要大项目，成就感满满！' }  
- ],  
- health: [  
- { label: '肩颈腰酸背痛', text: '最近肩颈酸痛特别严重，身体很疲乏' },  
- { label: '失眠头痛好累', text: '昨晚睡眠质量很差，头痛又犯困' },  
- { label: '做家务操劳顾家', text: '忙着操持家里大大小小的家务，累得腰酸' },  
- { label: '换季身体不舒服', text: '天气骤变降温，感觉有点着凉不舒服' }  
- ],  
- life: [  
- { label: '看中衣服舍不得买', text: '逛街看中一套漂亮的衣服却舍不得下单' },  
- { label: '看剧感动哭了', text: '昨晚看追的电视剧大结局感动得泪目' },  
- { label: '吃大餐心情美美', text: '吃到心仪美味的大餐，整个人心情超好' },  
- { label: '闹小脾气求破冰', text: '刚才拌了几句嘴，急需一个台阶体面破冰' }  
- ]  
- },  
- 'en': {  
- work: [  
- { label: 'Tough meeting with boss', text: 'Had an exhausting meeting with the boss, feeling stressed' },  
- { label: 'Exhausted from overtime', text: 'Worked late into the night, feeling totally drained' },  
- { label: 'Workplace friction', text: 'Faced frustrating workplace tension and misunderstandings' },  
- { label: 'Nailed a big project', text: 'Successfully wrapped up a major project today!' }  
- ],  
- health: [  
- { label: 'Neck & back aches', text: 'Suffering from severe neck and back stiffness today' },  
- { label: 'Insomnia & headache', text: 'Barely slept last night, struggling with fatigue' },  
- { label: 'Tired from chores', text: 'Exhausted after handling endless household chores' },  
- { label: 'Under the weather', text: 'Feeling slightly feverish and unwell with the weather shift' }  
- ],  
- life: [  
- { label: 'Loved a dress but hesitated', text: 'Eyeing a gorgeous outfit while shopping but hesitated to buy' },  
- { label: 'Moved to tears by movie', text: 'Watched an emotional series finale and cried eyes out' },  
- { label: 'Delicious meal & happy', text: 'Enjoyed a delightful dinner and feeling wonderful' },  
- { label: 'Silly quarrel seeking peace', text: 'We had a silly argument and need a sweet off-ramp' }  
- ]  
- }  
- };  
-  
- function renderEventChips(lang) {  
- const data = eventChipsData[lang] || eventChipsData['zh-HK'];  
- ['Work', 'Health', 'Life'].forEach(cat => {  
- const el = document.getElementById('chipGroup' + cat);  
- if (!el) return;  
- el.innerHTML = '';  
- const items = data[cat.toLowerCase()] || [];  
- items.forEach(item => {  
- const btn = document.createElement('button');  
- btn.type = 'button';  
- btn.className = 'chip-btn';  
- btn.innerText = item.label;  
- btn.onclick = () => selectEventChip(item.text);  
- el.appendChild(btn);  
- });  
- });  
- }  
-  
- const signoffPresets = {  
- 'zh-HK': [  
- { label: '永遠最愛你嘅老公', val: '—— 永遠最愛你嘅老公 ❤️' },  
- { label: '你的專屬騎士 Jason', val: '—— 你的專屬騎士 Jason 🗡️' },  
- { label: '企喺你呢邊嘅老公', val: '—— 永遠企喺你呢邊嘅老公 敬上 💍' },  
- { label: '認錯嘅大頭蝦老公', val: '—— 知道錯咗嘅大頭蝦老公 🥺' },  
- { label: '你專屬嘅暖男', val: '—— 你專屬嘅暖男 ☕' }  
- ],  
- 'zh-CN': [  
- { label: '永远最爱你的老公', val: '—— 永远最爱你的老公 ❤️' },  
- { label: '你的专属骑士 Jason', val: '—— 你的专属骑士 Jason 🗡️' },  
- { label: '永远站在你这边的老公', val: '—— 永远站在你这边的老公 敬上 💍' },  
- { label: '知道错啦的笨蛋老公', val: '—— 知道错啦的笨蛋老公 🥺' },  
- { label: '你专属的暖男', val: '—— 你专属的暖男 ☕' }  
- ],  
- 'en': [  
- { label: 'Forever loving you, hubby', val: '— Forever loving you, your partner ❤️' },  
- { label: 'Your dedicated protector', val: '— Your dedicated protector Jason 🗡️' },  
- { label: 'Always on your side', val: '— Always by your side, forever yours 💍' },  
- { label: 'Your apologetic partner', val: '— Your apologetic and loving man 🥺' },  
- { label: 'Your personal sunshine', val: '— Your personal sunshine ☕' }  
- ]  
- };  
-  
- function renderSignoffChips(lang) {  
- const list = signoffPresets[lang] || signoffPresets['zh-HK'];  
- const container = document.querySelector('.signoff-box .chip-group');  
- if (!container) return;  
- container.innerHTML = '';  
- list.forEach(item => {  
- const btn = document.createElement('button');  
- btn.type = 'button';  
- btn.className = 'chip-btn';  
- btn.innerText = item.label;  
- btn.onclick = () => setSignoffText(item.val);  
- container.appendChild(btn);  
- });  
- }  
-  
-  
-  
- // Language Management (i18n)  
+ const eventChipsData = {
+    'zh-HK': {
+      work: [
+        { label: '開會畀老細刁難', text: '今日返工開會畀老細刁難，好委屈好大壓力' },
+        { label: 'OT超時好攰', text: 'OT做到好夜好攰，成個人散晒' },
+        { label: '同事摩擦受委屈', text: '同同事做嘢有摩擦，滿肚委屈' },
+        { label: '搞掂大project等讚', text: '今日順利搞掂個大項目，超有成就感！' }
+      ],
+      health: [
+        { label: '肩頸腰酸背痛', text: '最近肩頸同腰酸背痛好嚴重，好辛苦' },
+        { label: '失眠頭痛好攰', text: '琴晚瞓得好差，失眠頭痛好攰' },
+        { label: '執屋操勞顧家', text: '成日忙住煮飯執屋打理屋企，操勞到腰痛' },
+        { label: '轉天氣唔舒服', text: '天氣轉涼好似有少少作感冒唔舒服' }
+      ],
+      life: [
+        { label: '睇中靚衫唔捨得買', text: '行街睇中咗件靚衫但猶豫唔捨得買' },
+        { label: '睇劇感動到喊', text: '琴晚睇劇集結局感動到眼濕濕' },
+        { label: '食好西心情靚', text: '食咗餐好食嘅嘢，心情好靚' },
+        { label: '鬧脾氣求破冰', text: '兩個人鬧咗兩句小脾氣，想搵台階下破冰' }
+      ],
+      chores: [
+        { label: '親自落廚煮餐好嘅等讚', text: '今日親自落廚煮咗幾味你最中意食嘅餸，等老婆返嚟品嚐' },
+        { label: '去街市買餸好辛苦', text: '去街市買餸拎到手都痛，辛苦晒老婆' },
+        { label: '今晚家務碗筷我包辦', text: '今晚你坐喺度煲劇放鬆，所有碗筷家務等老公搞掂' }
+      ],
+      travel: [
+        { label: '放假想去深圳食好西', text: '今個週末想帶你去行街放鬆下、食餐好西' },
+        { label: '難得二人世界拍拖', text: '放低屋企繁瑣事，今晚專心同你靜靜地拍拖' },
+        { label: '行街行到腳痛等按摩', text: '行咗成萬步腳都軟晒，返去等老公幫你足浴揼骨按摩' }
+      ],
+      weather: [
+        { label: '落大雨成身濕晒好狼狽', text: '突發落大雨鞋都濕埋好狼狽，心痛死老公' },
+        { label: '搭地鐵迫到沙甸魚燥底', text: '返放工搭車迫到沙甸魚咁成肚氣，返嚟老公幫你出氣' },
+        { label: '公司冷氣太凍驚冷親', text: '公司冷氣凍到縮，記得披件外套千祈咪冷親' }
+      ]
+    },
+    'zh-CN': {
+      work: [
+        { label: '开会受气压力大', text: '今天上班开会挨批受委屈，好大压力' },
+        { label: '加班到好晚好累', text: '加班到很晚整个人快散架了，好累' },
+        { label: '同事摩擦受委屈', text: '跟同事工作产生摩擦，心里很委屈' },
+        { label: '搞定大项目求夸', text: '今天终于把大项目顺利拿下，超有成就感！' }
+      ],
+      health: [
+        { label: '肩颈腰背酸痛', text: '最近肩颈和腰背酸痛好严重，很辛苦' },
+        { label: '失眠头疼状态差', text: '昨晚没睡好，失眠头痛特别累' },
+        { label: '操劳家务好疲惫', text: '忙着打理家务操心顾家，累到腰痛' },
+        { label: '变天着凉不适', text: '换季转凉好像有点着凉感冒难受' }
+      ],
+      life: [
+        { label: '看中漂亮衣服舍不得买', text: '逛街看中一件很漂亮的衣服却犹豫不舍得买' },
+        { label: '看剧感动掉眼泪', text: '昨晚看电视剧大结局感动得泪汪汪' },
+        { label: '吃大餐心情美滋滋', text: '吃了一顿超好吃的大餐，心情特别棒' },
+        { label: '闹小脾气求和好', text: '两人闹了点小别扭，想找个台阶破冰和好' }
+      ],
+      chores: [
+        { label: '亲自下厨做大餐求夸', text: '今天亲自下厨烧了你最爱吃的菜，等你回家品尝' },
+        { label: '买菜提重物好辛苦', text: '拎了好多菜手都勒红了，宝贝辛苦了' },
+        { label: '今晚家务洗碗我全包', text: '今晚你好好追剧休息，所有的碗筷和家务都交给我' }
+      ],
+      travel: [
+        { label: '周末想去放松逛街', text: '这个周末想带你出去逛街放松，吃顿好吃的' },
+        { label: '难得二人世界约会', text: '放下日常琐碎，今晚只想跟你好好过二人世界' },
+        { label: '逛街走累了给揉揉脚', text: '走了一万多步脚都酸了，回家我给你好好按摩揉揉' }
+      ],
+      weather: [
+        { label: '下暴雨淋湿了好狼狈', text: '突降暴雨鞋袜全湿了，心疼死我了' },
+        { label: '通勤挤地铁心情烦躁', text: '上下班挤车挤成沙丁鱼一肚子火，回来我当你的情绪沙包' },
+        { label: '办公室冷气太冷怕着凉', text: '公司空调太冷冻得发抖，记得披件外套千万别着凉' }
+      ]
+    },
+    'en': {
+      work: [
+        { label: 'Tough Meeting Stress', text: 'Had a rough day dealing with difficult bosses and meetings' },
+        { label: 'Exhausted from Overtime', text: 'Worked late overtime and feeling completely drained' },
+        { label: 'Coworker Conflict', text: 'Had friction with colleagues and feeling frustrated' },
+        { label: 'Big Project Success', text: 'Nailed the big project today and feeling so accomplished!' }
+      ],
+      health: [
+        { label: 'Sore Neck & Back', text: 'Shoulders and lower back aching severely from exhaustion' },
+        { label: 'Headache & Insomnia', text: 'Slept terribly last night, battling headache and fatigue' },
+        { label: 'Tired from House Chores', text: 'Exhausted from constantly taking care of the home' },
+        { label: 'Feeling Under Weather', text: 'The chilly weather caught me feeling slightly under the weather' }
+      ],
+      life: [
+        { label: 'Loved Outfit Hesitated', text: 'Spotted a gorgeous dress while shopping but hesitated to buy it' },
+        { label: 'Moved to Tears by Movie', text: 'Got emotionally teary watching the season finale last night' },
+        { label: 'Delicious Food Glow', text: 'Had a fantastic meal and my mood is instantly elevated' },
+        { label: 'Small Tiff Wanting Peace', text: 'We had a little misunderstanding and seeking a sweet truce' }
+      ],
+      chores: [
+        { label: 'Cooked Dinner for You', text: 'Cooked your favorite dishes tonight, waiting for you to come home' },
+        { label: 'Heavy Grocery Bags', text: 'Carrying heavy groceries all the way, thank you for all your hard work' },
+        { label: 'I Will Do All Dishes', text: 'You relax on the sofa tonight, I will handle all the dishes and cleaning' }
+      ],
+      travel: [
+        { label: 'Weekend Getaway Date', text: 'Want to take you out for a relaxing weekend walk and great food' },
+        { label: 'Precious Romantic Date', text: 'Leaving all chores behind, just the two of us tonight' },
+        { label: 'Tired Feet Need Massage', text: 'Walked so many miles today, let me give you a soothing foot rub' }
+      ],
+      weather: [
+        { label: 'Caught in Heavy Rain', text: 'Drenched in sudden downpour, feeling so sorry for you' },
+        { label: 'Crowded Commute Stress', text: 'Packed like sardines on the train, vent it all on me tonight' },
+        { label: 'Office AC Freezing', text: 'Office AC is freezing, please put on a cardigan and keep warm' }
+      ]
+    }
+  };
+
+function renderEventChips(lang) {
+  const data = eventChipsData[lang] || eventChipsData['zh-HK'];
+  const cats = [
+    { key: 'work', id: 'Work' },
+    { key: 'health', id: 'Health' },
+    { key: 'life', id: 'Life' },
+    { key: 'chores', id: 'Chores' },
+    { key: 'travel', id: 'Travel' },
+    { key: 'weather', id: 'Weather' }
+  ];
+  cats.forEach(c => {
+    const el = document.getElementById('chipGroup' + c.id);
+    if (!el) return;
+    el.innerHTML = '';
+    const items = data[c.key] || [];
+    items.forEach(item => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip-btn';
+      btn.innerText = item.label;
+      btn.onclick = () => selectEventChip(item.text);
+      el.appendChild(btn);
+    });
+  });
+}
+
+const signoffPresets = {
+  'zh-HK': [
+    { label: '永遠最愛你嘅老公 ❤️', val: '—— 永遠最愛你嘅老公 ❤️' },
+    { label: '隨時候命洗碗專員 🧼', val: '—— 隨時候命兼洗碗專員 敬上 🧼' },
+    { label: '求生慾極強小太監 🙇‍♂️', val: '—— 求生慾極強嘅小太監 叩頭 🙇‍♂️' },
+    { label: '任打唔還手沙包 🥊', val: '—— 今晚任打唔還手嘅沙包老公 🥊' },
+    { label: '私人司機兼外賣仔 🛵', val: '—— 你一世嘅私人司機兼外賣仔 🛵' },
+    { label: '人肉提款機按摩師 💳', val: '—— 人肉提款機兼專屬按摩技師 💳💆' },
+    { label: '自動跪緊玻璃老公 🧊', val: '—— 已經自動跪緊玻璃嘅老公 🧊' },
+    { label: '地位最低但最錫你 📉', val: '—— 屋企地位最低但最錫你嗰個 📉❤️' },
+    { label: '全世界最聽話廢青 🐕', val: '—— 全世界最聽話嘅廢青老公 🐕' },
+    { label: '你的專屬騎士 Jason 🗡️', val: '—— 你的專屬騎士 Jason 🗡️' },
+    { label: '企喺你呢邊嘅老公 💍', val: '—— 永遠企喺你呢邊嘅老公 敬上 💍' },
+    { label: '認錯嘅大頭蝦老公 🥺', val: '—— 知道錯咗嘅大頭蝦老公 🥺' },
+    { label: '你專屬嘅暖男 ☕', val: '—— 你專屬嘅暖男 ☕' }
+  ],
+  'zh-CN': [
+    { label: '永远最爱你的老公 ❤️', val: '—— 永远最爱你的老公 ❤️' },
+    { label: '随时候命洗碗专员 🧼', val: '—— 随时候命兼洗碗专员 敬上 🧼' },
+    { label: '求生欲极强小太监 🙇‍♂️', val: '—— 求生欲极强的小太监 叩头 🙇‍♂️' },
+    { label: '任打不还手沙包 🥊', val: '—— 今晚任打不还手的沙包老公 🥊' },
+    { label: '私人司机兼外卖员 🛵', val: '—— 你一辈子的私人司机兼外卖员 🛵' },
+    { label: '人肉提款机按摩师 💳', val: '—— 人肉提款机兼专属按摩技师 💳💆' },
+    { label: '主动跪榴莲的老公 🧊', val: '—— 已经主动跪榴莲的老公 🧊' },
+    { label: '地位最低但最疼你 📉', val: '—— 家里地位最低但最疼你那个 📉❤️' },
+    { label: '最听话的小狼狗 🐕', val: '—— 全世界最听话的小狼狗 🐕' },
+    { label: '你的专属骑士 Jason 🗡️', val: '—— 你的专属骑士 Jason 🗡️' },
+    { label: '永远站在你这边的老公 💍', val: '—— 永远站在你这边的老公 敬上 💍' },
+    { label: '知道错啦的笨蛋老公 🥺', val: '—— 知道错啦的笨蛋老公 🥺' },
+    { label: '你专属的暖男 ☕', val: '—— 你专属的暖男 ☕' }
+  ],
+  'en': [
+    { label: 'Forever loving you, hubby ❤️', val: '— Forever loving you, your partner ❤️' },
+    { label: 'Dishwashing Specialist 🧼', val: '— Your On-Call Dishwashing Officer 🧼' },
+    { label: 'Obedient Hubby 🙇‍♂️', val: '— Your humble and obedient partner 🙇‍♂️' },
+      { label: 'Punching Bag Tonight 🥊', val: "— Your punching bag who won't hit back tonight 🥊" },
+    { label: 'Private Chauffeur & Delivery 🛵', val: '— Your private driver & food delivery guy 🛵' },
+    { label: 'Walking ATM & Masseuse 💳', val: '— Walking ATM & personal massage therapist 💳💆' },
+    { label: 'Dedicated protector Jason 🗡️', val: '— Your dedicated protector Jason 🗡️' },
+    { label: 'Always on your side 💍', val: '— Forever on your side, respectfully 💍' },
+    { label: 'Apologetic goofball 🥺', val: '— Your apologetic goofball partner 🥺' },
+    { label: 'Your warm harbor ☕', val: '— Your personal warm harbor ☕' }
+  ]
+};
+
+function renderSignoffChips(lang) {
+  const list = signoffPresets[lang] || signoffPresets['zh-HK'];
+  const container = document.querySelector('.signoff-box .chip-group');
+  if (!container) return;
+  container.innerHTML = '';
+  list.forEach(item => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip-btn';
+    btn.innerText = item.label;
+    btn.onclick = () => setSignoffText(item.val);
+    container.appendChild(btn);
+  });
+}
+
+// Language Management (i18n)  
  function setAppLanguage(lang) {  
  currentLanguage = lang;  
  localStorage.setItem('ai_bf_lang', lang);  
@@ -4135,7 +4210,7 @@ function applyTimeAwarenessSuggestion() {
  'mid_autumn': '當前：🌕 中秋佳節',  
  'valentines': '當前：🌹 情人節',  
  'christmas': '當前：🎄 聖誕節',  
- 'new_year': '當前：🧨 新春佳節',  
+ 'new_year': '當前：🧧 新春佳節',  
  'birthday': '當前：🎂 生日專屬',  
  'anniversary': '當前：💍 紀念日',  
  'spring': '當前：🌸 春季',  
@@ -4148,7 +4223,7 @@ function applyTimeAwarenessSuggestion() {
  'mid_autumn': '当前：🌕 中秋佳节',  
  'valentines': '当前：🌹 情人节',  
  'christmas': '当前：🎄 圣诞节',  
- 'new_year': '当前：🧨 新春佳节',  
+ 'new_year': '当前：🧧 新春佳节',  
  'birthday': '当前：🎂 生日专属',  
  'anniversary': '当前：💍 纪念日',  
  'spring': '当前：🌸 春季',  
@@ -4161,7 +4236,7 @@ function applyTimeAwarenessSuggestion() {
  'mid_autumn': 'Current: 🌕 Mid-Autumn',  
  'valentines': "Current: 🌹 Valentine's",  
  'christmas': 'Current: 🎄 Christmas',  
- 'new_year': 'Current: 🧨 New Year',  
+ 'new_year': 'Current: 🧧 New Year',  
  'birthday': 'Current: 🎂 Birthday',  
  'anniversary': 'Current: 💍 Anniversary',  
  'spring': 'Current: 🌸 Spring',  
@@ -4245,11 +4320,11 @@ function applyTimeAwarenessSuggestion() {
  } else if (month === 1) {  
  activeFestivalData = {  
  key: 'new_year',  
- icon: '🧨',  
+ icon: '🧧',  
  title: {  
- 'zh-HK': '🧨 新春祈願季',  
- 'zh-CN': '🧨 新春祈愿季',  
- 'en': '🧨 New Year Season'  
+ 'zh-HK': '🧧 新春祈願季',  
+ 'zh-CN': '🧧 新春祈愿季',  
+ 'en': '🧧 New Year Season'  
  },  
  desc: {  
  'zh-HK': '新一年繼續加倍寵愛她！解鎖歲歲平安與長情話術。',  
@@ -4495,9 +4570,7 @@ function applyTimeAwarenessSuggestion() {
  btnDiary.classList.add('active');  
  viewGen.style.display = 'none';  
  viewDiary.classList.add('active');  
- renderDiaryList();
-    initCloudPageViews();
-    initTimeAwareness();  
+ renderDiaryList();  
  }  
  }  
   
@@ -4627,23 +4700,23 @@ function applyTimeAwarenessSuggestion() {
  generateMessage();  
  }  
   
- function getActiveSignoff() {  
- const enabled = document.getElementById('signoffEnableCheckbox').checked;  
- if (!enabled) return "";  
- let signoff = document.getElementById('customSignoffInput').value.trim();  
- if (!signoff) {  
- if (currentLanguage === 'zh-CN') {  
- signoff = `—— 永远最爱你的${profile.userName || '老公'} ❤️`;  
- } else if (currentLanguage === 'en') {  
- signoff = `— Forever loving you, ${profile.userName || 'hubby'} ❤️`;  
- } else {  
- signoff = `—— 永遠最愛你嘅${profile.userName || '老公'} ❤️`;  
- }  
- }  
- return `\\n\\n${signoff}`;  
- }  
-  
- // ==========================================  
+ function getActiveSignoff() {
+  const enabled = document.getElementById('signoffEnableCheckbox').checked;
+  if (!enabled) return "";
+  let signoff = document.getElementById('customSignoffInput').value.trim();
+  if (!signoff) {
+    if (currentLanguage === 'zh-CN') {
+      signoff = `—— 永远最爱你的${profile.userName || '老公'} ❤️`;
+    } else if (currentLanguage === 'en') {
+      signoff = `— Forever loving you, ${profile.userName || 'hubby'} ❤️`;
+    } else {
+      signoff = `—— 永遠最愛你嘅${profile.userName || '老公'} ❤️`;
+    }
+  }
+  return "\n\n" + signoff;
+}
+
+// ==========================================  
  // DIARY & COPY-PROTECTION SYSTEM  
  // ==========================================  
  function setDiaryMoodBtn(btn, mood) {  
@@ -4769,9 +4842,7 @@ const qElem = document.getElementById('previewQuote');
  clearDiaryPhoto();  
   
  updateLivePreview();  
- renderDiaryList();
-    initCloudPageViews();
-    initTimeAwareness();  
+ renderDiaryList();  
  showToast(currentLanguage === 'en' ? "Saved to memory book!" : "💖 回憶已珍重寫入時光牆！");  
   
  const wallContainer = document.getElementById('diaryWallContainer');  
@@ -4804,9 +4875,7 @@ const qElem = document.getElementById('previewQuote');
   
  if (addedCount > 0) {  
  localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));  
- renderDiaryList();
-    initCloudPageViews();
-    initTimeAwareness();  
+ renderDiaryList();  
  showToast(`✅ 成功從首頁同步 ${addedCount} 條生活事件到時光牆！`);  
  } else {  
  showToast("首頁的所有生活事件已全部存在於時光牆中！");  
@@ -4818,9 +4887,7 @@ const qElem = document.getElementById('previewQuote');
  diaryEntries = diaryEntries.filter(d => d.id !== id);  
  localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));  
  deleteEntryFromCloud(id);  
- renderDiaryList();
-    initCloudPageViews();
-    initTimeAwareness();  
+ renderDiaryList();  
  showToast("已刪除該條生活回憶。");  
  }  
  }  
@@ -5368,10 +5435,16 @@ const qElem = document.getElementById('previewQuote');
       profile.gender = profData.gender || profile.gender;
       profile.relationship = profData.relationship || profile.relationship;
       profile.targetTrait = profData.target_trait || profile.targetTrait;
+      profile.targetPhone = profData.target_phone || profile.targetPhone || '';
+      if (profData.saved_events && Array.isArray(profData.saved_events) && profData.saved_events.length > 0) {
+        savedEvents = profData.saved_events;
+        localStorage.setItem('ai_bf_events', JSON.stringify(savedEvents));
+        renderEventsDropdown();
+      }
       localStorage.setItem('ai_bf_profile', JSON.stringify(profile));
       renderProfileUI();
       closeProfileModal();
-      console.log("Profile automatically synced from Supabase Cloud:", profile.targetName);
+      console.log("Profile & Events synced from Supabase Cloud:", profile.targetName);
     }  
   
  // 2. Fetch Diaries  
@@ -5410,9 +5483,7 @@ const qElem = document.getElementById('previewQuote');
  } catch(e) {}  
   
  localStorage.setItem('ai_bf_diaries', JSON.stringify(diaryEntries));  
- renderDiaryList();
-    initCloudPageViews();
-    initTimeAwareness();  
+ renderDiaryList();  
  console.log("Synced diaries from Supabase with photos preserved! Count:", diaryEntries.length);  
  }  
  } catch(err) {  
@@ -5475,370 +5546,258 @@ const qElem = document.getElementById('previewQuote');
   
    
 // ==========================================  
- // FREEMIUM (每日5次) & SUPABASE 用戶雲端管理
-// ==========================================
-const DAILY_FREE_LIMIT = 5;
-let currentUser = null; // null (guest), { role: 'admin', name: 'Jason' }, or { email, role: 'user', is_vip: bool }
-let dailyUsedCount = 0;
-let selectedPlan = 'annual'; // 'monthly' ($18) or 'annual' ($98)
-
-function checkUserSession() {
-  const savedUser = localStorage.getItem('ai_bf_user_session');
-  if (savedUser) {
-    try {
-      currentUser = JSON.parse(savedUser);
-    } catch(e) {}
-  }
+ // AUTH, ADMIN & 3-DAY TRIAL MANAGEMENT  
+ // ==========================================  
+ let currentUser = null; // null (guest), { role: 'admin', name: 'Jason' }, or { email, role: 'user' }  
+ let guestGenCount = 0;  
+ let selectedPlan = 'annual'; // 'monthly' ($18) or 'annual' ($98)  
   
-  // 每日 00:00 自動重置邏輯
-  const todayStr = new Date().toISOString().split('T')[0];
-  const savedQuotaDate = localStorage.getItem('ai_bf_quota_date');
-  if (savedQuotaDate === todayStr) {
-    dailyUsedCount = parseInt(localStorage.getItem('ai_bf_daily_used') || '0', 10);
-  } else {
-    dailyUsedCount = 0;
-    localStorage.setItem('ai_bf_quota_date', todayStr);
-    localStorage.setItem('ai_bf_daily_used', '0');
-  }
-
-  // 若已登入且連線 Supabase，校驗最新 VIP 狀態
-  if (currentUser && currentUser.role === 'user' && currentUser.email && supabaseClient) {
-    supabaseClient.from('app_users').select('*').eq('email', currentUser.email).maybeSingle().then(({ data, error }) => {
-      if (!error && data) {
-        currentUser.is_vip = data.is_vip || false;
-        currentUser.vip_expires_at = data.vip_expires_at;
-        localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-        updateUserAuthUI();
-      }
-    });
-  }
-
-  updateUserAuthUI();
-}
-
-function updateUserAuthUI() {
-  const btnAuth = document.getElementById('btnUserAuth');
-  const btnAdmin = document.getElementById('btnAdminPanel');
-  const badge = document.getElementById('uiVipBadge');
-
-  const adminLabel = currentLanguage === 'en' ? '👑 Admin: Jason' : (currentLanguage === 'zh-CN' ? '👑 管理员: Jason' : '👑 管理員: Jason');
-  const superVipBadge = currentLanguage === 'en' ? '👑 Super VIP' : (currentLanguage === 'zh-CN' ? '👑 超级VIP' : '👑 超級VIP');
-  const signInLabel = currentLanguage === 'en' ? '👤 Sign In / Sign Up' : (currentLanguage === 'zh-CN' ? '👤 登录 / 注册' : '👤 登入 / 註冊');
-
-  if (currentUser && currentUser.role === 'admin') {
-    isVip = true;
-    if (btnAuth) btnAuth.innerHTML = adminLabel;
-    if (btnAdmin) btnAdmin.style.display = 'inline-flex';
-    if (badge) {
-      badge.innerText = superVipBadge;
-      badge.style.background = '#fef08a';
-      badge.style.color = '#854d0e';
-    }
-  } else if (currentUser && currentUser.role === 'user') {
-    if (btnAdmin) btnAdmin.style.display = 'none';
-    const outText = currentLanguage === 'en' ? 'Sign Out' : '登出';
-    if (btnAuth) btnAuth.innerHTML = `👤 ${currentUser.email.split('@')[0]} (${outText})`;
-    checkVipStatus();
-  } else {
-    // 訪客模式 (Guest)
-    if (btnAdmin) btnAdmin.style.display = 'none';
-    if (btnAuth) btnAuth.innerHTML = signInLabel;
-    isVip = false;
-    if (badge) {
-      const remain = Math.max(0, DAILY_FREE_LIMIT - dailyUsedCount);
-      badge.innerText = currentLanguage === 'en' ? `🆓 Free (${remain}/${DAILY_FREE_LIMIT} left)` : `🆓 免費版 (今日餘 ${remain}/${DAILY_FREE_LIMIT} 次)`;
-      badge.style.background = remain > 0 ? '#ecfdf5' : '#fee2e2';
-      badge.style.color = remain > 0 ? '#047857' : '#b91c1c';
-    }
-  }
-}
-
-function checkVipStatus() {
-  const badge = document.getElementById('uiVipBadge');
-  if (!currentUser || currentUser.role !== 'user') return;
-
-  const expiryTime = currentUser.vip_expires_at ? new Date(currentUser.vip_expires_at).getTime() : 0;
-  const now = Date.now();
-
-  if (currentUser.is_vip && expiryTime > now) {
-    isVip = true;
-    const diffDays = Math.ceil((expiryTime - now) / (1000 * 60 * 60 * 24));
-    badge.innerText = currentLanguage === 'en' ? `👑 VIP (${diffDays}d left)` : `👑 正式 VIP (餘 ${diffDays} 天)`;
-    badge.style.background = '#fef08a';
-    badge.style.color = '#854d0e';
-  } else {
-    isVip = false;
-    const remain = Math.max(0, DAILY_FREE_LIMIT - dailyUsedCount);
-    badge.innerText = currentLanguage === 'en' ? `🆓 Free (${remain}/${DAILY_FREE_LIMIT} left)` : `🆓 免費版 (今日餘 ${remain}/${DAILY_FREE_LIMIT} 次)`;
-    badge.style.background = remain > 0 ? '#ecfdf5' : '#fee2e2';
-    badge.style.color = remain > 0 ? '#047857' : '#b91c1c';
-  }
-}
-
-function openAuthModal() {
-  if (currentUser) {
-    if (confirm(`目前已登入：${currentUser.name || currentUser.email}，確定要登出嗎？`)) {
-      currentUser = null;
-      localStorage.removeItem('ai_bf_user_session');
-      updateUserAuthUI();
-      showToast("已成功登出。已切換為訪客模式。");
-    }
-    return;
-  }
-  document.getElementById('authModal').classList.add('active');
-}
-
-function closeAuthModal() {
-  document.getElementById('authModal').classList.remove('active');
-}
-
-function switchAuthTab(tab) {
-  const tUser = document.getElementById('tabAuthUser');
-  const tAdmin = document.getElementById('tabAuthAdmin');
-  const pUser = document.getElementById('panelAuthUser');
-  const pAdmin = document.getElementById('panelAuthAdmin');
-
-  if (tab === 'user') {
-    tUser.classList.add('active');
-    tAdmin.classList.remove('active');
-    pUser.style.display = 'flex';
-    pAdmin.style.display = 'none';
-  } else {
-    tUser.classList.remove('active');
-    tAdmin.classList.add('active');
-    pUser.style.display = 'none';
-    pAdmin.style.display = 'flex';
-  }
-}
-
-// 管理員登入
-function handleAdminLogin() {
-  const u = document.getElementById('adminUsernameInput').value.trim();
-  const p = document.getElementById('adminPasswordInput').value.trim();
-
-  if (u === 'Jason' && p === '97242234#') {
-    currentUser = {
-      role: 'admin',
-      name: 'Jason',
-      is_vip: true
-    };
-    localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-    closeAuthModal();
-    updateUserAuthUI();
-    showToast("👑 歡迎回來，超級管理員 Jason！全系統功能已永久解鎖！");
-  } else {
-    alert("管理員帳號或密碼錯誤！");
-  }
-}
-
-// 用戶註冊（自動儲存至 Supabase app_users 表）
-async function handleUserSignUp() {
-  const email = document.getElementById('userEmailInput').value.trim();
-  const pwd = document.getElementById('userPasswordInput').value.trim();
-  const code = document.getElementById('userRegCodeInput').value.trim().toUpperCase();
-
-  if (!email || !pwd || pwd.length < 6) {
-    alert("請輸入有效的電郵及至少 6 位數密碼！");
-    return;
-  }
-
-  let isUserVip = false;
-  let days = 0;
-  if (code.startsWith('VIP-1Y') || code.startsWith('Y98')) {
-    isUserVip = true; days = 365;
-  } else if (code.startsWith('VIP-1M') || code.startsWith('M18')) {
-    isUserVip = true; days = 30;
-  } else if (code.startsWith('VIP-LIFETIME') || code.includes('FOREVER')) {
-    isUserVip = true; days = 3650;
-  }
-
-  const expiryDate = isUserVip ? new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString() : null;
-
-  currentUser = {
-    id: 'usr_' + Date.now(),
-    role: 'user',
-    email: email,
-    is_vip: isUserVip,
-    vip_expires_at: expiryDate
-  };
-
-  localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-
-  // 寫入 Supabase 雲端用戶表
-  if (supabaseClient) {
-    try {
-      await supabaseClient.from('app_users').upsert([{
-        id: currentUser.id,
-        email: email,
-        role: 'user',
-        is_vip: isUserVip,
-        vip_expires_at: expiryDate,
-        daily_quota_used: dailyUsedCount,
-        last_active_at: new Date().toISOString()
-      }], { onConflict: 'email' });
-      console.log("Registered user saved to Supabase:", email);
-    } catch (e) {
-      console.warn("Supabase user sync error:", e);
-    }
-  }
-
-  closeAuthModal();
-  updateUserAuthUI();
-  showToast(isUserVip ? "🎉 註冊並成功激活 VIP！享受無限次數！" : "🎉 註冊成功！每日享有 5 次免費話術額度！");
-}
-
-// 用戶登入
-async function handleUserSignIn() {
-  const email = document.getElementById('userEmailInput').value.trim();
-  const pwd = document.getElementById('userPasswordInput').value.trim();
-
-  if (!email || !pwd) {
-    alert("請輸入電郵與密碼！");
-    return;
-  }
-
-  let isUserVip = false;
-  let expiryDate = null;
-
-  if (supabaseClient) {
-    try {
-      const { data, error } = await supabaseClient.from('app_users').select('*').eq('email', email).maybeSingle();
-      if (!error && data) {
-        isUserVip = data.is_vip || false;
-        expiryDate = data.vip_expires_at;
-        supabaseClient.from('app_users').update({ last_active_at: new Date().toISOString() }).eq('email', email);
-      } else {
-        const newId = 'usr_' + Date.now();
-        await supabaseClient.from('app_users').upsert([{
-          id: newId,
-          email: email,
-          role: 'user',
-          is_vip: false,
-          vip_expires_at: null,
-          daily_quota_used: dailyUsedCount,
-          last_active_at: new Date().toISOString()
-        }], { onConflict: 'email' });
-      }
-    } catch(e) {
-      console.warn("Supabase signin check:", e);
-    }
-  }
-
-  currentUser = {
-    role: 'user',
-    email: email,
-    is_vip: isUserVip,
-    vip_expires_at: expiryDate
-  };
-
-  localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-  closeAuthModal();
-  updateUserAuthUI();
-  showToast("✅ 登入成功！");
-}
-
-// 激活碼兌換
-function redeemActivationCode() {
-  const code = document.getElementById('activationCodeInput').value.trim().toUpperCase();
-  if (!code) {
-    alert("請輸入激活碼！");
-    return;
-  }
-
-  let days = 0;
-  if (code.includes('1M') || code.startsWith('M18')) {
-    days = 30;
-  } else if (code.includes('1Y') || code.startsWith('Y98')) {
-    days = 365;
-  } else if (code.includes('ADMIN') || code.includes('LIFETIME') || code.includes('FOREVER')) {
-    days = 3650;
-  } else {
-    days = 30;
-  }
-
-  const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();
-  if (!currentUser) {
-    currentUser = { role: 'user', email: 'guest@vip', is_vip: true, vip_expires_at: expiryDate };
-  } else {
-    currentUser.is_vip = true;
-    currentUser.vip_expires_at = expiryDate;
-  }
-
-  localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));
-
-  if (supabaseClient && currentUser.email && currentUser.email !== 'guest@vip') {
-    supabaseClient.from('app_users').update({
-      is_vip: true,
-      vip_expires_at: expiryDate,
-      last_active_at: new Date().toISOString()
-    }).eq('email', currentUser.email);
-  }
-
-  updateUserAuthUI();
-  closeVipModal();
-  showToast(`🎉 恭喜！激活碼兌換成功，VIP 權限已延長 ${days} 天！`);
-}
-
-// 管理員儀表板：即時讀取 Supabase 用戶數據
-async function openAdminModal() {
-  document.getElementById('adminModal').classList.add('active');
-  refreshAdminUserStats();
-}
-
-async function refreshAdminUserStats() {
-  const statsContainer = document.getElementById('adminUserStatsBox');
-  if (!statsContainer) return;
-  if (!supabaseClient) {
-    statsContainer.innerHTML = '<div style="color: #b45309; font-size: 0.82rem;">⚠️ Supabase 尚未連線，無法讀取雲端用戶數據。</div>';
-    return;
-  }
-
-  statsContainer.innerHTML = '<div style="color: #64748b; font-size: 0.82rem;">⏳ 正在連線 Supabase 讀取用戶數據...</div>';
-  try {
-    const { data: users, error } = await supabaseClient.from('app_users').select('*').order('created_at', { ascending: false });
-    if (!error && users) {
-      const total = users.length;
-      const vipCount = users.filter(u => u.is_vip).length;
-      const freeCount = total - vipCount;
-      statsContainer.innerHTML = `
-        <div style="font-size: 0.85rem; font-weight: bold; color: #92400e; margin-bottom: 8px;">👥 雲端用戶實時統計：</div>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; text-align: center;">
-          <div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #fed7aa;">
-            <div style="font-size: 0.75rem; color: #78350f;">總註冊人數</div>
-            <div style="font-size: 1.35rem; font-weight: 900; color: #c2410c;">${total}</div>
-          </div>
-          <div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #bbf7d0;">
-            <div style="font-size: 0.75rem; color: #14532d;">免費用戶</div>
-            <div style="font-size: 1.35rem; font-weight: 900; color: #15803d;">${freeCount}</div>
-          </div>
-          <div style="background: white; padding: 10px; border-radius: 8px; border: 1px solid #fef08a;">
-            <div style="font-size: 0.75rem; color: #854d0e;">付費 VIP</div>
-            <div style="font-size: 1.35rem; font-weight: 900; color: #b45309;">${vipCount}</div>
-          </div>
-        </div>
-        <div style="font-size: 0.8rem; font-weight: 700; color: #92400e; margin-bottom: 6px;">📋 最新註冊用戶名單：</div>
-        <div style="max-height: 140px; overflow-y: auto; background: white; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.78rem;">
-          ${users.length === 0 ? '<div style="padding: 10px; text-align: center; color: #94a3b8;">暫未有註冊用戶</div>' : users.map(u => `
-            <div style="padding: 6px 10px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
-              <span>${u.email}</span>
-              <span style="color: ${u.is_vip ? '#b45309' : '#64748b'}; font-weight: bold;">${u.is_vip ? '👑 VIP' : '免費版'}</span>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    } else {
-      statsContainer.innerHTML = '<div style="color: #b91c1c; font-size: 0.82rem;">讀取失敗：可能尚未在 Supabase 建立 app_users 資料表。</div>';
-    }
-  } catch(e) {
-    statsContainer.innerHTML = '<div style="color: #b91c1c; font-size: 0.82rem;">連線異常，請檢查網絡或 Supabase 設置。</div>';
-  }
-}
-
-function closeAdminModal() {
-  document.getElementById('adminModal').classList.remove('active');
-}
-
-function adminGenerateCode() {  
+ function checkUserSession() {  
+ const savedUser = localStorage.getItem('ai_bf_user_session');  
+ if (savedUser) {  
+ try {  
+ currentUser = JSON.parse(savedUser);  
+ } catch(e) {}  
+ }  
+   
+// Check if guest generation count stored for today  
+ const todayStr = new Date().toISOString().split('T')[0];  
+ const savedCountDate = localStorage.getItem('ai_bf_guest_date');  
+ if (savedCountDate === todayStr) {  
+ guestGenCount = parseInt(localStorage.getItem('ai_bf_guest_count') || '0', 10);  
+ } else {  
+ guestGenCount = 0;  
+ localStorage.setItem('ai_bf_guest_date', todayStr);  
+ localStorage.setItem('ai_bf_guest_count', '0');  
+ }  
+  
+ updateUserAuthUI();  
+ }  
+  
+ function updateUserAuthUI() {  
+ const btnAuth = document.getElementById('btnUserAuth');  
+ const btnAdmin = document.getElementById('btnAdminPanel');  
+ const badge = document.getElementById('uiVipBadge');  
+  
+ const adminLabel = currentLanguage === 'en' ? '👑 Admin: Jason' : (currentLanguage === 'zh-CN' ? '👑 管理员: Jason' : '👑 管理員: Jason');  
+ const superVipBadge = currentLanguage === 'en' ? '👑 Super VIP' : (currentLanguage === 'zh-CN' ? '👑 超级VIP' : '👑 超級VIP');  
+ const freeBadge = currentLanguage === 'en' ? 'Free Trial' : (currentLanguage === 'zh-CN' ? '免费版' : '免費版');  
+ const signInLabel = currentLanguage === 'en' ? '👤 Sign In / Sign Up' : (currentLanguage === 'zh-CN' ? '👤 登录 / 注册' : '👤 登入 / 註冊');  
+  
+ if (currentUser && currentUser.role === 'admin') {  
+ isVip = true;  
+ if (btnAuth) btnAuth.innerHTML = adminLabel;  
+ if (btnAdmin) btnAdmin.style.display = 'inline-flex';  
+ if (badge) {  
+ badge.innerText = superVipBadge;  
+ badge.style.background = '#fef08a';  
+ badge.style.color = '#854d0e';  
+ }  
+ } else if (currentUser && currentUser.role === 'user') {  
+ if (btnAdmin) btnAdmin.style.display = 'none';  
+ const outText = currentLanguage === 'en' ? 'Sign Out' : '登出';  
+ if (btnAuth) btnAuth.innerHTML = `👤 ${currentUser.email.split('@')[0]} (${outText})`;  
+ checkTrialOrVipExpiry();  
+ } else {  
+ if (btnAdmin) btnAdmin.style.display = 'none';  
+ if (btnAuth) btnAuth.innerHTML = signInLabel;  
+ if (badge && !isVip) {  
+ badge.innerText = freeBadge;  
+ badge.style.background = '#fef3c7';  
+ badge.style.color = '#b45309';  
+ }  
+ }  
+ }  
+  
+ function checkTrialOrVipExpiry() {  
+ const badge = document.getElementById('uiVipBadge');  
+ if (!currentUser || currentUser.role !== 'user') return;  
+  
+ const expiryTime = currentUser.vip_expires_at ? new Date(currentUser.vip_expires_at).getTime() : 0;  
+ const now = Date.now();  
+  
+ if (expiryTime > now) {  
+ isVip = true;  
+ const diffDays = Math.ceil((expiryTime - now) / (1000 * 60 * 60 * 24));  
+ if (currentUser.is_trial) {  
+ badge.innerText = `⏳ 3日VIP體驗 (餘 ${diffDays} 天)`;  
+ badge.style.background = '#fef08a';  
+ badge.style.color = '#854d0e';  
+ } else {  
+ badge.innerText = `👑 正式VIP (餘 ${diffDays} 天)`;  
+ badge.style.background = '#fef08a';  
+ badge.style.color = '#854d0e';  
+ }  
+ } else {  
+ // Expired!  
+ isVip = false;  
+ badge.innerText = '⚠️ VIP已到期 (點此續費)';  
+ badge.style.background = '#fee2e2';  
+ badge.style.color = '#b91c1c';  
+ }  
+ }  
+  
+ function openAuthModal() {  
+ if (currentUser) {  
+ if (confirm(`目前已登入：${currentUser.name || currentUser.email}，確定要登出嗎？`)) {  
+ currentUser = null;  
+ localStorage.removeItem('ai_bf_user_session');  
+ updateUserAuthUI();  
+ showToast("已成功登出。已切換為訪客模式。");  
+ }  
+ return;  
+ }  
+ document.getElementById('authModal').classList.add('active');  
+ }  
+  
+ function closeAuthModal() {  
+ document.getElementById('authModal').classList.remove('active');  
+ }  
+  
+ function switchAuthTab(tab) {  
+ const tUser = document.getElementById('tabAuthUser');  
+ const tAdmin = document.getElementById('tabAuthAdmin');  
+ const pUser = document.getElementById('panelAuthUser');  
+ const pAdmin = document.getElementById('panelAuthAdmin');  
+  
+ if (tab === 'user') {  
+ tUser.classList.add('active');  
+ tAdmin.classList.remove('active');  
+ pUser.style.display = 'flex';  
+ pAdmin.style.display = 'none';  
+ } else {  
+ tUser.classList.remove('active');  
+ tAdmin.classList.add('active');  
+ pUser.style.display = 'none';  
+ pAdmin.style.display = 'flex';  
+ }  
+ }  
+  
+ // Handle Admin Login (Jason / 97242234#)  
+ function handleAdminLogin() {  
+ const u = document.getElementById('adminUsernameInput').value.trim();  
+ const p = document.getElementById('adminPasswordInput').value.trim();  
+  
+ if (u === 'Jason' && p === '97242234#') {  
+ currentUser = {  
+ role: 'admin',  
+ name: 'Jason',  
+ is_vip: true  
+ };  
+ localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));  
+ closeAuthModal();  
+ updateUserAuthUI();  
+ showToast("👑 歡迎回來，超級管理員 Jason！全系統功能已永久解鎖！");  
+ } else {  
+ alert("管理員帳號或密碼錯誤！");  
+ }  
+ }  
+  
+ // Handle User Registration with Mode A (3-day Trial)  
+ function handleUserSignUp() {  
+ const email = document.getElementById('userEmailInput').value.trim();  
+ const pwd = document.getElementById('userPasswordInput').value.trim();  
+ const code = document.getElementById('userRegCodeInput').value.trim().toUpperCase();  
+  
+ if (!email || !pwd || pwd.length < 6) {  
+ alert("請輸入有效的電郵及至少 6 位數密碼！");  
+ return;  
+ }  
+  
+ // Check if entered activation code  
+ let isTrial = true;  
+ let days = 3; // default Mode A 3 days free trial  
+ if (code.startsWith('VIP-1Y')) {  
+ isTrial = false;  
+ days = 365;  
+ } else if (code.startsWith('VIP-1M')) {  
+ isTrial = false;  
+ days = 30;  
+ }  
+  
+ const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();  
+  
+ currentUser = {  
+ role: 'user',  
+ email: email,  
+ is_trial: isTrial,  
+ vip_expires_at: expiryDate  
+ };  
+  
+ localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));  
+ closeAuthModal();  
+ updateUserAuthUI();  
+ showToast(isTrial ? "🎉 註冊成功！已為您自動開通 3 天全功能免費 VIP 體驗！" : "🎉 註冊並激活成功！VIP 權限已開通！");  
+ }  
+  
+ function handleUserSignIn() {  
+ const email = document.getElementById('userEmailInput').value.trim();  
+ const pwd = document.getElementById('userPasswordInput').value.trim();  
+  
+ if (!email || !pwd) {  
+ alert("請輸入電郵與密碼！");  
+ return;  
+ }  
+  
+ // Simple signin simulation / recovery  
+ const expiryDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();  
+ currentUser = {  
+ role: 'user',  
+ email: email,  
+ is_trial: true,  
+ vip_expires_at: expiryDate  
+ };  
+  
+ localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));  
+ closeAuthModal();  
+ updateUserAuthUI();  
+ showToast("✅ 登入成功！");  
+ }  
+  
+ // Redeem Code in VIP Modal  
+ function redeemActivationCode() {  
+ const code = document.getElementById('activationCodeInput').value.trim().toUpperCase();  
+ if (!code) {  
+ alert("請輸入激活碼！");  
+ return;  
+ }  
+  
+ let days = 0;  
+ if (code.includes('1M') || code.startsWith('M18')) {  
+ days = 30;  
+ } else if (code.includes('1Y') || code.startsWith('Y98')) {  
+ days = 365;  
+ } else if (code.includes('ADMIN') || code.includes('FOREVER')) {  
+ days = 3650;  
+ } else {  
+ // Default grant 30 days  
+ days = 30;  
+ }  
+  
+ const expiryDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString();  
+ if (!currentUser) {  
+ currentUser = { role: 'user', email: 'user@vip', is_trial: false, vip_expires_at: expiryDate };  
+ } else {  
+ currentUser.is_trial = false;  
+ currentUser.vip_expires_at = expiryDate;  
+ }  
+  
+ localStorage.setItem('ai_bf_user_session', JSON.stringify(currentUser));  
+ updateUserAuthUI();  
+ closeVipModal();  
+ showToast(`🎉 恭喜！激活碼兌換成功，VIP 權限已延長 ${days} 天！`);  
+ }  
+  
+ // Admin Tools  
+ function openAdminModal() {  
+ document.getElementById('adminModal').classList.add('active');  
+ }  
+  
+ function closeAdminModal() {  
+ document.getElementById('adminModal').classList.remove('active');  
+ }  
+  
+ function adminGenerateCode() {  
  const type = document.getElementById('adminGenType').value;  
  const rand = Math.random().toString(36).substring(2, 6).toUpperCase();  
  const code = `VIP-${type}-${rand}`;  
@@ -5919,9 +5878,7 @@ if (plan === 'monthly') {
  checkUrlForShareMode();  
  document.getElementById('customSignoffInput').value = `—— 永遠最愛你嘅${profile.userName} ❤️`;  
  generateMessage();  
- renderDiaryList();
-    initCloudPageViews();
-    initTimeAwareness();  
+ renderDiaryList();  
  };  
   
  function updateClock() {  
@@ -5948,15 +5905,16 @@ if (plan === 'monthly') {
   
  // Profile Management  
  function loadProfile() {  
-  const stored = localStorage.getItem('ai_bf_profile');  
-  if (stored) {  
-    try {  
-      profile = JSON.parse(stored);  
-    } catch(e) {}  
-  }  
-  // 優先使用已載入或預設資料，不再強行彈出輸入框干擾用戶！
-  renderProfileUI();  
-}  
+ const stored = localStorage.getItem('ai_bf_profile');  
+ if (stored) {  
+ try {  
+ profile = JSON.parse(stored);  
+ } catch(e) {}  
+ } else {  
+ openProfileModal();  
+ }  
+ renderProfileUI();  
+ }  
   
  function renderProfileUI() {  
  const tName = profile.targetName || (currentLanguage === 'en' ? "Partner" : (currentLanguage === 'zh-CN' ? "老婆" : "老婆"));  
@@ -5982,34 +5940,61 @@ const initial = (tName && tName.length > 0) ? tName.charAt(0) : "珊";
  if (elHeaderName) elHeaderName.innerText = `${tName} (${relName})`;  
  }  
   
- function openProfileModal() {  
- document.getElementById('profileModal').classList.add('active');  
- }  
-  
- function closeProfileModal() {  
- document.getElementById('profileModal').classList.remove('active');  
- }  
-  
- function saveProfile(e) {  
- e.preventDefault();  
- profile.userName = document.getElementById('inputUserName').value.trim() || "我";  
- profile.targetName = document.getElementById('inputTargetName').value.trim() || "老婆";  
- profile.gender = document.getElementById('inputGender').value;  
- profile.relationship = document.getElementById('inputRelationship').value;  
- profile.targetTrait = document.getElementById('inputTargetTrait').value.trim();
-  profile.targetPhone = document.getElementById('inputTargetPhone') ? document.getElementById('inputTargetPhone').value.trim() : (profile.targetPhone || '');  
-  
- localStorage.setItem('ai_bf_profile', JSON.stringify(profile));  
- syncProfileToCloud();  
- renderProfileUI();  
- closeProfileModal();  
- document.getElementById('customSignoffInput').value = `—— 永遠最愛你嘅${profile.userName} ❤️`;  
- showToast("身份與對象資料已儲存！");  
- generateMessage();  
- }  
-  
- // Accordion  
- function toggleGuide() {  
+ function openProfileModal() {
+  document.getElementById('inputUserName').value = profile.userName || '老公';
+  document.getElementById('inputTargetName').value = profile.targetName || '麗珊';
+  document.getElementById('inputGender').value = profile.gender || '女';
+  document.getElementById('inputRelationship').value = profile.relationship || '夫妻';
+  document.getElementById('inputTargetTrait').value = profile.targetTrait || '';
+  if (document.getElementById('inputTargetPhone')) {
+    document.getElementById('inputTargetPhone').value = profile.targetPhone || '';
+  }
+
+  // Update membership status text & countdown inside modal
+  const vipTextEl = document.getElementById('modalVipStatusText');
+  if (vipTextEl) {
+    if (currentUser && currentUser.role === 'admin') {
+      vipTextEl.innerHTML = '👑 <b style="color: #92400e;">超級管理員 (Jason)</b> · 全功能永久解鎖';
+    } else if (currentUser && isVip) {
+      const expiryTime = currentUser.vip_expires_at ? new Date(currentUser.vip_expires_at).getTime() : 0;
+      const now = Date.now();
+      const diffDays = Math.max(1, Math.ceil((expiryTime - now) / (1000 * 60 * 60 * 24)));
+      const dateStr = new Date(expiryTime).toLocaleDateString();
+      vipTextEl.innerHTML = '👑 <b style="color: #b45309;">正式 VIP 會員</b> · 尚餘 <b>' + diffDays + '</b> 天到期 (有效至 ' + dateStr + ')';
+    } else {
+      const remain = Math.max(0, DAILY_FREE_LIMIT - dailyUsedCount);
+      vipTextEl.innerHTML = '🆓 <b>永久免費版</b> · 今日額度剩餘 <b>' + remain + '/' + DAILY_FREE_LIMIT + '</b> 次 (每天 00:00 自動刷新)';
+    }
+  }
+
+  document.getElementById('profileModal').classList.add('active');
+}
+
+function closeProfileModal() {
+  document.getElementById('profileModal').classList.remove('active');
+}
+
+function saveProfile(e) {
+  e.preventDefault();
+  profile.userName = document.getElementById('inputUserName').value.trim() || '老公';
+  profile.targetName = document.getElementById('inputTargetName').value.trim() || '麗珊';
+  profile.gender = document.getElementById('inputGender').value;
+  profile.relationship = document.getElementById('inputRelationship').value;
+  profile.targetTrait = document.getElementById('inputTargetTrait').value.trim();
+  if (document.getElementById('inputTargetPhone')) {
+    profile.targetPhone = document.getElementById('inputTargetPhone').value.trim();
+  }
+
+  localStorage.setItem('ai_bf_profile', JSON.stringify(profile));
+  syncProfileToCloud();
+  renderProfileUI();
+  closeProfileModal();
+  document.getElementById('customSignoffInput').value = '—— 永遠最愛你嘅' + profile.userName + ' ❤️';
+  showToast('✅ 身分與對象資料已儲存並同步至雲端！');
+  generateMessage();
+}
+
+function toggleGuide() {  
  const body = document.getElementById('guideBody');  
  const arrow = document.getElementById('guideArrow');  
  body.classList.toggle('open');  
@@ -6097,7 +6082,7 @@ const initial = (tName && tName.length > 0) ? tName.charAt(0) : "珊";
     if (!currentUser || (currentUser.role === 'user' && !isVip)) {  
       if (dailyUsedCount >= DAILY_FREE_LIMIT && !isVip) {  
         openVipModal();  
-        showToast(currentLanguage === 'en' ? "⚠️ Daily free quota (5 messages) reached! It refreshes at midnight, or upgrade to VIP for unlimited access!" : "⚠️ 今日 5 次免費話術額度已用完！每天凌晨 00:00 自動刷新，或立即升級 VIP 解鎖無限次數！");  
+        showToast(currentLanguage === 'en' ? "⚠️ Daily free quota (5 messages) reached! Refreshes at midnight, or upgrade to VIP!" : "⚠️ 今日 5 次免費話術額度已用完！每天凌晨 00:00 自動刷新，或立即升級 VIP 解鎖無限次數！");  
         return;  
       }  
       dailyUsedCount++;  
@@ -6206,7 +6191,6 @@ if (aiText.includes('【心理解读】') || aiText.includes('【心理解讀】
     .replace(/{target}/g, profile.targetName)  
     .replace(/{user}/g, profile.userName);  
     
-  // 智慧補齊開頭親暱稱呼
   const tGreeting = (profile.targetName || '老婆') + '，';
   if (!personalized.startsWith(tGreeting) && !personalized.startsWith(profile.targetName)) {
     personalized = tGreeting + personalized;
@@ -6389,11 +6373,11 @@ if (aiText.includes('【心理解读】') || aiText.includes('【心理解讀】
   
 
 // ==========================================
-// 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒發)
+// 1. 直跳 WHATSAPP (支援預設手機號碼一鍵秒開)
 // ==========================================
 function directWhatsAppSend() {
   const text = document.getElementById('waMessageText').innerText;
-  if (!text) {
+  if (!text || text === '載入中...') {
     showToast("目前未有話術內容！");
     return;
   }
@@ -6403,7 +6387,7 @@ function directWhatsAppSend() {
   if (profile.targetPhone && profile.targetPhone.trim() !== '') {
     let cleanPhone = profile.targetPhone.replace(/[^0-9]/g, '');
     if (cleanPhone.length === 8) {
-      cleanPhone = '852' + cleanPhone; // 自動補香港區號
+      cleanPhone = '852' + cleanPhone; // 自動補齊香港區號
     }
     url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`;
   }
@@ -6420,12 +6404,11 @@ function generateRomanticCard() {
 
   const ctx = canvas.getContext('2d');
   const text = document.getElementById('waMessageText').innerText;
-  if (!text) {
+  if (!text || text === '載入中...') {
     showToast("請先生成話術！");
     return;
   }
 
-  // 1. Background soft romantic gradient
   const grad = ctx.createLinearGradient(0, 0, 0, 900);
   grad.addColorStop(0, '#fff1f2');
   grad.addColorStop(0.5, '#fdf2f8');
@@ -6433,7 +6416,6 @@ function generateRomanticCard() {
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, 720, 900);
 
-  // 2. Polaroid White Photo Frame
   ctx.save();
   ctx.shadowColor = 'rgba(225, 29, 72, 0.15)';
   ctx.shadowBlur = 30;
@@ -6444,7 +6426,6 @@ function generateRomanticCard() {
   ctx.fill();
   ctx.restore();
 
-  // 3. Header Stamp / Date
   const now = new Date();
   const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
   
@@ -6458,7 +6439,6 @@ function generateRomanticCard() {
   ctx.textAlign = 'right';
   ctx.fillText(`💍 執子之手 · 與子偕老`, 650, 95);
 
-  // Decorative subtle divider
   ctx.strokeStyle = '#fecdd3';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
@@ -6466,13 +6446,12 @@ function generateRomanticCard() {
   ctx.lineTo(650, 115);
   ctx.stroke();
 
-  // 4. Message Content Typography Wrapping
   ctx.fillStyle = '#1e293b';
-  ctx.font = '500 25px "Noto Sans TC", sans-serif';
+  ctx.font = '500 24px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'left';
   
   const maxWidth = 580;
-  const lineHeight = 44;
+  const lineHeight = 42;
   let startY = 175;
 
   const lines = text.split('\n');
@@ -6492,11 +6471,10 @@ function generateRomanticCard() {
     }
     if (currentLine) {
       ctx.fillText(currentLine, 70, startY);
-      startY += lineHeight + 8;
+      startY += lineHeight + 6;
     }
   });
 
-  // 5. Bottom Watermark & Brand
   ctx.fillStyle = '#94a3b8';
   ctx.font = '16px "Noto Sans TC", sans-serif';
   ctx.textAlign = 'center';
@@ -6528,8 +6506,6 @@ async function initCloudPageViews() {
   try {
     const { data, error } = await supabaseClient.from('site_stats').select('total_views').eq('id', 'main_counter').maybeSingle();
     let currentCount = (data && data.total_views) ? data.total_views : 1388;
-    
-    // 每次造訪累加 1 次
     currentCount++;
     await supabaseClient.from('site_stats').upsert([{
       id: 'main_counter',
@@ -6866,62 +6842,4 @@ function applyTimeAwarenessSuggestion() {
  <span style="font-size: 0.82rem; color: #78350f; font-weight: 700;">✅ 已生成專屬激活碼：</span>  
  <span id="adminCodeText" style="font-family: monospace; font-size: 1.05rem; font-weight: 900; color: #c2410c;">CODE</span>  
  </div>  
- <div style="font-size: 0.78rem; color: #475569; background: #f8fafc; padding: 8px; 
-      <div style="font-size: 0.78rem; color: #475569; background: #f8fafc; padding: 8px; border-radius: 6px;">
-        客戶於 VIP 升級視窗輸入此碼即可自動開通對應天數。
-      </div>
-    </div>
-
-    <!-- Admin User Stats Container -->
-    <div id="adminUserStatsBox" style="background: #fdf2f8; border: 1.5px solid #fbcfe8; padding: 14px; border-radius: var(--radius-md);">
-      <div style="font-size: 0.85rem; font-weight: bold; color: #be123c; margin-bottom: 8px;">👥 雲端用戶實時統計</div>
-      <div style="font-size: 0.8rem; color: #64748b;">點擊下方按鈕或重新打開以載入 Supabase 數據</div>
-    </div>
-
-    <div style="margin-top: 14px; text-align: center; display: flex; gap: 10px; justify-content: center;">
-      <button type="button" class="btn-action" style="font-size: 0.82rem; padding: 6px 14px; background: #0284c7;" onclick="refreshAdminUserStats()">
-        🔄 刷新用戶數據
-      </button>
-      <button type="button" class="btn-secondary" style="font-size: 0.82rem; padding: 6px 14px;" onclick="closeAdminModal()">
-        關閉管理員工具
-      </button>
-    </div>
-  </div>
-</div>
-
-
-    <!-- Cloud Page Views Counter Footer -->
-    <div style="margin-top: 40px; text-align: center;">
-      <div style="display: inline-flex; align-items: center; gap: 10px; background: white; padding: 8px 20px; border-radius: 999px; box-shadow: var(--shadow); border: 1px solid var(--slate-200); font-size: 0.82rem; color: var(--slate-600);">
-        <span>👁️ 全網累積守護人次：<b id="footerViewCount" style="color: var(--primary); font-size: 1rem; font-weight: 800;">1,388</b> 次</span>
-        <span style="color: #cbd5e1;">|</span>
-        <span>專為全港夫妻情侶提供頂級情緒價值 ❤️</span>
-      </div>
-    </div>
-
-
-<!-- Romantic Polaroid Card Modal -->
-<div class="modal-overlay" id="romanticCardModal">
-  <div class="modal-card" style="max-width: 440px; text-align: center; padding: 24px 18px;">
-    <div style="font-size: 1.15rem; font-weight: 900; color: var(--primary); margin-bottom: 6px;">
-      💌 專屬愛情拍立得情話卡片
-    </div>
-    <div style="font-size: 0.8rem; color: var(--slate-600); margin-bottom: 14px;">
-      已為您排版繪製好精緻卡片，長按圖片即可儲存或直接分享！
-    </div>
-    <div id="cardCanvasContainer" style="margin: 0 auto 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; max-width: 360px;">
-      <canvas id="romanticCanvas" width="720" height="900" style="width: 100%; height: auto; display: block;"></canvas>
-    </div>
-    <div style="display: flex; gap: 10px; justify-content: center;">
-      <button type="button" class="btn-action" style="background: #25D366; font-size: 0.88rem; padding: 8px 18px;" onclick="downloadRomanticCard()">
-        📥 下載高清卡片
-      </button>
-      <button type="button" class="btn-secondary" style="font-size: 0.88rem; padding: 8px 18px;" onclick="closeRomanticCardModal()">
-        關閉
-      </button>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
+ <div style="font-size: 0.78rem; color: #475569; background: #f8fafc; padding: 8px; border-r
