@@ -123,7 +123,7 @@
             <div class="flex items-center gap-1.5 flex-wrap">
               <span class="whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">管理層專閱</span>  
               <span class="whitespace-nowrap px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/30 text-blue-200 border border-blue-400/40 flex items-center gap-1">
-                <i class="fa-solid fa-code-commit text-[9px]"></i>v3.8 (2026年9月17日 全功能正式版)
+                <i class="fa-solid fa-code-commit text-[9px]"></i>v3.9 (2026年9月19日 品牌分類與工時排序版)
               </span>
             </div>
           </div>  
@@ -364,19 +364,64 @@
         </div>  
       </div>  
   
+      <!-- 品牌快捷分類切換列 (包含各品牌與其他分類) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 mb-2.5 pt-0.5 scrollbar-none select-none text-xs">
+        <span class="text-xs font-extrabold text-slate-500 whitespace-nowrap mr-0.5 flex items-center gap-1">
+          <i class="fa-solid fa-tags text-blue-500"></i> 品牌分類:
+        </span>
+        <div id="brandTabBar" class="flex items-center gap-1.5 flex-nowrap">
+          <!-- 由 JS 動態生成各品牌分類標籤與筆數 -->
+        </div>
+      </div>
+
       <!-- 表格主體 (緊湊高密度單行排版，每個資料佔一行，一目了然) -->  
       <div class="w-full overflow-x-auto table-container">  
         <table class="w-full text-left text-xs border-collapse compact-table">  
           <thead>  
-            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider">  
-              <th class="py-2 px-2.5 whitespace-nowrap w-32">提交時間</th>  
-              <th class="py-2 px-2 whitespace-nowrap w-28">工單號</th>  
-              <th class="py-2 px-2.5 whitespace-nowrap w-28">門市代號</th>  
-              <th class="py-2 px-2 whitespace-nowrap w-20">聯絡人</th>  
-              <th class="py-2 px-2 whitespace-nowrap w-24">問題類型</th>  
+            <tr class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 text-[11px] uppercase tracking-wider select-none">  
+              <th onclick="handleSort('timestamp')" class="py-2 px-2.5 whitespace-nowrap w-32 cursor-pointer hover:bg-slate-200 transition group" title="點擊依提交時間排序">
+                <div class="flex items-center gap-1">
+                  <span>提交時間</span>
+                  <i id="sortIcon_timestamp" class="fa-solid fa-sort text-slate-400 group-hover:text-blue-600"></i>
+                </div>
+              </th>  
+              <th onclick="handleSort('ticket_id')" class="py-2 px-2 whitespace-nowrap w-28 cursor-pointer hover:bg-slate-200 transition group" title="點擊依工單號排序">
+                <div class="flex items-center gap-1">
+                  <span>工單號</span>
+                  <i id="sortIcon_ticket_id" class="fa-solid fa-sort text-slate-400 group-hover:text-blue-600"></i>
+                </div>
+              </th>  
+              <th onclick="handleSort('shop_code')" class="py-2 px-2.5 whitespace-nowrap w-28 cursor-pointer hover:bg-slate-200 transition group" title="點擊依門市代號排序">
+                <div class="flex items-center gap-1">
+                  <span>門市代號</span>
+                  <i id="sortIcon_shop_code" class="fa-solid fa-sort text-slate-400 group-hover:text-blue-600"></i>
+                </div>
+              </th>  
+              <th onclick="handleSort('contact_person')" class="py-2 px-2 whitespace-nowrap w-20 cursor-pointer hover:bg-slate-200 transition group" title="點擊依聯絡人排序">
+                <div class="flex items-center gap-1">
+                  <span>聯絡人</span>
+                  <i id="sortIcon_contact_person" class="fa-solid fa-sort text-slate-400 group-hover:text-blue-600"></i>
+                </div>
+              </th>  
+              <th onclick="handleSort('category')" class="py-2 px-2 whitespace-nowrap w-24 cursor-pointer hover:bg-slate-200 transition group" title="點擊依問題類型排序">
+                <div class="flex items-center gap-1">
+                  <span>問題類型</span>
+                  <i id="sortIcon_category" class="fa-solid fa-sort text-slate-400 group-hover:text-blue-600"></i>
+                </div>
+              </th>  
               <th class="py-2 px-2.5 max-w-[200px]">門市補充說明</th>  
-              <th class="py-2 px-2 text-center whitespace-nowrap w-24">處理狀態</th>  
-              <th class="py-2 px-2 text-center whitespace-nowrap w-20 bg-blue-50/40 text-blue-900 border-x border-blue-100">負責人</th>  
+              <th onclick="handleSort('status')" class="py-2 px-2 text-center whitespace-nowrap w-24 cursor-pointer hover:bg-slate-200 transition group" title="點擊依處理狀態排序">
+                <div class="flex items-center justify-center gap-1">
+                  <span>處理狀態</span>
+                  <i id="sortIcon_status" class="fa-solid fa-sort text-slate-400 group-hover:text-blue-600"></i>
+                </div>
+              </th>  
+              <th onclick="handleSort('assignee')" class="py-2 px-2 text-center whitespace-nowrap w-20 bg-blue-50/40 text-blue-900 border-x border-blue-100 cursor-pointer hover:bg-blue-100 transition group" title="點擊依負責人排序">
+                <div class="flex items-center justify-center gap-1">
+                  <span>負責人</span>
+                  <i id="sortIcon_assignee" class="fa-solid fa-sort text-blue-400 group-hover:text-blue-700"></i>
+                </div>
+              </th>  
               <th class="py-2 px-2.5 max-w-[280px]">IT 最新跟進 / 預計到店</th>  
               <th class="py-2 px-2.5 text-center whitespace-nowrap min-w-[76px] action-buttons">操作</th>  
             </tr>  
@@ -399,7 +444,7 @@
   <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-center gap-2">  
     <span>威黃物流服務有限公司 (Fenix Logistics Services Limited) · I&TD - Jason Chow</span>  
     <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-bold text-[11px] bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs">  
-      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.8 (2026年9月17日 全功能正式版)  
+      <i class="fa-solid fa-code-commit text-[10px]"></i>v3.9 (2026年9月19日 品牌分類與工時排序版)  
     </span>  
   </footer>  
 
@@ -477,12 +522,20 @@
           </div>
         </div>
 
-        <!-- 完成時間 (若有) -->
-        <div id="modalResolvedSection" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 flex items-center justify-between">
-          <span class="font-bold flex items-center gap-1.5">
-            <i class="fa-regular fa-circle-check text-emerald-600"></i> 結案完成時間
-          </span>
-          <span id="modalResolvedTime" class="font-mono font-bold">--</span>
+        <!-- 完成時間 與 工作所需時間 (若有) -->
+        <div id="modalResolvedSection" class="hidden p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold flex items-center gap-1.5 text-xs sm:text-sm">
+              <i class="fa-regular fa-circle-check text-emerald-600"></i> 結案完成時間
+            </span>
+            <span id="modalResolvedTime" class="font-mono font-bold text-emerald-950 text-xs sm:text-sm">--</span>
+          </div>
+          <div id="modalDurationRow" class="flex items-center justify-between border-t border-emerald-200/80 pt-2 text-xs">
+            <span class="font-bold text-emerald-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-stopwatch text-emerald-600"></i> 工作所需時間 (處理工時)
+            </span>
+            <span id="modalDurationText" class="font-mono font-black text-emerald-950 bg-emerald-100/90 px-2.5 py-0.5 rounded border border-emerald-300">--</span>
+          </div>
         </div>
       </div>
 
@@ -534,7 +587,183 @@
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNx4nxgACcXOs_LtIqxGStQLBqCopnQYO6KgzlPRHA0asUattS1fZ5OKbkWQwTFM_x/exec";  
   const CACHE_KEY = "fls_dashboard_cached_tickets";
   
-  let rawTickets = [];  
+  let rawTickets = [];
+  let currentBrandFilter = 'ALL';
+  let currentSortCol = 'timestamp';
+  let currentSortDir = 'desc';
+
+  const BRAND_CONFIG = [
+    { id: 'ALL', name: '全部支援工單', short: '全部' },
+    { id: '45R', name: '45R (45rpm)', short: '45R' },
+    { id: 'TY', name: 'AT Tayama', short: 'AT Tayama' },
+    { id: 'AP_WB', name: 'Anteprima / Wirebag', short: 'Anteprima / Wirebag' },
+    { id: 'MM', name: 'Marimekko', short: 'Marimekko' },
+    { id: 'CT', name: 'AT Cocktail', short: 'AT Cocktail' },
+    { id: 'OTHER', name: '其他 (內部/FLS)', short: '其他 (內部/FLS)' }
+  ];
+
+  // 識別工單所屬品牌
+  function getTicketBrand(t) {
+    if (!t) return 'OTHER';
+    const shop = String(t.shop_code || '').toUpperCase().trim();
+    
+    // 1. 匹配 4 碼門市編號與 STORES
+    const mCode = shop.match(/^(\d{4})/);
+    if (mCode && STORES[mCode[1]]) {
+      const b = (STORES[mCode[1]].brand || '').toLowerCase();
+      if (b.includes('tayama')) return 'TY';
+      if (b.includes('anteprima') || b.includes('wirebag')) return 'AP_WB';
+      if (b.includes('marimekko')) return 'MM';
+      if (b.includes('cocktail')) return 'CT';
+      if (b.includes('45rpm') || b.includes('45r')) return '45R';
+    }
+
+    // 2. 門市代號後綴匹配
+    if (shop.endsWith('-45R') || shop.includes('45R') || shop.includes('45RPM')) return '45R';
+    if (shop.endsWith('-TY') || shop.includes('-TY-') || shop.includes('TAYAMA')) return 'TY';
+    if (shop.endsWith('-AP') || shop.endsWith('-WB') || shop.includes('-AP-') || shop.includes('-WB-') || shop.includes('ANTEPRIMA') || shop.includes('WIREBAG')) return 'AP_WB';
+    if (shop.endsWith('-MM') || shop.includes('-MM-') || shop.includes('MARIMEKKO')) return 'MM';
+    if (shop.endsWith('-CT') || shop.includes('-CT-') || shop.includes('COCKTAIL')) return 'CT';
+    
+    // 3. 補充描述與問題分類補充匹配
+    const allText = `${shop} ${t.description || ''}`.toUpperCase();
+    if (allText.includes('45R') || allText.includes('45RPM')) return '45R';
+    if (allText.includes('TAYAMA')) return 'TY';
+    if (allText.includes('MARIMEKKO')) return 'MM';
+    if (allText.includes('COCKTAIL')) return 'CT';
+    if (allText.includes('ANTEPRIMA') || allText.includes('WIREBAG')) return 'AP_WB';
+
+    return 'OTHER';
+  }
+
+  // 計算並取得工作所需時間 (處理工時)
+  function getTicketDuration(t) {
+    if (!t) return null;
+
+    // 優先從 it_notes 或 description 提取【處理工時：XX】或【工時：XX】
+    const fullText = `${t.it_notes || ''} ${t.description || ''}`;
+    const mExplicit = fullText.match(/(?:【)?(?:處理)?(?:工時|所需時間|耗時)[:：\s]*([0-9.]+)\s*(小時|分鐘|分|mins?|hours?|hr|h)(?:】)?/i);
+    if (mExplicit) {
+      const num = mExplicit[1];
+      const unit = mExplicit[2].toLowerCase();
+      if (unit.startsWith('h') || unit.includes('小時')) {
+        return `${num} 小時`;
+      } else {
+        return `${num} 分鐘`;
+      }
+    }
+
+    // 若無手動標註，自動精確計算提交至完成時間差
+    const startTime = parseTicketDate(t.raw_timestamp || t.timestamp);
+    const endTime = parseTicketDate(t.resolved_time);
+    if (startTime && endTime && endTime >= startTime) {
+      const diffMs = endTime.getTime() - startTime.getTime();
+      const diffMins = Math.round(diffMs / (1000 * 60));
+      if (diffMins < 1) return '即時解決 (< 1 分鐘)';
+      if (diffMins < 60) return `${diffMins} 分鐘`;
+      const hours = Math.floor(diffMins / 60);
+      const remMins = diffMins % 60;
+      if (hours < 24) {
+        return remMins > 0 ? `${hours} 小時 ${remMins} 分鐘` : `${hours} 小時`;
+      }
+      const days = Math.floor(hours / 24);
+      const remHours = hours % 24;
+      return remHours > 0 ? `${days} 天 ${remHours} 小時` : `${days} 天`;
+    }
+
+    return null;
+  }
+
+  // 渲染品牌快捷分類標籤
+  function renderBrandTabs() {
+    const container = document.getElementById('brandTabBar');
+    if (!container) return;
+
+    const timeFilter = document.getElementById('filterTimeRange')?.value || '2026';
+    const baseTickets = rawTickets.filter(t => isWithinTimeRange(t.raw_timestamp || t.timestamp, timeFilter));
+
+    const counts = { ALL: baseTickets.length, '45R': 0, TY: 0, AP_WB: 0, MM: 0, CT: 0, OTHER: 0 };
+    baseTickets.forEach(t => {
+      const b = getTicketBrand(t);
+      if (counts[b] !== undefined) counts[b]++;
+      else counts.OTHER++;
+    });
+
+    let html = '';
+    BRAND_CONFIG.forEach(item => {
+      const isActive = (currentBrandFilter === item.id);
+      const count = counts[item.id] || 0;
+      const activeClass = isActive
+        ? 'bg-blue-600 text-white font-extrabold shadow-xs border-blue-600'
+        : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200 font-bold';
+
+      html += `
+        <button type="button" onclick="setBrandFilter('${item.id}')"
+          class="px-2.5 py-1 rounded-lg text-xs transition border flex items-center gap-1.5 whitespace-nowrap shadow-3xs ${activeClass}">
+          <span>${item.short}</span>
+          <span class="px-1.5 py-0.2 rounded-full text-[10px] ${isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600 border border-slate-200'} font-bold">
+            ${count}
+          </span>
+        </button>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function setBrandFilter(brandId) {
+    currentBrandFilter = brandId;
+    renderBrandTabs();
+    applyFilters();
+  }
+
+  // 點擊表頭排序處理
+  function handleSort(colKey) {
+    if (currentSortCol === colKey) {
+      currentSortDir = (currentSortDir === 'asc') ? 'desc' : 'asc';
+    } else {
+      currentSortCol = colKey;
+      currentSortDir = (colKey === 'timestamp' || colKey === 'ticket_id') ? 'desc' : 'asc';
+    }
+    updateSortIcons();
+    sortTickets(filteredTickets);
+    renderTable(filteredTickets);
+  }
+
+  function updateSortIcons() {
+    const cols = ['timestamp', 'ticket_id', 'shop_code', 'contact_person', 'category', 'status', 'assignee'];
+    cols.forEach(c => {
+      const icon = document.getElementById(`sortIcon_${c}`);
+      if (!icon) return;
+      if (c === currentSortCol) {
+        icon.className = (currentSortDir === 'asc')
+          ? 'fa-solid fa-arrow-up-short-wide text-blue-600 text-[11px]'
+          : 'fa-solid fa-arrow-down-wide-short text-blue-600 text-[11px]';
+      } else {
+        icon.className = 'fa-solid fa-sort text-slate-400 group-hover:text-blue-600 text-[10px]';
+      }
+    });
+  }
+
+  function sortTickets(list) {
+    list.sort((a, b) => {
+      let valA, valB;
+      if (currentSortCol === 'timestamp') {
+        valA = parseTicketDate(a.raw_timestamp || a.timestamp)?.getTime() || 0;
+        valB = parseTicketDate(b.raw_timestamp || b.timestamp)?.getTime() || 0;
+      } else if (currentSortCol === 'ticket_id') {
+        valA = String(a.ticket_id || '');
+        valB = String(b.ticket_id || '');
+      } else {
+        valA = String(a[currentSortCol] || '').toLowerCase();
+        valB = String(b[currentSortCol] || '').toLowerCase();
+      }
+
+      if (valA < valB) return currentSortDir === 'asc' ? -1 : 1;
+      if (valA > valB) return currentSortDir === 'asc' ? 1 : -1;
+      return 0;
+    });
+  }  
   let filteredTickets = [];  
   let chartVisitsInstance = null;  
   let chartCategoryInstance = null;  
@@ -836,6 +1065,12 @@
     filteredTickets = rawTickets.filter(t => {  
       if (!isWithinTimeRange(t.raw_timestamp || t.timestamp, timeFilter)) return false;
 
+      // 品牌分類過濾 (支援 45R, TY, AP_WB, MM, CT, OTHER)
+      if (currentBrandFilter !== 'ALL') {
+        const brand = getTicketBrand(t);
+        if (brand !== currentBrandFilter) return false;
+      }
+
       if (shopFilter !== 'ALL') {  
         if (!t.shop_code.includes(shopFilter) && !shopFilter.includes(t.shop_code)) return false;  
       }  
@@ -856,17 +1091,14 @@
       return true;  
     });  
 
-    // 最新工單排在最上方
-    filteredTickets.sort((a, b) => {
-      const da = parseTicketDate(a.raw_timestamp || a.timestamp);
-      const db = parseTicketDate(b.raw_timestamp || b.timestamp);
-      if (da && db) return db.getTime() - da.getTime();
-      return String(b.ticket_id || '').localeCompare(String(a.ticket_id || ''));
-    });
+    // 依據當前選定排序欄位與方向排序
+    sortTickets(filteredTickets);
+    updateSortIcons();
   
     updateKPIs(filteredTickets);  
     renderCharts(filteredTickets);  
     renderTable(filteredTickets);  
+    renderBrandTabs();  
   }  
   
   function resetFilters() {  
@@ -874,7 +1106,10 @@
     document.getElementById('filterShop').value = 'ALL';  
     document.getElementById('filterStatus').value = 'ALL';  
     document.getElementById('filterCategory').value = 'ALL';  
-    document.getElementById('filterKeyword').value = '';  
+    document.getElementById('filterKeyword').value = '';
+    currentBrandFilter = 'ALL';
+    currentSortCol = 'timestamp';
+    currentSortDir = 'desc';  
     applyFilters();  
   }  
   
@@ -1185,10 +1420,25 @@
     const notesEl = document.getElementById('modalNotesContainer');
     notesEl.innerHTML = formatITNotesModal(t.it_notes, t.assignee);
 
-    // 完成時間
+    // 完成時間 與 工作所需時間
     const resSec = document.getElementById('modalResolvedSection');
+    const durRow = document.getElementById('modalDurationRow');
+    const durText = document.getElementById('modalDurationText');
+    const duration = getTicketDuration(t);
+
     if (t.resolved_time && t.resolved_time.trim() !== '') {
       document.getElementById('modalResolvedTime').textContent = formatTicketTime(t.resolved_time);
+      if (duration) {
+        durText.textContent = duration;
+        durRow.classList.remove('hidden');
+      } else {
+        durRow.classList.add('hidden');
+      }
+      resSec.classList.remove('hidden');
+    } else if (duration) {
+      document.getElementById('modalResolvedTime').textContent = '處理中 (尚未結案)';
+      durText.textContent = duration;
+      durRow.classList.remove('hidden');
       resSec.classList.remove('hidden');
     } else {
       resSec.classList.add('hidden');
