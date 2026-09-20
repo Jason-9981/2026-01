@@ -1362,6 +1362,217 @@ box-shadow: 0 10px 30px rgba(0,0,0,0.5);
  }  
 }  
   
+
+/* ===================================================
+   GENDER ROLE SWITCHER & ADAPTIVE STYLES
+   =================================================== */
+.role-switch-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0 16px;
+  position: relative;
+  z-index: 10;
+}
+.role-switch-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #fed7aa;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.08);
+}
+.role-switch-label {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #475569;
+}
+.role-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+.role-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+.role-btn.active#btnRoleMale {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  color: white;
+  border-color: #0284c7;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  transform: scale(1.03);
+}
+.role-btn.active#btnRoleFemale {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: white;
+  border-color: #e11d48;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+  transform: scale(1.03);
+}
+
+/* Visibility classes based on active role */
+body.role-male .role-female-only { display: none !important; }
+body.role-male .role-male-only { display: inline-block !important; }
+body.role-male .role-male-flex { display: flex !important; }
+body.role-male .role-female-flex { display: none !important; }
+
+body.role-female .role-male-only { display: none !important; }
+body.role-female .role-female-only { display: inline-block !important; }
+body.role-female .role-male-flex { display: none !important; }
+body.role-female .role-female-flex { display: flex !important; }
+
+/* Quick Preview Bottom Sheet Drawer */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+.drawer-card {
+  background: white;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 18px 20px 28px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 -10px 35px rgba(0, 0, 0, 0.25);
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.drawer-overlay.active .drawer-card {
+  transform: translateY(0);
+}
+.drawer-handle-bar {
+  width: 44px;
+  height: 5px;
+  background: #cbd5e1;
+  border-radius: 999px;
+  margin: 0 auto 4px;
+}
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 10px;
+}
+.drawer-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.drawer-close-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.drawer-wa-bubble {
+  background: #DCF8C6;
+  border-radius: 14px;
+  border-top-right-radius: 2px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.btn-drawer-action {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  transition: transform 0.15s ease;
+}
+.btn-drawer-action:active {
+  transform: scale(0.97);
+}
+
+/* Floating Action Button (FAB) */
+.mobile-floating-preview-btn {
+  display: none;
+}
+@media (max-width: 900px) {
+  .mobile-floating-preview-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: fixed;
+    bottom: 22px;
+    right: 18px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    color: white;
+    padding: 11px 18px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.88rem;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.45);
+    z-index: 999;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+    animation: pulse-fab 2.5s infinite;
+  }
+  .mobile-floating-preview-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(37, 211, 102, 0.55);
+  }
+  .mobile-floating-preview-btn:active {
+    transform: scale(0.95);
+  }
+}
+@keyframes pulse-fab {
+  0% { box-shadow: 0 8px 25px rgba(37, 211, 102, 0.45); }
+  50% { box-shadow: 0 8px 30px rgba(37, 211, 102, 0.75), 0 0 0 6px rgba(37, 211, 102, 0.2); }
+  100% { box-shadow: 0 8px 25px rgba(37, 211, 102, 0.45); }
+}
+
 /* Mobile Floating Quick Button */  
 .mobile-floating-preview-btn {  
  display: none;  
@@ -1409,6 +1620,20 @@ box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 </div>   
   
 <!-- Header -->   
+
+<!-- Gender Role Switcher (男 / 女 切換) -->
+<div class="role-switch-container">
+  <div class="role-switch-pill">
+    <span class="role-switch-label">👤 你係：</span>
+    <button type="button" class="role-btn active" id="btnRoleMale" onclick="setUserRole('male')">
+      <span>👦 我係男士 (哄伴侶/求生)</span>
+    </button>
+    <button type="button" class="role-btn" id="btnRoleFemale" onclick="setUserRole('female')">
+      <span>👧 我係女士 (撒嬌/治癒另一半)</span>
+    </button>
+  </div>
+</div>
+
 <header>   
 <div class="badge-pill" id="headerBadge">🔥 頂級情緒價值系統 · 哄妻救命終極武器</div>   
 <h1 id="headerTitle">港男/女求生必備神器</h1>   
@@ -1949,6 +2174,35 @@ onselectstart="handleDiarySelectStart(event)">
 </div> <!-- closes diaryView inside -->  
 </div> <!-- closes #diaryView -->  
   
+
+<!-- PassIIQE 易考通 AI Promo Showcase -->
+<div class="service-promo-card" style="margin: 35px auto 22px; max-width: 750px; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 45%, #f0fdf4 100%); border: 2px solid #3b82f6; border-radius: 20px; padding: 22px 24px; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.16); text-align: left; position: relative; overflow: hidden;">
+  <div style="position: absolute; top: 0; right: 0; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-size: 0.72rem; font-weight: 800; padding: 4px 16px; border-bottom-left-radius: 14px; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(37,99,235,0.35);">
+    🚀 官方最新 AI 服務 · 正式上線
+  </div>
+  <div style="display: flex; align-items: center; gap: 16px; margin-top: 4px; flex-wrap: wrap;">
+    <div style="width: 62px; height: 62px; min-width: 62px; border-radius: 18px; background: linear-gradient(135deg, #1e40af, #3b82f6); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(30, 64, 175, 0.28); border: 2.5px solid white;">
+      <span style="font-size: 2.2rem;">🎓</span>
+    </div>
+    <div style="flex: 1; min-width: 240px;">
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 900; color: #1e3a8a; letter-spacing: -0.2px;">PassIIQE 易考通 AI</h3>
+        <span style="background: #22c55e; color: white; font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 999px;">一剔過 PASS 必備</span>
+      </div>
+      <p style="margin: 6px 0 0 0; font-size: 0.84rem; color: #334155; line-height: 1.5; font-weight: 600;">
+        專為保險及財富管理專業從業員研發的 AI 智能考試通關神器！涵蓋 IIQE 卷一至卷五精準試題庫、考點深度解析與個人化弱項突破，助你零壓力一剔過！
+      </p>
+    </div>
+  </div>
+  <div style="margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px dashed #93c5fd; padding-top: 12px; flex-wrap: wrap;">
+    <span style="font-size: 0.78rem; color: #475569; font-weight: 700;">🌐 免費試用 · 隨時隨地手機即開即溫</span>
+    <a href="https://jason-9981.github.io/2026-01/PassIIQE.html" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; text-decoration: none; font-size: 0.86rem; font-weight: 800; padding: 9px 20px; border-radius: 999px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); transition: all 0.2s ease;">
+      <span>👉 立即體驗 PassIIQE 易考通 AI</span>
+      <span style="font-size: 1rem;">↗</span>
+    </a>
+  </div>
+</div>
+
 <footer class="app-footer" style="margin-top: 40px; margin-bottom: 30px; background: white; border: 2px solid #fed7aa; border-radius: 20px; padding: 28px 18px; text-align: center; box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.08);">   
 <!-- AI Mascot / Brand Visual Banner -->  
  <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 14px;">  
@@ -1988,6 +2242,62 @@ onselectstart="handleDiarySelectStart(event)">
 </div>   
   
 <!-- VIP Subscription Modal (方案 2: 轉數快 FPS + PayMe) -->   
+
+<!-- Mobile Floating Quick Action Button (右下角常駐已選內容查看) -->
+<div class="mobile-floating-preview-btn" id="mobileFloatingBtn" onclick="openQuickPreviewDrawer()" title="即睇已選話術">
+  <span style="font-size: 1.25rem;">💬</span>
+  <span id="mobileFloatingText">即睇已選話術</span>
+  <span style="background: white; color: #128c7e; font-size: 0.72rem; padding: 2px 7px; border-radius: 999px; font-weight: 900;" id="mobileFabBadge">即睇</span>
+</div>
+
+<!-- Quick Preview Bottom Sheet Drawer for Mobile -->
+<div class="drawer-overlay" id="quickPreviewDrawer" onclick="closeQuickPreviewDrawer(event)">
+  <div class="drawer-card" onclick="event.stopPropagation()">
+    <div class="drawer-handle-bar"></div>
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <span>💬 當前已組合 WhatsApp 話術</span>
+        <span style="font-size: 0.75rem; background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 999px; font-weight: 800;" id="drawerRoleBadge">👦 男士模式</span>
+      </div>
+      <button type="button" class="drawer-close-btn" onclick="closeQuickPreviewDrawer()">&times;</button>
+    </div>
+    <div class="drawer-body" style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-size: 0.8rem; color: #64748b; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <span>發送對象：<strong id="drawerTargetName" style="color: #0f172a;">老婆 (麗珊)</strong></span>
+        <span style="font-size: 0.75rem; background: #f1f5f9; padding: 2px 8px; border-radius: 6px;" id="drawerToneName">情緒共情</span>
+      </div>
+      <div class="drawer-wa-bubble">
+        <div id="drawerStickerBox" style="display: none; margin-bottom: 8px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06);">
+          <img id="drawerStickerImg" src="" alt="心意卡" style="width: 100%; max-height: 180px; object-fit: cover; display: block;">
+        </div>
+        <div id="drawerMessageText" style="white-space: pre-wrap; font-size: 0.95rem; line-height: 1.55; color: #1e293b;">載入中...</div>
+        <div style="text-align: right; font-size: 0.72rem; color: #64748b; margin-top: 6px;">
+          <span id="drawerMessageTime">09:15</span> ✓✓
+        </div>
+      </div>
+      <div id="drawerPsychologyTip" style="font-size: 0.78rem; color: #475569; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 12px; line-height: 1.4;">
+        🧠 話術心理拆解：先肯定對方情緒與付出，瞬間化解心防。
+      </div>
+    </div>
+    <div class="drawer-footer" style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px;">
+      <button type="button" class="btn-drawer-action" style="background: #e2e8f0; color: #1e293b;" onclick="copyDrawerMessage()">
+        📋 一鍵複製
+      </button>
+      <button type="button" class="btn-drawer-action" style="background: #25D366; color: white;" onclick="directWhatsAppSend(); closeQuickPreviewDrawer();">
+        💬 直跳 WhatsApp
+      </button>
+      <button type="button" class="btn-drawer-action" style="background: linear-gradient(135deg, #f43f5e, #be123c); color: white;" onclick="generateRomanticCard(); closeQuickPreviewDrawer();">
+        💌 拍立得卡片
+      </button>
+    </div>
+    <div style="text-align: center; margin-top: 2px;">
+      <a href="javascript:void(0)" onclick="scrollToPreview(); closeQuickPreviewDrawer();" style="font-size: 0.76rem; color: #0284c7; text-decoration: none; font-weight: 700;">
+        📍 滾動至全螢幕模擬器檢視
+      </a>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="vipModal">   
 <div class="modal-card">   
 <div class="modal-title" style="color: #92400e; display: flex; align-items: center; gap: 8px;">   
@@ -2123,18 +2433,18 @@ onselectstart="handleDiarySelectStart(event)">
 <label class="form-label">你的自稱（你喺對話入面叫自己做乜）：</label>   
 <input type="text" id="inputUserName" required placeholder="例：老公 / Jason">   
 <div class="chip-group">   
-<span style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 2px;">男士自稱：</span>
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '老公')">老公</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '男朋友')">男朋友</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '霸道總裁')">霸道總裁 👔</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '你的專屬騎士')">專屬騎士 ⚔️</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '暖男')">暖男 ☕</button>   
-<span style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 4px;">女士自稱：</span>
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '老婆')">老婆</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '女朋友')">女朋友</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '貼心小女友')">貼心小女友 🎀</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '小嬌妻')">小嬌妻 ❤️</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputUserName', '女王大人')">女王大人 👑</button>   
+<span class="role-male-only" style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 2px;">男士自稱推薦：</span>
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputUserName', '老公')">老公</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputUserName', '男朋友')">男朋友</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputUserName', '霸道總裁')">霸道總裁 👔</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputUserName', '你的專屬騎士')">專屬騎士 ⚔️</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputUserName', '暖男')">暖男 ☕</button>   
+<span class="role-female-only" style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 4px;">女士自稱推薦：</span>
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputUserName', '老婆')">老婆</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputUserName', '女朋友')">女朋友</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputUserName', '貼心小女友')">貼心小女友 🎀</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputUserName', '小嬌妻')">小嬌妻 ❤️</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputUserName', '女王大人')">女王大人 👑</button>   
 </div>   
 </div>   
   
@@ -2142,19 +2452,19 @@ onselectstart="handleDiarySelectStart(event)">
 <label class="form-label">你想稱呼對象做乜嘢（對象暱稱）：</label>   
 <input type="text" id="inputTargetName" required placeholder="例：老婆 / 麗珊 / BB">   
 <div class="chip-group">   
-<span style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 2px;">稱呼女士：</span>
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '老婆')">老婆</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '麗珊')">麗珊</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', 'BB')">BB</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '女王大人')">女王大人</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '女神')">女神</button>   
-<span style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 4px;">稱呼男士：</span>
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '老公')">老公</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '男朋友')">男朋友</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '霸道總裁')">霸道總裁 👔</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '哥哥')">哥哥 💕</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '大笨蛋')">大笨蛋 🐻</button>   
-<button type="button" class="chip-btn" onclick="setQuickVal('inputTargetName', '老闆')">老闆 😎</button>   
+<span class="role-male-only" style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 2px;">稱呼女伴推薦：</span>
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputTargetName', '老婆')">老婆</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputTargetName', '麗珊')">麗珊</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputTargetName', 'BB')">BB</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputTargetName', '女王大人')">女王大人</button>   
+<button type="button" class="chip-btn role-male-only" onclick="setQuickVal('inputTargetName', '女神')">女神</button>   
+<span class="role-female-only" style="font-size: 0.72rem; color: #64748b; width: 100%; margin-top: 4px;">稱呼男伴推薦：</span>
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputTargetName', '老公')">老公</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputTargetName', '男朋友')">男朋友</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputTargetName', '霸道總裁')">霸道總裁 👔</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputTargetName', '哥哥')">哥哥 💕</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputTargetName', '大笨蛋')">大笨蛋 🐻</button>   
+<button type="button" class="chip-btn role-female-only" onclick="setQuickVal('inputTargetName', '老闆')">老闆 😎</button>   
 </div>   
 </div>   
   
@@ -4315,25 +4625,25 @@ el.appendChild(btn);
 const signoffPresets = {   
 'zh-HK': [   
 // 👩 女性專屬下款簽名（港女撒嬌/深情）
-{ label: '永遠最愛你嘅小嬌妻 ❤️', val: '—— 永遠最愛你嘅小嬌妻 ❤️' },   
-{ label: '最黏你嘅專屬小貓咪 🐾', val: '—— 最黏你嘅專屬小貓咪 🐾' },   
-{ label: '只崇拜你一個嘅小迷妹 🥰', val: '—— 只崇拜你一個嘅小迷妹 🥰' },   
-{ label: '你一生嘅溫柔賢內助 💍', val: '—— 你一生嘅溫柔賢內助 💍' },   
-{ label: '有時任性但最錫你嘅老婆 👧', val: '—— 有時任性但最錫你嘅老婆 👧❤️' },   
-{ label: '你唯一嘅女王陛下 👑', val: '—— 你唯一嘅女王陛下 👑' },   
-{ label: '想時時刻刻霸住你嘅女友 🎀', val: '—— 想時時刻刻霸住你嘅女友 🎀' },   
-{ label: '伸長雙手求抱抱嘅小可愛 🥺', val: '—— 伸長雙手求抱抱嘅小可愛 🥺' },   
+{ label: '永遠最愛你嘅小嬌妻 ❤️', val: '—— 永遠最愛你嘅小嬌妻 ❤️', role: 'female' },   
+{ label: '最黏你嘅專屬小貓咪 🐾', val: '—— 最黏你嘅專屬小貓咪 🐾', role: 'female' },   
+{ label: '只崇拜你一個嘅小迷妹 🥰', val: '—— 只崇拜你一個嘅小迷妹 🥰', role: 'female' },   
+{ label: '你一生嘅溫柔賢內助 💍', val: '—— 你一生嘅溫柔賢內助 💍', role: 'female' },   
+{ label: '有時任性但最錫你嘅老婆 👧', val: '—— 有時任性但最錫你嘅老婆 👧❤️', role: 'female' },   
+{ label: '你唯一嘅女王陛下 👑', val: '—— 你唯一嘅女王陛下 👑', role: 'female' },   
+{ label: '想時時刻刻霸住你嘅女友 🎀', val: '—— 想時時刻刻霸住你嘅女友 🎀', role: 'female' },   
+{ label: '伸長雙手求抱抱嘅小可愛 🥺', val: '—— 伸長雙手求抱抱嘅小可愛 🥺', role: 'female' },   
 // 👨 男性專屬下款簽名（港男求生/霸總/暖男）
-{ label: '你的霸道總裁 👔', val: '—— 你的霸道總裁 👔' },   
-{ label: '永遠最愛你嘅老公 ❤️', val: '—— 永遠最愛你嘅老公 ❤️' },   
-{ label: '隨時候命洗碗專員 🧼', val: '—— 隨時候命兼洗碗專員 敬上 🧼' },   
-{ label: '求生慾極強小太監 🙇‍♂️', val: '—— 求生慾極強嘅小太監 叩頭 🙇‍♂️' },   
-{ label: '任打唔還手沙包 🥊', val: '—— 今晚任打唔還手嘅沙包 🥊' },   
-{ label: '你的專屬騎士 🗡️', val: '—— 你的專屬騎士 🗡️' },   
-{ label: '聽話嘅小狼狗男友 🐕', val: '—— 全世界最聽話嘅小狼狗男友 🐕' },   
-{ label: '你專屬嘅暖男 ☕', val: '—— 你專屬嘅暖男 ☕' },   
-{ label: '永遠企喺你呢邊 💍', val: '—— 永遠企喺你呢邊 敬上 💍' },   
-{ label: '知道錯咗嘅大笨蛋 🥺', val: '—— 知道錯咗嘅大笨蛋 🥺' }   
+{ label: '你的霸道總裁 👔', val: '—— 你的霸道總裁 👔', role: 'male' },   
+{ label: '永遠最愛你嘅老公 ❤️', val: '—— 永遠最愛你嘅老公 ❤️', role: 'male' },   
+{ label: '隨時候命洗碗專員 🧼', val: '—— 隨時候命兼洗碗專員 敬上 🧼', role: 'male' },   
+{ label: '求生慾極強小太監 🙇‍♂️', val: '—— 求生慾極強嘅小太監 叩頭 🙇‍♂️', role: 'male' },   
+{ label: '任打唔還手沙包 🥊', val: '—— 今晚任打唔還手嘅沙包 🥊', role: 'male' },   
+{ label: '你的專屬騎士 🗡️', val: '—— 你的專屬騎士 🗡️', role: 'male' },   
+{ label: '聽話嘅小狼狗男友 🐕', val: '—— 全世界最聽話嘅小狼狗男友 🐕', role: 'male' },   
+{ label: '你專屬嘅暖男 ☕', val: '—— 你專屬嘅暖男 ☕', role: 'male' },   
+{ label: '永遠企喺你呢邊 💍', val: '—— 永遠企喺你呢邊 敬上 💍', role: 'male' },   
+{ label: '知道錯咗嘅大笨蛋 🥺', val: '—— 知道錯咗嘅大笨蛋 🥺', role: 'male' }   
 ],   
 'zh-CN': [   
 { label: '永远最爱你的老公 ❤️', val: '—— 永远最爱你的老公 ❤️' },   
@@ -4365,7 +4675,8 @@ const signoffPresets = {
 };   
   
 function renderSignoffChips(lang) {   
-const list = signoffPresets[lang] || signoffPresets['zh-HK'];   
+const rawList = signoffPresets[lang] || signoffPresets['zh-HK'];   
+const list = rawList.filter(item => !item.role || item.role === currentRole);   
 const container = document.querySelector('.signoff-box .chip-group');   
 if (!container) return;   
 container.innerHTML = '';   
@@ -4379,6 +4690,182 @@ container.appendChild(btn);
 });   
 }   
   
+
+// ===================================================
+// GENDER ROLE STATE & MANAGEMENT (男 / 女 切換與精簡)
+// ===================================================
+let currentRole = localStorage.getItem('ai_bf_user_role') || 'male';
+
+function setUserRole(role, silent) {
+  currentRole = role;
+  localStorage.setItem('ai_bf_user_role', role);
+
+  // 1. Update Buttons
+  const btnMale = document.getElementById('btnRoleMale');
+  const btnFemale = document.getElementById('btnRoleFemale');
+  if (btnMale) btnMale.classList.toggle('active', role === 'male');
+  if (btnFemale) btnFemale.classList.toggle('active', role === 'female');
+
+  // 2. Update Body Class to toggle role-male-only / role-female-only
+  document.body.classList.remove('role-male', 'role-female');
+  document.body.classList.add(role === 'male' ? 'role-male' : 'role-female');
+
+  // 3. Smart defaults adjustment based on role
+  if (role === 'male') {
+    if (!profile.userName || profile.userName === '老婆' || profile.userName === '小嬌妻' || profile.userName === '貼心小女友') {
+      profile.userName = '老公';
+    }
+    if (!profile.targetName || profile.targetName === '老公' || profile.targetName === '霸道總裁' || profile.targetName === '大笨蛋') {
+      profile.targetName = '老婆 (麗珊)';
+    }
+    profile.gender = '女';
+    if (!profile.targetTrait || profile.targetTrait.includes('霸道總裁') || profile.targetTrait.includes('小奶狗')) {
+      profile.targetTrait = '四十幾歲成熟優雅、外剛內柔';
+    }
+
+    // Adaptive UI Titles
+    const bTitle = document.getElementById('headerTitle');
+    if (bTitle) bTitle.innerText = '港男求生必備神器 (哄伴侶情緒價值)';
+    const bBadge = document.getElementById('headerBadge');
+    if (bBadge) bBadge.innerText = '🔥 頂級情緒價值系統 · 哄妻救命終極武器';
+    const emTitle = document.getElementById('emergencyTitleText');
+    if (emTitle) emTitle.innerText = '🚨 伴侶吵架冷戰 · 男士求生急救包模式';
+    const optW = document.getElementById('optToneWarm');
+    if (optW) optW.innerText = '溫柔體貼 (細心關懷照顧另一半)';
+    const optS = document.getElementById('optToneSpoiled');
+    if (optS) optS.innerText = '霸道寵溺 (當成小女孩、霸道總裁式寵溺)';
+
+    // Signoff placeholder
+    const csInp = document.getElementById('customSignoffInput');
+    if (csInp) csInp.placeholder = '例：—— 永遠最愛你嘅老公 ❤️';
+
+    const drvBadge = document.getElementById('drawerRoleBadge');
+    if (drvBadge) {
+      drvBadge.innerText = '👦 男士求生模式';
+      drvBadge.style.background = '#e0f2fe';
+      drvBadge.style.color = '#0284c7';
+    }
+  } else {
+    // Female Role
+    if (!profile.userName || profile.userName === '老公' || profile.userName === '霸道總裁') {
+      profile.userName = '老婆';
+    }
+    if (!profile.targetName || profile.targetName === '老婆 (麗珊)' || profile.targetName === '麗珊' || profile.targetName === '老婆') {
+      profile.targetName = '老公 (大笨蛋)';
+    }
+    profile.gender = '男';
+    if (!profile.targetTrait || profile.targetTrait.includes('四十幾歲')) {
+      profile.targetTrait = '霸道總裁、傲嬌深情、護妻狂魔';
+    }
+
+    // Adaptive UI Titles
+    const bTitle = document.getElementById('headerTitle');
+    if (bTitle) bTitle.innerText = '港女撒嬌必備神器 (極致治癒另一半)';
+    const bBadge = document.getElementById('headerBadge');
+    if (bBadge) bBadge.innerText = '💖 頂級情緒價值系統 · 撒嬌/降服另一半神器';
+    const emTitle = document.getElementById('emergencyTitleText');
+    if (emTitle) emTitle.innerText = '🚨 男友/老公生氣冷戰 · 撒嬌破冰急救包模式';
+    const optW = document.getElementById('optToneWarm');
+    if (optW) optW.innerText = '溫柔治癒 (撫慰男友/老公一天疲勞)';
+    const optS = document.getElementById('optToneSpoiled');
+    if (optS) optS.innerText = '傲嬌撒嬌 (小嬌妻撒嬌、崇拜誇獎男友/老公)';
+
+    // Signoff placeholder
+    const csInp = document.getElementById('customSignoffInput');
+    if (csInp) csInp.placeholder = '例：—— 永遠最愛你嘅小嬌妻 ❤️';
+
+    const drvBadge = document.getElementById('drawerRoleBadge');
+    if (drvBadge) {
+      drvBadge.innerText = '👧 女士撒嬌模式';
+      drvBadge.style.background = '#ffe4e6';
+      drvBadge.style.color = '#e11d48';
+    }
+  }
+
+  // 4. Re-render UI components
+  renderProfileUI();
+  renderSignoffChips(currentLanguage);
+  syncQuickPreviewDrawer();
+
+  if (!silent) {
+    generateMessage(true);
+    showToast(role === 'male' ? "👦 已切換為男士模式，已為你隱藏女性選項！" : "👧 已切換為女士模式，已為你隱藏男性選項！");
+  }
+}
+
+// ===================================================
+// MOBILE FLOATING BUTTON & DRAWER LOGIC
+// ===================================================
+function openQuickPreviewDrawer() {
+  syncQuickPreviewDrawer();
+  const drawer = document.getElementById('quickPreviewDrawer');
+  if (drawer) {
+    drawer.classList.add('active');
+    document.body.style.overflow = 'hidden'; // prevent background scroll
+  }
+}
+
+function closeQuickPreviewDrawer(e) {
+  if (e && e.target && e.target !== e.currentTarget && !e.target.classList.contains('drawer-close-btn')) {
+    return;
+  }
+  const drawer = document.getElementById('quickPreviewDrawer');
+  if (drawer) {
+    drawer.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+function syncQuickPreviewDrawer() {
+  // Sync Target
+  const tName = profile.targetName || (currentRole === 'male' ? '老婆' : '老公');
+  const dTarget = document.getElementById('drawerTargetName');
+  if (dTarget) dTarget.innerText = tName;
+
+  // Sync Tone
+  const tSel = document.getElementById('toneSelect');
+  const dTone = document.getElementById('drawerToneName');
+  if (tSel && dTone) {
+    dTone.innerText = tSel.options[tSel.selectedIndex]?.text.split('(')[0].trim() || '情緒共情';
+  }
+
+  // Sync Message
+  const mainMsg = document.getElementById('waMessageText');
+  const dMsg = document.getElementById('drawerMessageText');
+  if (mainMsg && dMsg) {
+    dMsg.innerText = mainMsg.innerText || '尚未生成話術，請點擊調度台生成！';
+  }
+
+  // Sync Sticker
+  const mainStickerBox = document.getElementById('waStickerPreviewBox');
+  const mainStickerImg = document.getElementById('waStickerPreviewImg');
+  const dStickerBox = document.getElementById('drawerStickerBox');
+  const dStickerImg = document.getElementById('drawerStickerImg');
+  if (mainStickerBox && dStickerBox && dStickerImg) {
+    if (mainStickerBox.style.display !== 'none' && mainStickerImg && mainStickerImg.src) {
+      dStickerBox.style.display = 'block';
+      dStickerImg.src = mainStickerImg.src;
+    } else {
+      dStickerBox.style.display = 'none';
+    }
+  }
+
+  // Sync Time
+  const mainTime = document.getElementById('waMessageTime');
+  const dTime = document.getElementById('drawerMessageTime');
+  if (mainTime && dTime) dTime.innerText = mainTime.innerText;
+
+  // Sync Psychology Tip
+  const mainTip = document.getElementById('psychologyTip');
+  const dTip = document.getElementById('drawerPsychologyTip');
+  if (mainTip && dTip) dTip.innerText = mainTip.innerText;
+}
+
+function copyDrawerMessage() {
+  copyCurrentMessage();
+  showToast("📋 已複製話術全文！可直接貼上 WhatsApp");
+}
+
 // Language Management (i18n)   
 function setAppLanguage(lang) {   
 currentLanguage = lang;   
@@ -5965,7 +6452,8 @@ if (waBtn) waBtn.href = "https://wa.me/?text=" + encodeURIComponent("你好！�
 window.onload = function() {   
 initSupabase();   
 checkUserSession();   
-loadProfile();   
+loadProfile();
+setUserRole(currentRole, true);   
 loadEvents();   
 loadHistory();   
 loadDiaries();   
@@ -6039,9 +6527,12 @@ if (elHeaderName) elHeaderName.innerText = `${tName} (${relName})`;
 }   
   
 function openProfileModal() {   
-document.getElementById('inputUserName').value = profile.userName || '老公';   
-document.getElementById('inputTargetName').value = profile.targetName || '麗珊';   
-document.getElementById('inputGender').value = profile.gender || '女';   
+const defUser = currentRole === 'male' ? '老公' : '老婆';
+const defTarget = currentRole === 'male' ? '麗珊' : '老公';
+const defGender = currentRole === 'male' ? '女' : '男';
+document.getElementById('inputUserName').value = profile.userName || defUser;   
+document.getElementById('inputTargetName').value = profile.targetName || defTarget;   
+document.getElementById('inputGender').value = profile.gender || defGender;   
 document.getElementById('inputRelationship').value = profile.relationship || '夫妻';   
 document.getElementById('inputTargetTrait').value = profile.targetTrait || '';   
 if (document.getElementById('inputTargetPhone')) {   
@@ -6474,7 +6965,8 @@ toast.classList.remove('show');
 function startupApp() {   
 try { initSupabase(); } catch(e) {}  
  try { checkUserSession(); } catch(e) {}  
- try { loadProfile(); } catch(e) {}   
+ try { loadProfile();
+setUserRole(currentRole, true); } catch(e) {}   
 try { loadHistory(); } catch(e) {}   
 try { loadDiaries(); } catch(e) {}   
 try { loadEvents(); } catch(e) {}   
@@ -7414,20 +7906,33 @@ async function handleUserSignUp() {
  // Check if session returned (auto-confirmed) or email confirmation required  
  // Record user in database immediately  
  const expDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();  
+ const userId = (data && data.user && data.user.id) ? data.user.id : ('usr_' + Date.now());
  const userRegData = {  
+ id: userId,
  email: email,  
+ user_email: email,
  role: 'user',  
  is_vip: true,  
  vip_expires_at: expDate,  
- user_name: profile.userName || '老公',  
- target_name: profile.targetName || '老婆',  
+ user_name: profile.userName || '用戶',  
+ target_name: profile.targetName || '另一半',  
  target_phone: phone,  
  status: 'normal',  
  created_at: new Date().toISOString(),  
  last_active_at: new Date().toISOString()  
  };  
  if (phone) profile.targetPhone = phone;  
- try { await supabaseClient.from('profiles').upsert([userRegData]); } catch(e) {}  
+ 
+ // Save locally immediately so admin on same browser/device sees user instantly
+ try {
+   let localList = JSON.parse(localStorage.getItem('ai_bf_all_local_users') || '[]');
+   const exIdx = localList.findIndex(x => x.email === email);
+   if (exIdx >= 0) localList[exIdx] = { ...localList[exIdx], ...userRegData };
+   else localList.push(userRegData);
+   localStorage.setItem('ai_bf_all_local_users', JSON.stringify(localList));
+ } catch(e) {}
+
+ try { await supabaseClient.from('profiles').upsert([userRegData]); } catch(e) { console.warn("profiles upsert error:", e); }  
  try { await supabaseClient.from('app_users').upsert([userRegData]); } catch(e) {}  
  try { await supabaseClient.from('app_user').upsert([userRegData]); } catch(e) {}  
   
