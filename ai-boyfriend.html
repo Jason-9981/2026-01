@@ -4053,7 +4053,8 @@ const i18nDict = {
 };   
   
 let currentLanguage = localStorage.getItem('ai_bf_lang') || 'zh-HK';   
-let currentCategory = 'stage';   
+let currentCategory = 'stage';
+let currentDisplayedRawTemplate = '';   
 let geminiConfig = JSON.parse(localStorage.getItem('ai_bf_gemini') || '{"enabled":false,"key":""}');   
 let activeFestivalData = null;   
 let selectedStickerId = null;   
@@ -4427,6 +4428,11 @@ if (cat === 'stage') {
 if (stageContainer) stageContainer.style.display = 'block';   
 } else {   
 if (stageContainer) stageContainer.style.display = 'none';   
+// If switching to a festival, clear non-festive eventInput to immediately show festive messages!
+const evInput = document.getElementById('eventInput');
+if (evInput && evInput.value.trim() !== '') {
+  evInput.value = '';
+}
 }   
 updateCategoryIndicator();   
 generateMessage();   
@@ -4817,65 +4823,79 @@ if (typeof updateHomeDiarySnippet === 'function') updateHomeDiarySnippet();
 }   
   
 // Event Tailored Dynamic Synthesizers   
-function synthesizeWithEvent(baseText, eventDescription, lang) {   
-if (!eventDescription || eventDescription.trim() === "") {   
-return baseText;   
-}   
-const cleanEvent = eventDescription.trim();   
-const currentL = lang || currentLanguage || 'zh-HK';   
-  
-if (currentL === 'zh-CN') {   
-if (isEmergencyMode) {   
-return `${profile.targetName}，关于「${cleanEvent}」这件事，我真的深刻反省检讨了，完全是${profile.userName}不够体贴细心。你平时付出那么多，我还让你受委屈，我真的很自责心疼。宝贝大人有大量，别再生闷气了，今晚等我好好补偿你，好吗？❤️`;   
-}   
-if (currentCategory !== 'stage') {   
-return `${profile.targetName}，趁着今天提到「${cleanEvent}」，我特别想对你说：有你在我身边，每个特别的日子都有了最温暖的意义。今晚交给我，让我好好陪你。❤️`;   
-}   
-if (currentStage === 2) {   
-return `${profile.targetName}，知道你最近「${cleanEvent}」，看到你这么疲惫我真的特别心疼。你已经做得很棒了，在我面前不用这么强撑，回到家全部交给我${profile.userName}，让我来好好照顾你。❤️`;   
-} else if (currentStage === 1) {   
-return `早安呀${profile.targetName}！一直挂念着你说过的「${cleanEvent}」，今天感觉好点了吗？记得工作再忙也要按时吃口热饭，我会一直在你身后支持你。`;   
-} else if (currentStage === 3) {   
-return `${profile.targetName}，看着你面对「${cleanEvent}」时那种从容与坚定，我真心觉得你身上的知性与优雅无人能及。能与你携手，是我这辈子最大的幸运。`;   
-} else {   
-return `以后「${cleanEvent}」的所有麻烦统统交给我搞定，不准你再为这些琐事皱一下眉头！有我${profile.userName}在，谁都不能让你受委屈。你安心做我捧在手心的小公主就好！👑`;   
-}   
-} else if (currentL === 'en') {   
-if (isEmergencyMode) {   
-return `${profile.targetName}, regarding "${cleanEvent}", I have truly reflected on my actions. It was entirely my lack of sensitivity and attentiveness. You do so much for us, and the last thing you deserve is frustration. Please forgive me—let me make this right with you tonight.❤️`;   
-}   
-if (currentCategory !== 'stage') {   
-return `${profile.targetName}, thinking of "${cleanEvent}" today makes me realize once again how deeply grateful I am to walk through life with you. Let me take care of you tonight.❤️`;   
-}   
-if (currentStage === 2) {   
-return `${profile.targetName}, I know how exhausting "${cleanEvent}" has been on you. Seeing you so tired breaks my heart. You've been extraordinary, but you don't have to carry it alone. Come home and let me take care of everything for you.❤️`;   
-} else if (currentStage === 1) {   
-return `Good morning, ${profile.targetName}! I've been thinking about "${cleanEvent}" that you mentioned. How are you feeling today? Please remember to eat well today—I'm cheering for you always.`;   
-} else if (currentStage === 3) {   
-return `${profile.targetName}, seeing how gracefully you handled "${cleanEvent}" reminds me once again of the poise and wisdom you embody. Being with you is the greatest privilege of my life.`;   
-} else {   
-return `Leave everything about "${cleanEvent}" to me from now on—I won't let you worry for another second! With me here, your only job is to be cherished like royalty.👑`;   
-}   
-} else {   
-// Default zh-HK   
-if (isEmergencyMode) {   
-return `${profile.targetName}，關於「${cleanEvent}」呢件事，我真係深切反省過，完全係${profile.userName}唔夠細心同體諒。你平時付出咁多，我仲惹你唔高興，我真係好心痛自責。老婆你大人有大量，唔好再生悶氣，今晚等我好好補償返畀你，好嘛？❤️`;   
-}   
-if (currentCategory !== 'stage') {   
-return `${profile.targetName}，講起「${cleanEvent}」，我更加覺得身邊有你在真係一生最圓滿嘅事。今晚一切交畀我，等我好好陪你享受！❤️`;   
-}   
-if (currentStage === 2) {   
-return `${profile.targetName}，知你最近「${cleanEvent}」，睇到你咁攰我真係好心痛。你已經做得好出色，喺我面前唔使咁頂硬上，返到嚟全部交畀${profile.userName}，等我好好照顧你。❤️`;   
-} else if (currentStage === 1) {   
-return `早安呀${profile.targetName}！仲記掛住你講過「${cleanEvent}」，今日感覺好啲未？記得忙起上嚟都要按時食飯，我會一直喺度撐住你。`;   
-} else if (currentStage === 3) {   
-return `${profile.targetName}，見到你面對「${cleanEvent}」嗰份從容同堅持，我真心覺得你身上嗰種優雅氣度無人能及。娶到你咁有智慧嘅女人，真係我一生最大嘅幸運。`;   
-} else {   
-return `聽日開始「${cleanEvent}」嘅事交畀我搞，你唔准再為呢啲嘢皺眉頭！有${profile.userName}喺度，無任何人可以令你唔開心。你只要做我被寵壞嘅公主就夠！👑`;   
-}   
-}   
-}   
-  
+function synthesizeWithEvent(baseText, eventDescription, lang) {
+  if (!eventDescription || eventDescription.trim() === "") {
+    return baseText;
+  }
+  const cleanEvent = eventDescription.trim();
+  const currentL = lang || currentLanguage || 'zh-HK';
+
+  // If the event is already mentioned in baseText, preserve baseText as is
+  if (baseText.includes(cleanEvent)) {
+    return baseText;
+  }
+
+  // Strip leading greeting prefix from baseText so we don't repeat greeting twice
+  let content = baseText.trim();
+  const tName = profile.targetName || '老婆';
+  const greetingHk = tName + '，';
+  const greetingEn = tName + ', ';
+  if (content.startsWith(greetingHk)) {
+    content = content.substring(greetingHk.length).trim();
+  } else if (content.startsWith(greetingEn)) {
+    content = content.substring(greetingEn.length).trim();
+  } else if (content.startsWith(tName)) {
+    content = content.substring(tName.length).replace(/^[，,：:\s]+/, '').trim();
+  }
+
+  if (currentL === 'zh-CN') {
+    if (isEmergencyMode) {
+      return `${tName}，关于「${cleanEvent}」这件事，我真的深刻反省了。${content}`;
+    }
+    if (currentCategory !== 'stage') {
+      return `${tName}，知道你最近因为「${cleanEvent}」费了不少心神。在这个特别的日子里：${content}`;
+    }
+    if (currentStage === 2) {
+      return `${tName}，知道你最近「${cleanEvent}」很累很辛苦，回家全部交给我吧。${content}`;
+    } else if (currentStage === 1) {
+      return `早安呀${tName}！一直挂念着你说过的「${cleanEvent}」。${content}`;
+    } else if (currentStage === 3) {
+      return `${tName}，看到你面对「${cleanEvent}」时的从容与付出，真的很佩服你。${content}`;
+    } else {
+      return `${tName}，以后「${cleanEvent}」的麻烦统统交给我！${content}`;
+    }
+  } else if (currentL === 'en') {
+    if (isEmergencyMode) {
+      return `${tName}, regarding "${cleanEvent}", I have truly reflected and feel so sorry. ${content}`;
+    }
+    if (currentCategory !== 'stage') {
+      return `${tName}, knowing how much "${cleanEvent}" has been on your mind: on this special day, ${content}`;
+    }
+    if (currentStage === 2) {
+      return `${tName}, I know how exhausting "${cleanEvent}" has been. Let me take care of you tonight. ${content}`;
+    } else {
+      return `${tName}, thinking of what you are facing with "${cleanEvent}"—${content}`;
+    }
+  } else {
+    // Default zh-HK (香港地道口語)
+    if (isEmergencyMode) {
+      return `${tName}，關於「${cleanEvent}」呢件事，我真係好自責內疚，完全係我唔夠細心。${content}`;
+    }
+    if (currentCategory !== 'stage') {
+      return `${tName}，知你最近因為「${cleanEvent}」咁忙咁辛苦，喺呢個特別日子：${content}`;
+    }
+    if (currentStage === 2) {
+      return `${tName}，知你最近「${cleanEvent}」好攰好辛苦，見到你好心痛。返到嚟全部交畀我～${content}`;
+    } else if (currentStage === 1) {
+      return `${tName}，一直掛住你「${cleanEvent}」嗰件事。${content}`;
+    } else if (currentStage === 3) {
+      return `${tName}，見到你面對「${cleanEvent}」嗰種堅韌同付出，我真係好佩服你。${content}`;
+    } else {
+      return `${tName}，以後「${cleanEvent}」有咩需要儘管交畀我搞！${content}`;
+    }
+  }
+}
+
 // Quick Preset Helper   
 function setQuickVal(elemId, val) {   
 document.getElementById(elemId).value = val;   
@@ -6189,7 +6209,13 @@ tipPart = splitArr[1].trim();
 const signoff = getActiveSignoff();   
 const fullMessage = msgPart + signoff;   
   
-document.getElementById('waMessageText').innerText = fullMessage;   
+const waMsgEl = document.getElementById('waMessageText');
+if (waMsgEl) {
+  waMsgEl.innerText = fullMessage;
+  waMsgEl.style.transition = 'opacity 0.15s ease';
+  waMsgEl.style.opacity = '0.4';
+  setTimeout(() => { waMsgEl.style.opacity = '1'; }, 150);
+}   
 document.getElementById('psychologyTip').innerText = currentLanguage === 'en' ? `Psychological Insight: ${tipPart}` : `話術心理解讀：${tipPart}`;   
 addToHistory(fullMessage, "Gemini_AI_Live");   
 return;   
@@ -6210,14 +6236,23 @@ pool = masterTemplates[`stage${currentStage}`] || masterTemplates.stage1;
 pool = masterTemplates[currentCategory] || masterTemplates.stage1;   
 }   
   
-let available = pool.filter((item) => !historyList.some(h => h.rawTemplate === (item.zh_HK || item.text)));   
-if (available.length === 0) {   
-available = pool;   
-}   
-  
-const randomIndex = Math.floor(Math.random() * available.length);   
-const chosen = available[randomIndex];   
-  
+// 100% Strict Anti-Repetition Guarantee:
+// Step 1: Strictly exclude the currently showing template
+let candidatePool = pool.filter(item => (item.zh_HK || item.text) !== currentDisplayedRawTemplate);
+if (candidatePool.length === 0) {
+  candidatePool = pool;
+}
+
+// Step 2: From remaining candidates, prefer items not recently in history
+let freshCandidates = candidatePool.filter(item => !historyList.some(h => h.rawTemplate === (item.zh_HK || item.text)));
+if (freshCandidates.length > 0) {
+  candidatePool = freshCandidates;
+}
+
+const randomIndex = Math.floor(Math.random() * candidatePool.length);
+const chosen = candidatePool[randomIndex];
+currentDisplayedRawTemplate = chosen.zh_HK || chosen.text;
+
 let rawMsg;   
 let tipText;   
 if (currentLanguage === 'zh-CN') {   
@@ -6247,7 +6282,13 @@ personalized = synthesizeWithEvent(personalized, eventText, currentLanguage);
 const signoff = getActiveSignoff();   
 const fullMessage = personalized + signoff;   
   
-document.getElementById('waMessageText').innerText = fullMessage;   
+const waMsgEl = document.getElementById('waMessageText');
+if (waMsgEl) {
+  waMsgEl.innerText = fullMessage;
+  waMsgEl.style.transition = 'opacity 0.15s ease';
+  waMsgEl.style.opacity = '0.4';
+  setTimeout(() => { waMsgEl.style.opacity = '1'; }, 150);
+}   
 const prefixTip = currentLanguage === 'en' ? "Psychological Insight: " : (currentLanguage === 'zh-CN' ? "话术心理解读：" : "話術心理解讀：");   
 document.getElementById('psychologyTip').innerText = `${prefixTip}${tipText}`;   
   
@@ -7442,9 +7483,11 @@ let userObj = null;
  try { userObj = (await supabaseClient.auth.getUser())?.data?.user; } catch(e) {}
  const userId = (userObj && userObj.id) ? userObj.id : undefined;
 
+ const cleanEmail = (email && email.includes('@')) ? email.trim().toLowerCase() : (currentUser && currentUser.email ? currentUser.email : '');
  const uRec = {   
    id: userId,
-   email: email,   
+   email: cleanEmail || email,   
+   user_email: cleanEmail || email,
    role: 'user',   
    is_vip: true,   
    vip_expires_at: expDate,   
