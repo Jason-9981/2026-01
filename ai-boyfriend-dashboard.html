@@ -138,12 +138,15 @@
       <div class="admin-avatar">J</div>
       <div class="admin-title-box">
         <h1>港男求生必備神器 · 全域營運與用戶活躍度監控台</h1>
-        <p>獨立專屬管理系統 ｜ 雲端連線狀態：<span id="cloudStatusBadge" style="color: #059669; font-weight: 800;">● Supabase Cloud Connected</span></p>
+        <p>獨立專屬管理系統 ｜ 雲端連線狀態：<span id="cloudStatusBadge" style="color: #059669; font-weight: 800;">● Supabase Cloud 實時連線中 (真實資料庫)</span></p>
       </div>
     </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
+    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+      <button type="button" class="btn btn-primary" onclick="loadAllAdminData()" style="background: #0284c7;">
+        🔄 即時同步刷新
+      </button>
       <a href="ai-boyfriend.html" target="_blank" class="btn btn-secondary">
-        🌐 打開對外前台
+        🌐 打開前台試玩
       </a>
       <button type="button" class="btn btn-secondary" onclick="adminLogout()">
         登出後台
@@ -262,8 +265,8 @@
 
 <script>
 // Supabase Configuration
-const SUPABASE_URL = "https://kxyjtwkdrdhhvghgczfv.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4eWp0d2tkcmRoaHZnaGdjemZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzMzg5MjUsImV4cCI6MjA1NzkxNDkyNX0.x_A8-a6H_mF-i3aJ_xQ-zQ-publishable_jI6taTaoa2EUBcYx90D3wQ_el5DbCom";
+const SUPABASE_URL = "https://dyclbjiqcqesxtphjbtn.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_jI6taTaoa2EUBcYx90D3wQ_el5DbCom";
 let supabaseClient = null;
 
 let allUsers = [];
@@ -274,7 +277,19 @@ function initSupabase() {
   if (window.supabase && SUPABASE_URL && SUPABASE_ANON_KEY) {
     try {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      console.log("Admin Supabase initialized!");
+      console.log("Admin Supabase initialized with real cloud database!");
+      
+      // Listen for real-time registrations from friends
+      try {
+        supabaseClient.channel('realtime_admin_profiles')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, (payload) => {
+            console.log("🔔 Real-time change detected in profiles:", payload);
+            loadAllAdminData();
+          })
+          .subscribe();
+      } catch(subErr) {
+        console.warn("Realtime subscription note:", subErr);
+      }
     } catch(e) {
       console.warn("Supabase init error:", e);
     }
@@ -287,7 +302,7 @@ function verifyAdminLogin() {
   const key = document.getElementById('loginAdminKey').value.trim();
 
   // Secure Password
-  if (key === '97242234#' || key === 'jason2026') {
+  if (key === '97242234#' || key === 'jason2026' || key === 'Ainslie739-') {
     document.getElementById('adminLoginOverlay').style.display = 'none';
     document.getElementById('adminMainContent').style.display = 'block';
     sessionStorage.setItem('ai_bf_admin_auth', 'true');
@@ -332,10 +347,8 @@ async function loadAllAdminData() {
     } catch(e) {}
   }
 
-  // If mock/local fallback
-  if (usersList.length === 0) {
-    usersList = generateRealisticUserData();
-  }
+  // 100% Real Data Mode from Supabase Cloud:
+  // If usersList is empty, keep it empty so admin sees genuine registration status.
 
   allUsers = usersList.map(u => {
     // calculate last active days
@@ -424,7 +437,16 @@ function renderUserTable() {
   }
 
   if (list.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 30px;">查無相符用戶資料</td></tr>';
+    tbody.innerHTML = `<tr>
+      <td colspan="7" style="text-align: center; color: #64748b; padding: 48px 20px;">
+        <div style="font-size: 2.2rem; margin-bottom: 10px;">🌱</div>
+        <div style="font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 6px;">暫無已登記會員記錄</div>
+        <div style="font-size: 0.86rem; color: #64748b; max-width: 520px; margin: 0 auto; line-height: 1.6;">
+          目前系統已切換為 <strong>Supabase 真實雲端資料庫</strong>（專案：<code>dyclbjiqcqesxtphjbtn</code>）。<br>
+          您可以直接將前台連結發送給朋友，朋友於前台輸入電郵登記或登入後，此處將<strong>即時自動同步顯示</strong>其最新註冊資料！
+        </div>
+      </td>
+    </tr>`;
     return;
   }
 
@@ -629,17 +651,9 @@ function copyWhatsAppDispatchMessage() {
   });
 }
 
+// Real Data Mode: No mock fallback needed
 function generateRealisticUserData() {
-  return [
-    { id: 'u_1', email: 'jasonchow739@gmail.com', user_name: 'Jason (管理員)', target_name: '麗珊', target_phone: '97242234', is_vip: true, vip_expires_at: null, last_active_at: new Date().toISOString(), status: 'normal' },
-    { id: 'u_2', email: 'andy.wong@hotmail.com', user_name: 'Andy', target_name: 'Mandy', target_phone: '91234567', is_vip: true, vip_expires_at: new Date(Date.now() + 28*86400000).toISOString(), last_active_at: new Date(Date.now() - 1*86400000).toISOString(), status: 'normal' },
-    { id: 'u_3', email: 'kevin.chan@gmail.com', user_name: '阿樂', target_name: '晴晴', target_phone: '62345678', is_vip: false, vip_expires_at: null, last_active_at: new Date(Date.now() - 3*86400000).toISOString(), status: 'normal' },
-    { id: 'u_4', email: 'chris.lau@yahoo.com.hk', user_name: 'Chris', target_name: '阿Wing', target_phone: '51239876', is_vip: true, vip_expires_at: new Date(Date.now() + 320*86400000).toISOString(), last_active_at: new Date(Date.now() - 5*86400000).toISOString(), status: 'normal' },
-    { id: 'u_5', email: 'tommy_lee@gmail.com', user_name: 'Tommy', target_name: '阿花', target_phone: '98881234', is_vip: false, vip_expires_at: null, last_active_at: new Date(Date.now() - 14*86400000).toISOString(), status: 'normal' },
-    { id: 'u_6', email: 'daniel_kwok@outlook.com', user_name: 'Daniel', target_name: 'Kary', target_phone: '65554321', is_vip: false, vip_expires_at: null, last_active_at: new Date(Date.now() - 22*86400000).toISOString(), status: 'normal' },
-    { id: 'u_7', email: 'ghost_user99@test.com', user_name: '測試號', target_name: '路人', target_phone: '--', is_vip: false, vip_expires_at: null, last_active_at: new Date(Date.now() - 45*86400000).toISOString(), status: 'normal' },
-    { id: 'u_8', email: 'spammer_fake@163.com', user_name: '廣告人', target_name: '無', target_phone: '--', is_vip: false, vip_expires_at: null, last_active_at: new Date(Date.now() - 72*86400000).toISOString(), status: 'dormant' }
-  ];
+  return [];
 }
 </script>
 
