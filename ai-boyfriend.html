@@ -1736,28 +1736,40 @@ VIEW 1: GENERATOR VIEW (DEFAULT)
 </button>   
 </div>   
 <div class="copy-tip" id="copyTipText">💡 點擊「直跳 WhatsApp」直接喚醒手機 App 直達專屬聊天室；點擊「拍立得卡片」可生成高清圖文卡片！</div>   
-</div></div>   
+</div></div> <!-- closes wa-footer-actions and wa-preview-card -->
+</div> <!-- closes app-grid -->  
   
 <!-- Bottom: Anti-Repetition History -->   
-<!-- Main Screen Warm Diary Box (出面生活點滴預覽) -->  
- <div class="card" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff1f2 100%); border: 1.5px solid #fde68a; margin-top: 20px;">  
- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">  
- <div class="card-title" style="color: #92400e; font-size: 1.05rem;">  
- <span>📖 兩人生活點滴回憶錄</span>  
- </div>  
- <button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 4px 12px; background: white; border-color: #f59e0b; color: #b45309;" onclick="switchMainTab('diary')">  
- 查看全本日記 ➔  
- </button>  
- </div>  
- <div style="font-size: 0.82rem; color: #78350f; line-height: 1.5; margin-bottom: 10px;">  
- 記錄你哋日常相處嘅每份體貼與感動，永久加密珍藏，換手機亦永不丟失！  
- </div>  
- <div id="homeDiarySnippetBox" style="background: white; border: 1px dashed #f59e0b; border-radius: 10px; padding: 12px; font-size: 0.86rem; color: #475569;">  
- <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #b45309; margin-bottom: 4px;">  
- <span id="homeDiarySnippetDate">📅 最近生活紀錄</span>  
- <span id="homeDiarySnippetMood">🥰 甜蜜心動</span>  
- </div>  
- <div id="homeDiarySnippetTitle" style="font-weight: 800; color: #1e293b; margin-bottom: 4px;">今日生活點滴</div>
+<!-- Main Screen Warm Diary Box (首頁生活點滴預覽卡片) -->  
+<div class="card" id="homeDiarySnippetCard" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff1f2 100%); border: 1.5px solid #fde68a; margin-top: 20px; margin-bottom: 20px;">  
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">  
+    <div class="card-title" style="color: #92400e; font-size: 1.05rem; font-weight: 800;">  
+      <span>📖 兩人生活點滴回憶錄</span>  
+    </div>  
+    <button type="button" class="btn-secondary" style="font-size: 0.8rem; padding: 5px 14px; background: white; border-color: #f59e0b; color: #b45309; font-weight: 800;" onclick="switchMainTab('diary')">  
+      查看全本日記 ➔  
+    </button>  
+  </div>  
+  <div style="font-size: 0.82rem; color: #78350f; line-height: 1.5; margin-bottom: 12px;">  
+    記錄你哋日常相處嘅每份體貼與感動，永久加密珍藏，換手機亦永不丟失！  
+  </div>  
+  <div id="homeDiarySnippetBox" style="background: white; border: 1px dashed #f59e0b; border-radius: 10px; padding: 14px; font-size: 0.86rem; color: #475569;">  
+    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #b45309; margin-bottom: 6px; font-weight: 700;">  
+      <span id="homeDiarySnippetDate">📅 最近生活紀錄</span>  
+      <span id="homeDiarySnippetMood" style="background: #fef3c7; padding: 2px 8px; border-radius: 999px;">🥰 甜蜜心動</span>  
+    </div>  
+    <div id="homeDiarySnippetTitle" style="font-weight: 800; color: #1e293b; margin-bottom: 6px; font-size: 0.95rem;">今日生活點滴</div>  
+    <div id="homeDiarySnippetBody" style="line-height: 1.6; color: #475569; margin-bottom: 4px;">點擊「寫入專屬回憶錄」即可儲存今日專屬情景，點滴匯聚成兩人的溫暖時光。</div>  
+  </div>  
+  <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">  
+    <button type="button" class="btn-action" style="flex: 1; min-width: 160px; background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 0.88rem; padding: 10px 16px; font-weight: 800;" onclick="switchMainTab('diary')">  
+      ✍️ 寫新生活日記  
+    </button>  
+    <button type="button" class="btn-secondary" style="flex: 1; min-width: 160px; font-size: 0.85rem; padding: 10px 16px; border-color: #f59e0b; color: #b45309; font-weight: 800; justify-content: center; background: white;" onclick="quickSaveCurrentMessageToDiary()">  
+      ⚡ 一鍵將首頁情境記低  
+    </button>  
+  </div>  
+</div>
 
 <div class="history-card">   
 <div class="history-header">   
@@ -1770,6 +1782,7 @@ VIEW 1: GENERATOR VIEW (DEFAULT)
 </div>   
 <div class="history-list" id="historyList"></div>   
 </div> <!-- closes history-card -->
+</div> <!-- closes #generatorView --> <!-- closes history-card -->
 </div> <!-- closes app-grid -->
 </div> <!-- closes #generatorView -->   
   
@@ -1932,6 +1945,7 @@ onselectstart="handleDiarySelectStart(event)">
 </div>
 </div> <!-- closes diary right card -->
 </div> <!-- closes diary-grid -->
+</div> <!-- closes diaryView inside -->
 </div> <!-- closes #diaryView -->
 
 <footer class="app-footer" style="margin-top: 40px; margin-bottom: 30px; background: white; border: 2px solid #fed7aa; border-radius: 20px; padding: 28px 18px; text-align: center; box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.08);">   
@@ -1957,8 +1971,8 @@ onselectstart="handleDiarySelectStart(event)">
   </div>   
 
   <!-- Romantic Couple Banner / Visual Showcase -->
-  <div style="max-width: 600px; margin: 0 auto 16px; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1.5px solid #fecdd3;">
-    <img src="https://lh3.googleusercontent.com/d/1Xv0oILxyRYas7L1Z9dEzh9DeEbwjGjVH" alt="頂級情緒價值哄另一半神器" style="width: 100%; height: auto; display: block; border-radius: 12px;">
+  <div style="max-width: 340px; margin: 0 auto 16px; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.08); border: 1.5px solid #fecdd3;">
+    <img src="https://lh3.googleusercontent.com/d/1Xv0oILxyRYas7L1Z9dEzh9DeEbwjGjVH" alt="頂級情緒價值哄另一半神器" style="width: 100%; max-width: 320px; height: auto; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
   </div>
 
   <div class="footer-copyright" id="footerCopyright" style="font-size: 0.78rem; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 12px; line-height: 1.5;">   
@@ -2417,265 +2431,9 @@ onselectstart="handleDiarySelectStart(event)">
      <button type="button" class="btn-action" style="flex: 1; font-size: 0.95rem; padding: 12px;" onclick="downloadRomanticCard()">  
        💾 下載高清卡片 (PNG)  
      </button>  
-     <button type="button" class="btn-secondary" style="padding: 12px 20px;" onclick="closeRomanticCardModal()">  
-       關閉  
-     </button>  
+     <button type="button" class="btn-secondary" style="padding: 12px 20px;" onclick="closeRomanticCardModal()">關閉</button>  
    </div>  
  </div>  
-</div>
-
-  
- <div id="homeDiarySnippetBody" style="line-height: 1.5;">點擊「寫入專屬回憶錄」即可儲存今日專屬情景，點滴匯聚成兩人的溫暖時光。</div>  
- </div>  
- <div style="display: flex; gap: 8px; margin-top: 12px;">  
- <button type="button" class="btn-action" style="flex: 1; background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 0.85rem; padding: 9px;" onclick="switchMainTab('diary')">  
- ✍️ 寫新生活日記  
- </button>  
- <button type="button" class="btn-secondary" style="flex: 1; font-size: 0.85rem; padding: 9px; background: white; color: #b45309; border-color: #f59e0b;" onclick="syncEventsToDiary()">  
- ⚡ 一鍵將首頁情境記低  
- </button>  
- </div>  
- </div>  
-</div>  
-  
-<div class="modal-overlay" id="authModal">   
-<div class="modal-card" style="max-width: 480px;">   
-  <!-- Modal Header -->
-  <div class="modal-title" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">   
-    <span style="font-size: 1.2rem; font-weight: 900; color: var(--slate-800);">👤 會員系統 · 跨裝置登入</span>   
-    <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="closeAuthModal()">✕</button>
-  </div>   
-  <div class="modal-desc" style="margin-bottom: 16px;">   
-    支援「電郵 + 密碼」隨時於任何手機或電腦登入，新用戶免費送 3 天全功能 VIP！   
-  </div>   
-
-  <!-- Auth Mode Switcher Tabs -->
-  <div style="display: flex; background: var(--slate-100); padding: 4px; border-radius: 999px; margin-bottom: 16px; border: 1px solid var(--slate-200);">
-    <button type="button" id="tabAuthLogin" class="nav-tab-btn active" style="flex: 1; padding: 8px; font-size: 0.88rem; font-weight: 800; border-radius: 999px;" onclick="switchAuthTab('login')">
-      🔑 會員登入 (已有帳號)
-    </button>
-    <button type="button" id="tabAuthSignup" class="nav-tab-btn" style="flex: 1; padding: 8px; font-size: 0.88rem; font-weight: 800; border-radius: 999px; color: var(--slate-600); background: transparent;" onclick="switchAuthTab('signup')">
-      🎁 註冊新帳號 (送 3 天 VIP)
-    </button>
-  </div>
-  
-  <!-- Form 1: Sign In (Email + Password) -->
-  <div id="formSignIn" style="display: flex; flex-direction: column; gap: 12px;">
-    <div class="form-group">
-      <label class="form-label" style="font-weight: 800; color: #1e293b;">電郵地址 (Email)</label>
-      <input type="email" id="loginEmail" placeholder="請輸入登記時的電郵 (例如: name@gmail.com)" style="padding: 11px 14px; font-size: 0.92rem;">
-    </div>
-    <div class="form-group">
-      <label class="form-label" style="font-weight: 800; color: #1e293b; display: flex; justify-content: space-between;">
-        <span>帳號密碼 (Password)</span>
-        <span style="font-size: 0.75rem; color: #0284c7; cursor: pointer; font-weight: normal;" onclick="togglePasswordVisibility('loginPassword', this)">👁️ 顯示密碼</span>
-      </label>
-      <input type="password" id="loginPassword" placeholder="請輸入密碼" style="padding: 11px 14px; font-size: 0.92rem;">
-    </div>
-
-    <button type="button" id="btnDoSignIn" class="btn-action" style="background: linear-gradient(135deg, #e11d48, #be123c); font-size: 0.96rem; padding: 12px; margin-top: 4px; box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);" onclick="handleUserSignIn()">
-      🚀 立即登入 (跨裝置無縫同步)
-    </button>
-
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-      <span style="font-size: 0.78rem; color: #64748b;">換咗新手機？用返呢組密碼即可登入。</span>
-      <a href="javascript:void(0)" style="font-size: 0.78rem; color: #e11d48; font-weight: 700; text-decoration: underline;" onclick="showMagicLinkSection()">忘記密碼？</a>
-    </div>
-  </div>
-
-  <!-- Form 2: Sign Up (Email + Password) -->
-  <div id="formSignUp" style="display: none; flex-direction: column; gap: 12px;">
-    <div style="background: #fdf2f8; border: 1.5px solid #fbcfe8; border-radius: 10px; padding: 12px 14px; font-size: 0.82rem; color: #9d174d; line-height: 1.5;">
-      🎁 <b>新會員迎新禮遇</b>：登記即自動獲贈 3 天全功能免費 VIP 體驗！設定好電郵與密碼後，日後在任何手機或電腦輸入即可隨時登入。
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" style="font-weight: 800; color: #1e293b;">登記電郵 (Email)</label>
-      <input type="email" id="signupEmail" placeholder="請輸入您的真實電郵 (用於接收確認信)" style="padding: 11px 14px; font-size: 0.92rem;">
-    </div>
-
-    <div class="form-group">
-      <label class="form-label" style="font-weight: 800; color: #1e293b; display: flex; justify-content: space-between;">
-        <span>設定帳號密碼 (最少 6 位)</span>
-        <span style="font-size: 0.75rem; color: #0284c7; cursor: pointer; font-weight: normal;" onclick="togglePasswordVisibility('signupPassword', this)">👁️ 顯示密碼</span>
-      </label>
-      <input type="password" id="signupPassword" placeholder="請設定 6 位或以上密碼" style="padding: 11px 14px; font-size: 0.92rem;">
-    </div>
-
-    <button type="button" id="btnDoSignUp" class="btn-action" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 0.96rem; padding: 12px; margin-top: 4px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);" onclick="handleUserSignUp()">
-      🎁 立即註冊新帳號 (免費領 3 天 VIP)
-    </button>
-  </div>
-
-  <!-- Confirmation Notice Card (Shown after signup when email confirmation is required) -->
-  <div id="signupConfirmNotice" style="display: none; background: #ecfdf5; border: 1.5px solid #a7f3d0; border-radius: 12px; padding: 18px; text-align: center; flex-direction: column; gap: 10px; margin-top: 8px;">
-    <div style="font-size: 2.2rem;">📬</div>
-    <div style="font-weight: 900; color: #065f46; font-size: 1.1rem;">註冊成功！激活郵件已發送</div>
-    <div style="font-size: 0.85rem; color: #047857; font-weight: 700; word-break: break-all;" id="signupEmailDisplay"></div>
-    <div style="font-size: 0.82rem; color: #334155; line-height: 1.6; background: white; border-radius: 8px; padding: 12px; border: 1px solid #d1fae5; text-align: left;">
-      <b>下一步指引：</b><br>
-      1. 請前往您的電子郵箱，點擊確認郵件內的 <b>「Confirm your mail」</b> 連結激活帳號；<br>
-      2. 激活完成後，您在<b>任何手機、平板或電腦</b>只要切換至「登入」，輸入此電郵和密碼即可隨時秒速登入！
-    </div>
-    <button type="button" class="btn-action" style="font-size: 0.85rem; padding: 8px 16px; align-self: center; margin-top: 6px; background: #059669;" onclick="switchAuthTab('login')">
-      👉 前往登入視窗
-    </button>
-  </div>
-
-  <!-- Fallback: Magic Link Request Card (Collapsible) -->
-  <div id="magicLinkFallbackBox" style="display: none; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--slate-200); text-align: left;">
-    <div style="font-size: 0.82rem; font-weight: 800; color: #475569; margin-bottom: 6px;">
-      💌 忘記密碼？發送免密碼登入連結：
-    </div>
-    <div style="display: flex; gap: 8px;">
-      <input type="email" id="magicLinkEmailInput" placeholder="輸入電郵發送 Magic Link" style="flex: 1; padding: 8px 12px; font-size: 0.85rem;">
-      <button type="button" class="btn-secondary" style="padding: 8px 14px; font-size: 0.82rem; white-space: nowrap; font-weight: 700;" onclick="sendMagicLinkFallback()">
-        發送連結
-      </button>
-    </div>
-  </div>
-
-  <div style="margin-top: 18px; text-align: center;">   
-    <button type="button" class="btn-secondary" style="font-size: 0.82rem; padding: 7px 18px;" onclick="closeAuthModal()">   
-      返回主畫面   
-    </button>   
-  </div>   
-</div>   
-</div>
-
-<!-- Purchase History & Account Data Modal -->  
-<div class="modal-overlay" id="purchaseHistoryModal">  
- <div class="modal-card" style="max-width: 600px;">  
- <div class="modal-title" style="color: #15803d; display: flex; justify-content: space-between; align-items: center;">  
- <div style="display: flex; align-items: center; gap: 8px;">  
- <span>🧾 我的購買紀錄與會員數據</span>  
- </div>  
- <button type="button" class="btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;" onclick="closePurchaseHistoryModal()">✕ 關閉</button>  
- </div>  
- <div class="modal-desc">  
- 查看您的帳號服務詳情、歷史購買單據及 VIP 有效期，更換裝置亦能隨時查閱。  
- </div>  
-  
- <!-- Account Summary Card -->  
- <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: var(--radius-md); padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px;">  
- <div style="display: flex; justify-content: space-between; align-items: center;">  
- <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">會員帳號 (Email)：</span>  
- <strong id="phUserEmail" style="font-size: 0.9rem; color: #14532d;">未登入</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between; align-items: center;">  
- <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">目前會員級別：</span>  
- <span id="phUserTier" style="font-size: 0.82rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fef3c7; color: #b45309;">免費版</span>  
- </div>  
- <div style="display: flex; justify-content: space-between; align-items: center;">  
- <span style="font-size: 0.82rem; color: #166534; font-weight: 700;">VIP 有效期限：</span>  
- <strong id="phVipExpiry" style="font-size: 0.88rem; color: #b45309;">--</strong>  
- </div>  
- </div>  
-  
- <!-- Order History List -->  
- <div style="display: flex; flex-direction: column; gap: 10px;">  
- <div style="font-size: 0.88rem; font-weight: 800; color: #1e293b;">📋 歷史購買與兌換單據清單：</div>  
- <div id="phOrdersContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">  
- <!-- Populated dynamically -->  
- </div>  
- </div>  
-  
- <div style="margin-top: 16px; display: flex; gap: 10px;">  
- <button type="button" class="btn-action" style="flex: 1; font-size: 0.88rem; padding: 10px;" onclick="closePurchaseHistoryModal(); openVipModal();">  
- 👑 升級 / 續期 VIP 方案  
- </button>  
- <button type="button" class="btn-secondary" style="padding: 10px 18px;" onclick="closePurchaseHistoryModal()">  
- 關閉  
- </button>  
- </div>  
- </div>  
-</div>  
-  
-<!-- Official Electronic Receipt Modal (電子單據) -->  
-<div class="modal-overlay" id="officialReceiptModal">  
- <div class="modal-card" style="max-width: 480px; text-align: center; background: #fffdfa; border: 2px solid #fed7aa;">  
- <div style="border-bottom: 2px dashed #f59e0b; padding-bottom: 12px; margin-bottom: 14px;">  
- <div style="font-size: 0.78rem; font-weight: 800; color: #b45309; letter-spacing: 1px;">港男求生必備神器 · 官方電子收據</div>  
- <div style="font-size: 1.35rem; font-weight: 900; color: #78350f; margin-top: 4px;">OFFICIAL RECEIPT</div>  
- <div style="font-size: 0.72rem; color: #94a3b8;" id="receiptIdText">INV-202609-0000</div>  
- </div>  
-  
- <div style="text-align: left; font-size: 0.85rem; color: #334155; display: flex; flex-direction: column; gap: 8px; line-height: 1.6; margin-bottom: 16px;">  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">客戶電郵：</span>  
- <strong id="receiptEmail">--</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">開通方案：</span>  
- <strong id="receiptPlan" style="color: #ea580c;">--</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">付款方式：</span>  
- <span id="receiptPayment">轉數快 FPS</span>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">交易金額：</span>  
- <strong id="receiptAmount" style="font-size: 1.05rem; color: #b91c1c;">HK$ 0.00</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">服務有效期至：</span>  
- <strong id="receiptValidUntil" style="color: #15803d;">--</strong>  
- </div>  
- <div style="display: flex; justify-content: space-between;">  
- <span style="color: #64748b;">開出時間：</span>  
- <span id="receiptCreatedAt">--</span>  
- </div>  
- </div>  
-  
- <!-- Official Stamp -->  
- <div style="border: 2px solid #dc2626; border-radius: 8px; padding: 4px 12px; display: inline-block; color: #dc2626; font-weight: 900; font-size: 0.82rem; letter-spacing: 2px; transform: rotate(-4deg); margin-bottom: 16px;">  
- ★ PAID · 官方已核實生效 ★  
- </div>  
-  
- <div style="font-size: 0.72rem; color: #94a3b8; margin-bottom: 14px;">  
- 本單據為系統自動生成之電子憑證，資料已同步加密存入雲端數據庫。  
- </div>  
-  
- <div style="display: flex; gap: 8px;">  
- <button type="button" class="btn-action" style="flex: 1; font-size: 0.85rem; padding: 9px;" onclick="printOrSaveReceipt()">  
- 💾 截圖 / 列印儲存單據  
- </button>  
- <button type="button" class="btn-secondary" style="padding: 9px 16px;" onclick="closeReceiptModal()">  
- 關閉  
- </button>  
- </div>  
- </div>  
-</div>  
-  
-<div class="modal-overlay" id="pwaInstallModal">
-  <div class="modal-card" style="max-width: 440px; text-align: center;">
-    <div class="modal-title" style="color: #be123c; display: flex; align-items: center; justify-content: center; gap: 8px;">
-      <span>📲 一鍵加到手機主畫面</span>
-    </div>
-    <div class="modal-desc" style="margin-bottom: 14px;">
-      像原生 App 一樣放在手機桌面，即開即用、隱藏網址列，全螢幕體驗！
-    </div>
-
-    <div style="background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 12px; padding: 16px; text-align: left; display: flex; flex-direction: column; gap: 12px;">
-      <div>
-        <b style="color: #be123c;">🍎 iOS (Safari) 用戶：</b><br>
-        1. 點擊瀏覽器底部的 <b>「分享」</b> 按鈕（帶向上箭頭的方框）<br>
-        2. 向下滾動並點擊 <b>「加入主畫面 (Add to Home Screen)」</b><br>
-        3. 點擊右上角「新增」，即可在桌面隨時一鍵呼出神器！
-      </div>
-      <hr style="border: none; border-top: 1px dashed #fecdd3;">
-      <div>
-        <b style="color: #059669;">🤖 Android (Chrome) 用戶：</b><br>
-        1. 點擊右上角 <b>「選單 (三個點)」</b><br>
-        2. 選擇 <b>「安裝應用程式」</b> 或 <b>「加至主螢幕」</b><br>
-        3. 確認新增即可！
-      </div>
-    </div>
-
-    <button type="button" class="btn-secondary" style="margin-top: 16px; width: 100%;" onclick="closePwaModal()">
-      我知道了，稍後再加
-    </button>
-  </div>
 </div>
 
 <script>
@@ -7227,8 +6985,10 @@ async function handleUserSignIn() {
 async function handleUserSignUp() {
   const emailInput = document.getElementById('signupEmail');
   const passwordInput = document.getElementById('signupPassword');
+  const phoneInput = document.getElementById('signupPhone');
   const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
   const password = passwordInput ? passwordInput.value : '';
+  const phone = phoneInput ? phoneInput.value.trim() : '';
 
   if (!email || !email.includes('@') || !email.includes('.')) {
     showToast("⚠️ 請輸入有效的電郵地址！");
@@ -7255,7 +7015,8 @@ async function handleUserSignUp() {
           emailRedirectTo: currentUrl,
           data: {
             user_name: profile.userName || '老公',
-            target_name: profile.targetName || '老婆'
+            target_name: profile.targetName || '老婆',
+            phone: phone
           }
         }
       });
@@ -7277,6 +7038,25 @@ async function handleUserSignUp() {
       }
 
       // Check if session returned (auto-confirmed) or email confirmation required
+            // Record user in database immediately
+      const expDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      const userRegData = {
+        email: email,
+        role: 'user',
+        is_vip: true,
+        vip_expires_at: expDate,
+        user_name: profile.userName || '老公',
+        target_name: profile.targetName || '老婆',
+        target_phone: phone,
+        status: 'normal',
+        created_at: new Date().toISOString(),
+        last_active_at: new Date().toISOString()
+      };
+      if (phone) profile.targetPhone = phone;
+      try { await supabaseClient.from('profiles').upsert([userRegData]); } catch(e) {}
+      try { await supabaseClient.from('app_users').upsert([userRegData]); } catch(e) {}
+      try { await supabaseClient.from('app_user').upsert([userRegData]); } catch(e) {}
+
       if (data && data.session) {
         await completeUserAuthSession(email, "密碼註冊即時登入");
         showToast("🎉 註冊成功！已自動開通 3 天 VIP 體驗！");
